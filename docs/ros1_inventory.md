@@ -9,6 +9,7 @@ Reference links:
 - Main controller: https://github.com/HyeonGyu-Lee/scale_truck_control/blob/master/src/ScaleTruckController.cpp
 - LRC node: https://github.com/HyeonGyu-Lee/scale_truck_control/blob/master/src/lrc.cpp
 - OpenCR firmware: https://github.com/HyeonGyu-Lee/scale_truck_control/tree/master/etc/OpenCR
+- Detailed command-to-actuator pipeline: [control_pipeline.md](control_pipeline.md)
 
 ## Package Summary
 
