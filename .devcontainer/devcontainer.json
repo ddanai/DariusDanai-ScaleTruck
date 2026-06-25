@@ -1,0 +1,26 @@
+{
+  "name": "Scale Truck ROS 2",
+  "image": "osrf/ros:humble-desktop",
+  "remoteUser": "root",
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "runArgs": [
+    "--network=host",
+    "--privileged"
+  ],
+  "containerEnv": {
+    "ROS_DOMAIN_ID": "42",
+    "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+  },
+  "postCreateCommand": "apt-get update && apt-get install -y python3-colcon-common-extensions python3-rosdep python3-pip git && rosdep update || true",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-iot.vscode-ros",
+        "ms-vscode.cpptools",
+        "ms-python.python"
+      ]
+    }
+  }
+}
+

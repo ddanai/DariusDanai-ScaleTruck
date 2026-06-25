@@ -1,0 +1,43 @@
+# Build outputs
+build/
+install/
+log/
+.colcon/
+
+# ROS bags and logs
+*.bag
+*.db3
+*.mcap
+rosbag2_*/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# C/C++
+*.o
+*.so
+*.a
+*.elf
+*.hex
+*.bin
+
+# IDE and OS
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local machine files
+.env
+.env.*
+!.env.example
+

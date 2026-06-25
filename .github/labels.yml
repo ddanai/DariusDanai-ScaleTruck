@@ -1,0 +1,37 @@
+- name: area:ros2
+  color: "1D76DB"
+  description: ROS 2 migration, packages, launch, messages, and middleware
+- name: area:firmware
+  color: "5319E7"
+  description: Teensy firmware and serial protocol
+- name: area:hardware
+  color: "D93F0B"
+  description: Sensors, actuators, wiring, and vehicle bring-up
+- name: area:docs
+  color: "0075CA"
+  description: Documentation, reports, and diagrams
+- name: area:testing
+  color: "0E8A16"
+  description: Tests, logs, latency profiling, and validation
+- name: area:digital-twin
+  color: "FBCA04"
+  description: ADDT telemetry and physical-twin integration
+- name: type:task
+  color: "C5DEF5"
+  description: Planned work item
+- name: type:bug
+  color: "D73A4A"
+  description: Defect or failed behavior
+- name: type:research
+  color: "BFDADC"
+  description: Investigation or design decision
+- name: priority:high
+  color: "B60205"
+  description: High priority
+- name: priority:medium
+  color: "FBCA04"
+  description: Medium priority
+- name: priority:low
+  color: "0E8A16"
+  description: Low priority
+
