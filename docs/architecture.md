@@ -14,6 +14,29 @@ flowchart LR
     Telemetry --> ADDT["Autonomous Driving Digital Twin"]
 ```
 
+## ROS 1 Reference Architecture
+
+```mermaid
+flowchart LR
+    Camera["USB camera (/usb_cam/image_raw)"] --> Xavier["scale_truck_control"]
+    Lidar["RPLidar A3 (/scan)"] --> Filter["laser_filter"]
+    Filter --> Obstacles["obstacle_detector (/tracked_obstacles)"]
+    Obstacles --> Xavier
+    ZMQ["ZeroMQ command/coordination"] --> Xavier
+    Xavier --> Lane["/lane_msg"]
+    Xavier --> Xav2Lrc["/xav2lrc_msg"]
+    Ocr2Lrc["/ocr2lrc_msg"] --> LRC["LRC"]
+    Xav2Lrc --> LRC
+    LRC --> Lrc2Xav["/lrc2xav_msg"]
+    Lrc2Xav --> Xavier
+    LRC --> Lrc2Ocr["/lrc2ocr_msg"]
+    Lrc2Ocr --> Rosserial["rosserial_python"]
+    Rosserial --> OpenCR["OpenCR firmware"]
+    OpenCR --> Rosserial
+    LRC <--> Multicast["UDP multicast resiliency data"]
+    Controller["Qt Controller UI"] --> Multicast
+```
+
 ## Main Interfaces
 
 - High-level commands: velocity, steering, stop/go, emergency stop.
@@ -26,4 +49,3 @@ flowchart LR
 - Replace placeholder boxes with package and node names after ROS 1 inventory is complete.
 - Add topic names, message types, and expected publish rates.
 - Document failure paths for communication loss and emergency stop.
-
