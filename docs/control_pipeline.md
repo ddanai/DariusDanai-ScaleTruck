@@ -116,6 +116,20 @@ This is the key software/hardware boundary in the ROS 1 stack.
 
 ## 5. OpenCR Low-Level Control
 
+OpenCR firmware is the code running on the OpenCR 1.0 microcontroller. It is the low-level hardware actuation layer in the ROS 1 scale-truck stack: ROS decides what the truck should do, and OpenCR turns those commands into real PWM signals for the steering servo and throttle ESC.
+
+Plain-language flow:
+
+```text
+ROS high-level controller
+  -> /xav2lrc_msg
+  -> LRC
+  -> /lrc2ocr_msg
+  -> rosserial over USB
+  -> OpenCR firmware
+  -> steering servo + throttle ESC
+```
+
 Firmware:
 
 - Location: `etc/OpenCR/LV/LV.ino`, `etc/OpenCR/FV1/FV1.ino`, `etc/OpenCR/FV2/FV2.ino`
@@ -140,6 +154,15 @@ Feedback to ROS:
 | --- | --- |
 | `cur_vel` | Measured velocity from wheel encoder. |
 | `u_k` | Saturated velocity/control value used by LRC observer. |
+
+OpenCR's main responsibilities:
+
+- Receive desired steering angle, target velocity, current distance, target distance, predicted velocity, and fault status from ROS.
+- Read the wheel encoder to estimate current speed.
+- Run low-level speed control for throttle.
+- Convert steering commands to servo PWM.
+- Clamp throttle and steering outputs to safe ranges.
+- Publish measured velocity and saturated control feedback back to ROS.
 
 ## 6. Throttle Actuation
 
@@ -237,4 +260,3 @@ For the ROS 2 rewrite, this pipeline suggests these package boundaries:
 - `scale_truck_resiliency`: LRC-like fault detection and mode logic, if retained.
 - `scale_truck_firmware_bridge`: serial or micro-ROS bridge to Teensy/OpenCR.
 - `scale_truck_msgs`: ROS 2 versions of `xav2lrc`, `lrc2ocr`, `ocr2lrc`, `lane`, and `lane_coef`.
-
