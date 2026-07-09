@@ -12,14 +12,15 @@
 ## Core ROS Migration
 
 - [x] Set up the ROS 2 workspace and package structure.
-- [x] Remove ROS 1 master startup assumptions and validate ROS 2 DDS discovery.
 - [ ] Migrate package metadata and build configuration from ROS 1 to ROS 2.
 - [ ] Migrate custom messages, services, actions, and topic naming conventions.
 - [ ] Port ROS 1 nodes to ROS 2 client libraries.
 - [ ] Migrate launch and runtime configuration.
 - [ ] Migrate parameter handling, namespaces, and remapping behavior.
-- [ ] Review and assign QoS settings for major communication paths.
 - [ ] Replace ROS 1-only bridges and middleware assumptions with ROS 2-compatible equivalents.
+- [ ] Remove ROS 1 master startup assumptions from migrated launch, config, and runtime docs.
+- [ ] Review and assign QoS settings for major communication paths.
+- [ ] Validate ROS 2 DDS discovery in the target development environment.
 - [ ] Validate that the migrated ROS 2 graph starts, communicates, and shuts down correctly.
 
 ## Dependency Migration
