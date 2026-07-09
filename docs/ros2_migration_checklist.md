@@ -6,8 +6,8 @@
 - [x] Add ROS 2 workspace structure.
 - [x] Add development environment instructions.
 - [x] Add issue templates and task tracker plan.
-- [ ] Create GitHub repository and push initial commit.
-- [ ] Create Week 1 GitHub issues.
+- [x] Create GitHub repository and push initial commit.
+- [x] Create Week 1 GitHub issues.
 
 ## Core ROS Migration
 
