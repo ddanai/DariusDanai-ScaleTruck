@@ -13,6 +13,7 @@
 
 - [x] Set up the ROS 2 workspace and package structure.
 - [x] Migrate package metadata and build configuration from ROS 1 to ROS 2.
+- [ ] Import the original ROS 1 reference code for migration review.
 - [ ] Migrate custom messages, services, actions, and topic naming conventions.
 - [ ] Port ROS 1 nodes to ROS 2 client libraries.
 - [ ] Migrate launch and runtime configuration.
