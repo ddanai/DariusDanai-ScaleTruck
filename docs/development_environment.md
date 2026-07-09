@@ -31,6 +31,12 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
+Validate ROS 2 DDS discovery:
+
+```bash
+../scripts/validate_ros2_dds_discovery.sh
+```
+
 ## Option B: Native Ubuntu 22.04
 
 Install ROS 2 Humble:
@@ -56,9 +62,14 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
+Validate ROS 2 DDS discovery:
+
+```bash
+../scripts/validate_ros2_dds_discovery.sh
+```
+
 ## Hardware Notes
 
 - Teensy firmware development should be documented under `firmware/teensy`.
 - Serial defaults are listed in `.env.example`.
 - Jetson-specific deployment notes should be added once the final JetPack and ROS 2 distro target are confirmed.
-

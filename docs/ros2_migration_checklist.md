@@ -12,7 +12,7 @@
 ## Core ROS Migration
 
 - [x] Set up the ROS 2 workspace and package structure.
-- [ ] Remove ROS 1 master startup assumptions and validate ROS 2 DDS discovery.
+- [x] Remove ROS 1 master startup assumptions and validate ROS 2 DDS discovery.
 - [ ] Migrate package metadata and build configuration from ROS 1 to ROS 2.
 - [ ] Migrate custom messages, services, actions, and topic naming conventions.
 - [ ] Port ROS 1 nodes to ROS 2 client libraries.
@@ -59,6 +59,10 @@ The migration should preserve the same logical command and feedback path even if
 ROS 2 control node -> low-level command topic -> serial/micro-ROS transport -> Teensy/OpenCR
 Teensy/OpenCR -> feedback transport -> ROS 2 feedback topic -> control node
 ```
+
+## Related Validation Docs
+
+- [ROS 2 DDS Discovery Validation](dds_discovery_validation.md)
 
 ## Control and Hardware
 
