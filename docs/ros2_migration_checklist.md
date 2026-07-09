@@ -11,7 +11,7 @@
 
 ## Core ROS Migration
 
-- [ ] Set up the ROS 2 workspace and package structure.
+- [x] Set up the ROS 2 workspace and package structure.
 - [ ] Remove ROS 1 master startup assumptions and validate ROS 2 DDS discovery.
 - [ ] Migrate package metadata and build configuration from ROS 1 to ROS 2.
 - [ ] Migrate custom messages, services, actions, and topic naming conventions.
