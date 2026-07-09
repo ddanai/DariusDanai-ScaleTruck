@@ -39,6 +39,7 @@ source install/setup.bash
 4. Review the Week 1 documents:
 
 - [ROS 1 Inventory](docs/ros1_inventory.md)
+- [ROS 1 vs ROS 2](docs/ros1_vs_ros2.md)
 - [ROS 2 Migration Checklist](docs/ros2_migration_checklist.md)
 - [Task Tracker](docs/task_tracker.md)
 
@@ -54,4 +55,3 @@ The original ROS 1 project documents this hardware and software baseline:
 - USB camera and RPLidar A3
 
 This repository should preserve useful concepts from that project, but new code should be written and documented for the selected ROS 2 platform.
-
