@@ -11,12 +11,16 @@
 
 ## Core ROS Migration
 
-- [ ] Create ROS 2 package skeletons under `ros2_ws/src`.
-- [ ] Replace `catkin` build files with `ament_cmake` or `ament_python`.
-- [ ] Convert ROS 1 publishers/subscribers to ROS 2 nodes.
-- [ ] Convert launch files to ROS 2 Python launch files.
-- [ ] Convert parameter handling to ROS 2 parameter APIs.
-- [ ] Verify topic communication with test publishers/subscribers.
+- [ ] Set up the ROS 2 workspace and package structure.
+- [ ] Remove ROS 1 master startup assumptions and validate ROS 2 DDS discovery.
+- [ ] Migrate package metadata and build configuration from ROS 1 to ROS 2.
+- [ ] Migrate custom messages, services, actions, and topic naming conventions.
+- [ ] Port ROS 1 nodes to ROS 2 client libraries.
+- [ ] Migrate launch and runtime configuration.
+- [ ] Migrate parameter handling, namespaces, and remapping behavior.
+- [ ] Review and assign QoS settings for major communication paths.
+- [ ] Replace ROS 1-only bridges and middleware assumptions with ROS 2-compatible equivalents.
+- [ ] Validate that the migrated ROS 2 graph starts, communicates, and shuts down correctly.
 
 ## Dependency Migration
 
