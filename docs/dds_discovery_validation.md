@@ -43,6 +43,18 @@ Result:
 - `bash` was not available in the current shell.
 - DDS discovery could not be validated from this Windows shell.
 
+Attempted over SSH on the Xavier target on 2026-07-16:
+
+```text
+ls /opt/ros
+```
+
+Result:
+
+- The Xavier currently only reported `noetic`.
+- `ros2` was not available in the SSH session.
+- ROS 2 must be installed on the Xavier before DDS discovery can be validated there.
+
 Run the local validation command above from the target Ubuntu + ROS 2 development
 environment before checking off the migration checklist item.
 

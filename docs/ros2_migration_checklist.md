@@ -23,6 +23,7 @@
 - [x] Decide whether to port, replace, or drop non-ROS support components from the reference project.
 - [x] Remove ROS 1 master startup assumptions from migrated launch, config, and runtime docs.
 - [x] Review and assign QoS settings for major communication paths.
+- [ ] Install ROS 2 on the Xavier target environment.
 - [ ] Validate ROS 2 DDS discovery in the target development environment.
 - [ ] Validate that the migrated ROS 2 graph starts, communicates, and shuts down correctly.
 
