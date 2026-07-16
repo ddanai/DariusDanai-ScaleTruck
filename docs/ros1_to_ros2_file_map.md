@@ -61,6 +61,8 @@ ROS 1 message files should move to `scale_truck_msgs/msg` and use ROS 2 interfac
 | `msg/ocr2lrc.msg` | `ros2_ws/src/scale_truck_msgs/msg/Ocr2Lrc.msg` | Rename to CamelCase; keep serial bridge compatibility in mind. |
 | `msg/scale_truck_control_msgs.zip` | `docs/` or omit | Legacy generated/message archive; do not use as a ROS 2 source interface. |
 
+See [ROS 2 Interfaces and Topic Naming](ros2_interfaces_and_topics.md) for the migrated interface and topic mapping.
+
 ## Launch Files
 
 ROS 1 XML launch files should become ROS 2 Python launch files in `scale_truck_bringup`.
@@ -142,4 +144,3 @@ These files are part of the ROS 1 reference project but should not automatically
 5. Implement the firmware bridge and firmware protocol changes.
 6. Decide the fate of UDP/ZMQ, Qt controller, CRC tools, and track assets.
 7. Add build, launch, and hardware validation around each migrated slice.
-

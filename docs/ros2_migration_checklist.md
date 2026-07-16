@@ -15,7 +15,7 @@
 - [x] Migrate package metadata and build configuration from ROS 1 to ROS 2.
 - [x] Import the original ROS 1 reference code for migration review.
 - [x] Map ROS 1 source files, headers, launch files, config, firmware, and assets to their ROS 2 package destinations.
-- [ ] Migrate custom messages, services, actions, and topic naming conventions.
+- [x] Migrate custom messages, services, actions, and topic naming conventions.
 - [ ] Port ROS 1 nodes and reusable C++ support libraries to ROS 2 client libraries.
 - [ ] Migrate launch and runtime configuration.
 - [ ] Migrate parameter handling, namespaces, and remapping behavior.
