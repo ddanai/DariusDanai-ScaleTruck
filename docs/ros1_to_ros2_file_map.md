@@ -144,3 +144,5 @@ These files are part of the ROS 1 reference project but should not automatically
 5. Implement the firmware bridge and firmware protocol changes.
 6. Decide the fate of UDP/ZMQ, Qt controller, CRC tools, and track assets.
 7. Add build, launch, and hardware validation around each migrated slice.
+
+See [ROS 2 Node Port Notes](ros2_node_port_notes.md) for the first ROS 2 client-library port status.
