@@ -92,6 +92,7 @@ Runtime configuration should move to `scale_truck_bringup/config` unless it is c
 | `config/laser_filter.yaml` | `ros2_ws/src/scale_truck_bringup/config/laser_filter.yaml` | Reuse if ROS 2 `laser_filters` accepts the same structure; otherwise update. |
 
 See [ROS 2 Launch and Runtime Configuration](ros2_launch_config_notes.md) for the converted bringup files.
+See [ROS 2 Runtime Integration Decisions](ros2_runtime_integration_decisions.md) for namespace, remapping, bridge, and legacy support-component decisions.
 
 ## Firmware and Hardware Bridge
 

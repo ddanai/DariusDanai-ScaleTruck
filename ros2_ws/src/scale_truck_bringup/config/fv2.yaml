@@ -5,11 +5,11 @@ scale_truck_control_node:
       wait_key_delay: 1
       enable_console_output: true
     topics:
-      camera_reading: /usb_cam/image_raw
-      obstacle_reading: /tracked_obstacles
-      lrc_to_xavier: /lrc2xav_msg
-      lane_coef: /lane_msg
-      xavier_to_lrc: /xav2lrc_msg
+      camera_reading: usb_cam/image_raw
+      obstacle_reading: tracked_obstacles
+      lrc_to_xavier: lrc2xav_msg
+      lane_coef: lane_msg
+      xavier_to_lrc: xav2lrc_msg
     params:
       target_vel: 0.0
       safety_vel: 0.45
@@ -73,10 +73,10 @@ lrc_node:
     params:
       truck_info: 2
     topics:
-      xavier_to_lrc: /xav2lrc_msg
-      ocr_to_lrc: /ocr2lrc_msg
-      lrc_to_xavier: /lrc2xav_msg
-      lrc_to_ocr: /lrc2ocr_msg
+      xavier_to_lrc: xav2lrc_msg
+      ocr_to_lrc: ocr2lrc_msg
+      lrc_to_xavier: lrc2xav_msg
+      lrc_to_ocr: lrc2ocr_msg
     lrc_params:
       udp_group_addr: 239.255.255.250
       udp_group_port: 9392
@@ -87,4 +87,3 @@ lrc_node:
       lu_ob_l: 0.2817
       enable_console_output: true
       update_period_s: 0.02
-

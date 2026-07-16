@@ -8,5 +8,10 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
-ament_package()
+install(PROGRAMS
+  src/serial_bridge_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME serial_bridge_node
+)
 
+ament_package()

@@ -43,10 +43,27 @@ ros2 launch scale_truck_bringup lv.launch.py use_obstacles:=true
 ros2 launch scale_truck_bringup lv.launch.py use_firmware_bridge:=true
 ```
 
+## Namespaces and Remapping
+
+The migrated config uses relative topic names so launch namespaces and remappings work correctly. For example, this starts the leader under the `lv` namespace:
+
+```bash
+ros2 launch scale_truck_bringup lv.launch.py namespace:=lv
+```
+
+Common topics can be remapped at launch:
+
+```bash
+ros2 launch scale_truck_bringup lv.launch.py \
+  xav2lrc_topic:=/xav2lrc_msg \
+  lrc2xav_topic:=/lrc2xav_msg \
+  lrc2ocr_topic:=/lrc2ocr_msg \
+  ocr2lrc_topic:=/ocr2lrc_msg
+```
+
 ## Notes
 
 - ROS 1 `<rosparam>` blocks were converted to ROS 2 `ros__parameters` YAML.
-- ROS 1 `rosserial_python` is not launched. It is represented by a future `scale_truck_firmware_bridge` node and `serial_bridge.yaml`.
+- ROS 1 `rosserial_python` is not launched. It is replaced by `scale_truck_firmware_bridge/serial_bridge_node` and `serial_bridge.yaml`.
 - Driver package/executable names are launch arguments so they can be corrected when dependency migration chooses final ROS 2 drivers.
 - The lane-camera-specific ROS 1 launch files are not converted yet; they should be handled with the broader camera/perception migration.
-

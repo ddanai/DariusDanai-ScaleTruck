@@ -29,19 +29,19 @@ The imported ROS 1 reference project does not define custom services or actions.
 
 ## Initial Topic Mapping
 
-The first ROS 2 port should preserve these topic names to reduce migration risk and make side-by-side behavior comparison easier.
+The first ROS 2 port preserves the ROS 1 base topic names to reduce migration risk and make side-by-side behavior comparison easier. Runtime config uses relative names so ROS 2 namespaces and launch remaps can still be used.
 
 | ROS 1 Topic | ROS 1 Type | ROS 2 Topic | ROS 2 Type | Role |
 |-------------|------------|-------------|------------|------|
-| `/lane_msg` | `scale_truck_control/lane_coef` | `/lane_msg` | `scale_truck_msgs/msg/LaneCoef` | Lane polynomial output. |
-| `/xav2lrc_msg` | `scale_truck_control/xav2lrc` | `/xav2lrc_msg` | `scale_truck_msgs/msg/Xav2Lrc` | High-level command from scale truck controller to LRC. |
-| `/lrc2xav_msg` | `scale_truck_control/lrc2xav` | `/lrc2xav_msg` | `scale_truck_msgs/msg/Lrc2Xav` | LRC feedback to high-level controller. |
-| `/lrc2ocr_msg` | `scale_truck_control/lrc2ocr` | `/lrc2ocr_msg` | `scale_truck_msgs/msg/Lrc2Ocr` | Low-level command from LRC to firmware bridge. |
-| `/ocr2lrc_msg` | `scale_truck_control/ocr2lrc` | `/ocr2lrc_msg` | `scale_truck_msgs/msg/Ocr2Lrc` | Low-level feedback from firmware bridge to LRC. |
-| `/usb_cam/image_raw` | `sensor_msgs/Image` | `/usb_cam/image_raw` | `sensor_msgs/msg/Image` | Camera input; driver may remap this later. |
-| `/scan` | `sensor_msgs/LaserScan` | `/scan` | `sensor_msgs/msg/LaserScan` | LiDAR input. |
-| `/raw_obstacles` | `obstacle_detector/Obstacles` | `/raw_obstacles` | Replacement TBD | Raw obstacle input if `obstacle_detector` is ported/replaced. |
-| `/tracked_obstacles` | `obstacle_detector/Obstacles` | `/tracked_obstacles` | Replacement TBD | Tracked obstacle input used by runtime config. |
+| `/lane_msg` | `scale_truck_control/lane_coef` | `lane_msg` | `scale_truck_msgs/msg/LaneCoef` | Lane polynomial output. |
+| `/xav2lrc_msg` | `scale_truck_control/xav2lrc` | `xav2lrc_msg` | `scale_truck_msgs/msg/Xav2Lrc` | High-level command from scale truck controller to LRC. |
+| `/lrc2xav_msg` | `scale_truck_control/lrc2xav` | `lrc2xav_msg` | `scale_truck_msgs/msg/Lrc2Xav` | LRC feedback to high-level controller. |
+| `/lrc2ocr_msg` | `scale_truck_control/lrc2ocr` | `lrc2ocr_msg` | `scale_truck_msgs/msg/Lrc2Ocr` | Low-level command from LRC to firmware bridge. |
+| `/ocr2lrc_msg` | `scale_truck_control/ocr2lrc` | `ocr2lrc_msg` | `scale_truck_msgs/msg/Ocr2Lrc` | Low-level feedback from firmware bridge to LRC. |
+| `/usb_cam/image_raw` | `sensor_msgs/Image` | `usb_cam/image_raw` | `sensor_msgs/msg/Image` | Camera input; driver may remap this later. |
+| `/scan` | `sensor_msgs/LaserScan` | `scan` | `sensor_msgs/msg/LaserScan` | LiDAR input. |
+| `/raw_obstacles` | `obstacle_detector/Obstacles` | `raw_obstacles` | Replacement TBD | Raw obstacle input if `obstacle_detector` is ported/replaced. |
+| `/tracked_obstacles` | `obstacle_detector/Obstacles` | `tracked_obstacles` | Replacement TBD | Tracked obstacle input used by runtime config. |
 
 ## Naming Rules for the Port
 
@@ -49,6 +49,6 @@ The first ROS 2 port should preserve these topic names to reduce migration risk 
 - Generated C++ includes use snake_case: `scale_truck_msgs/msg/lane_coef.hpp`.
 - Generated C++ types use the `scale_truck_msgs::msg` namespace.
 - Generated Python imports use `from scale_truck_msgs.msg import LaneCoef`.
-- Topic names stay compatible with the ROS 1 reference during the first migration pass.
-- Cleaner topic names, such as `/control/xavier_to_lrc` or `/firmware/feedback`, can be introduced later through remapping once behavior is validated.
-
+- Base topic names stay compatible with the ROS 1 reference during the first migration pass.
+- Absolute legacy names, such as `/xav2lrc_msg`, can be restored with launch remapping when needed.
+- Cleaner topic names, such as `control/xavier_to_lrc` or `firmware/feedback`, can be introduced later through remapping once behavior is validated.

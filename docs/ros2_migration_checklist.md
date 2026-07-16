@@ -18,10 +18,10 @@
 - [x] Migrate custom messages, services, actions, and topic naming conventions.
 - [x] Port ROS 1 nodes and reusable C++ support libraries to ROS 2 client libraries.
 - [x] Migrate launch and runtime configuration.
-- [ ] Migrate parameter handling, namespaces, and remapping behavior.
-- [ ] Replace ROS 1-only bridges and middleware assumptions with ROS 2-compatible equivalents.
-- [ ] Decide whether to port, replace, or drop non-ROS support components from the reference project.
-- [ ] Remove ROS 1 master startup assumptions from migrated launch, config, and runtime docs.
+- [x] Migrate parameter handling, namespaces, and remapping behavior.
+- [x] Replace ROS 1-only bridges and middleware assumptions with ROS 2-compatible equivalents.
+- [x] Decide whether to port, replace, or drop non-ROS support components from the reference project.
+- [x] Remove ROS 1 master startup assumptions from migrated launch, config, and runtime docs.
 - [ ] Review and assign QoS settings for major communication paths.
 - [ ] Validate ROS 2 DDS discovery in the target development environment.
 - [ ] Validate that the migrated ROS 2 graph starts, communicates, and shuts down correctly.

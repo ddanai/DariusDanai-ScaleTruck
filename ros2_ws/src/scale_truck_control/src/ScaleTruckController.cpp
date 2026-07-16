@@ -29,13 +29,13 @@ void ScaleTruckController::load_parameters()
 void ScaleTruckController::init_ros_interfaces()
 {
   const auto image_topic = this->declare_parameter<std::string>(
-    "topics.camera_reading", "/usb_cam/image_raw");
+    "topics.camera_reading", "usb_cam/image_raw");
   const auto velocity_topic = this->declare_parameter<std::string>(
-    "topics.lrc_to_xavier", "/lrc2xav_msg");
+    "topics.lrc_to_xavier", "lrc2xav_msg");
   const auto lane_topic = this->declare_parameter<std::string>(
-    "topics.lane_coef", "/lane_msg");
+    "topics.lane_coef", "lane_msg");
   const auto command_topic = this->declare_parameter<std::string>(
-    "topics.xavier_to_lrc", "/xav2lrc_msg");
+    "topics.xavier_to_lrc", "xav2lrc_msg");
 
   image_sub_ = this->create_subscription<sensor_msgs::msg::Image>(
     image_topic, rclcpp::SensorDataQoS(),

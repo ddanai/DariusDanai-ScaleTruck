@@ -43,13 +43,13 @@ void LocalResiliencyCoordinator::load_parameters()
 void LocalResiliencyCoordinator::init_ros_interfaces()
 {
   const auto xavier_to_lrc_topic = this->declare_parameter<std::string>(
-    "topics.xavier_to_lrc", "/xav2lrc_msg");
+    "topics.xavier_to_lrc", "xav2lrc_msg");
   const auto ocr_to_lrc_topic = this->declare_parameter<std::string>(
-    "topics.ocr_to_lrc", "/ocr2lrc_msg");
+    "topics.ocr_to_lrc", "ocr2lrc_msg");
   const auto lrc_to_xavier_topic = this->declare_parameter<std::string>(
-    "topics.lrc_to_xavier", "/lrc2xav_msg");
+    "topics.lrc_to_xavier", "lrc2xav_msg");
   const auto lrc_to_ocr_topic = this->declare_parameter<std::string>(
-    "topics.lrc_to_ocr", "/lrc2ocr_msg");
+    "topics.lrc_to_ocr", "lrc2ocr_msg");
 
   xavier_sub_ = this->create_subscription<scale_truck_msgs::msg::Xav2Lrc>(
     xavier_to_lrc_topic, rclcpp::QoS(1),
