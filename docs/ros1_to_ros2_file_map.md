@@ -91,6 +91,8 @@ Runtime configuration should move to `scale_truck_bringup/config` unless it is c
 | `config/lrc.yaml` | `ros2_ws/src/scale_truck_bringup/config/lrc.yaml` or `scale_truck_control/config/lrc.yaml` | Convert LRC parameters and remaps. |
 | `config/laser_filter.yaml` | `ros2_ws/src/scale_truck_bringup/config/laser_filter.yaml` | Reuse if ROS 2 `laser_filters` accepts the same structure; otherwise update. |
 
+See [ROS 2 Launch and Runtime Configuration](ros2_launch_config_notes.md) for the converted bringup files.
+
 ## Firmware and Hardware Bridge
 
 The ROS 1 OpenCR firmware should not be copied directly into `ros2_ws`. Use it to implement the project-owned Teensy/OpenCR firmware and ROS 2 bridge.

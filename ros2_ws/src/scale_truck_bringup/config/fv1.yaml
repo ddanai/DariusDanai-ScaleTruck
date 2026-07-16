@@ -1,0 +1,90 @@
+scale_truck_control_node:
+  ros__parameters:
+    image_view:
+      enable_opencv: false
+      wait_key_delay: 1
+      enable_console_output: true
+    topics:
+      camera_reading: /usb_cam/image_raw
+      obstacle_reading: /tracked_obstacles
+      lrc_to_xavier: /lrc2xav_msg
+      lane_coef: /lane_msg
+      xavier_to_lrc: /xav2lrc_msg
+    params:
+      target_vel: 0.0
+      safety_vel: 0.45
+      fv_max_vel: 1.2
+      ref_vel: 0.0
+      lv_stop_dist: 0.5
+      fv_stop_dist: 0.1
+      safety_dist: 1.5
+      target_dist: 0.8
+      angle_degree: 0.0
+      kp_d: 2.0
+      kd_d: 0.4
+      k: 0.15
+      update_period_s: 0.02
+    calibration:
+      matrix:
+        a: 325.4567221821768
+        b: 0.0
+        c: 320.0
+        d: 0.0
+        e: 325.4567221821768
+        f: 240.0
+        g: 0.0
+        h: 0.0
+        i: 1.0
+      dist_coef:
+        a: -0.35139098089507653
+        b: 0.15748570446604712
+        c: 0.0
+        d: 0.0
+        e: -0.037408338000060472
+    roi:
+      width: 640
+      height: 480
+      top_gap: 0.413
+      bot_gap: 0.185
+      top_height: 0.99
+      bot_height: 0.485
+      extra_f: 8.0
+      extra_b: 8.0
+      extra_up: 140
+      extra_down: 180
+      dynamic_roi: true
+      threshold: 128
+    tcp_ip:
+      sub_port: "5555"
+      pub_port: "5555"
+      req_port: "4444"
+      rep_port: "4444"
+      zipcode: "00001"
+      ip_addr: "tcp://192.168.0.18"
+      interface_name: "wlan0"
+    udp_ip:
+      port: "8080"
+      send_group: "FV2"
+      recv_group: "FV1"
+      ip_addr: "udp://239.255.255.250"
+
+lrc_node:
+  ros__parameters:
+    params:
+      truck_info: 1
+    topics:
+      xavier_to_lrc: /xav2lrc_msg
+      ocr_to_lrc: /ocr2lrc_msg
+      lrc_to_xavier: /lrc2xav_msg
+      lrc_to_ocr: /lrc2ocr_msg
+    lrc_params:
+      udp_group_addr: 239.255.255.250
+      udp_group_port: 9392
+      lrc_log_path: /tmp/scale_truck/logfiles
+      epsilon: 0.7
+      lu_ob_a: 0.6817
+      lu_ob_b: 0.3183
+      lu_ob_l: 0.2817
+      enable_console_output: true
+      update_period_s: 0.02
+
