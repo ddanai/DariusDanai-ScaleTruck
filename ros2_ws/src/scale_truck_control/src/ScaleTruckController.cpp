@@ -4,6 +4,8 @@
 #include <chrono>
 #include <functional>
 
+#include "scale_truck_control/qos.hpp"
+
 namespace scale_truck_control
 {
 
@@ -41,13 +43,13 @@ void ScaleTruckController::init_ros_interfaces()
     image_topic, rclcpp::SensorDataQoS(),
     std::bind(&ScaleTruckController::image_callback, this, std::placeholders::_1));
   velocity_sub_ = this->create_subscription<scale_truck_msgs::msg::Lrc2Xav>(
-    velocity_topic, rclcpp::QoS(1),
+    velocity_topic, qos::feedback(),
     std::bind(&ScaleTruckController::velocity_callback, this, std::placeholders::_1));
 
   lane_pub_ = this->create_publisher<scale_truck_msgs::msg::LaneCoef>(
-    lane_topic, rclcpp::QoS(10));
+    lane_topic, qos::lane());
   command_pub_ = this->create_publisher<scale_truck_msgs::msg::Xav2Lrc>(
-    command_topic, rclcpp::QoS(1));
+    command_topic, qos::command());
 
   const auto period = std::chrono::duration<double>(update_period_s_);
   timer_ = this->create_wall_timer(

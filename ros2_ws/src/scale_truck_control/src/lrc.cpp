@@ -4,6 +4,8 @@
 #include <cmath>
 #include <functional>
 
+#include "scale_truck_control/qos.hpp"
+
 namespace scale_truck_control
 {
 
@@ -52,16 +54,16 @@ void LocalResiliencyCoordinator::init_ros_interfaces()
     "topics.lrc_to_ocr", "lrc2ocr_msg");
 
   xavier_sub_ = this->create_subscription<scale_truck_msgs::msg::Xav2Lrc>(
-    xavier_to_lrc_topic, rclcpp::QoS(1),
+    xavier_to_lrc_topic, qos::command(),
     std::bind(&LocalResiliencyCoordinator::xavier_callback, this, std::placeholders::_1));
   firmware_sub_ = this->create_subscription<scale_truck_msgs::msg::Ocr2Lrc>(
-    ocr_to_lrc_topic, rclcpp::QoS(1),
+    ocr_to_lrc_topic, qos::feedback(),
     std::bind(&LocalResiliencyCoordinator::firmware_callback, this, std::placeholders::_1));
 
   xavier_pub_ = this->create_publisher<scale_truck_msgs::msg::Lrc2Xav>(
-    lrc_to_xavier_topic, rclcpp::QoS(1));
+    lrc_to_xavier_topic, qos::feedback());
   firmware_pub_ = this->create_publisher<scale_truck_msgs::msg::Lrc2Ocr>(
-    lrc_to_ocr_topic, rclcpp::QoS(1));
+    lrc_to_ocr_topic, qos::command());
 
   const auto period = std::chrono::duration<double>(update_period_s_);
   timer_ = this->create_wall_timer(

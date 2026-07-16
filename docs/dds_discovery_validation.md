@@ -26,6 +26,26 @@ Expected result:
 - `ros2 topic list` discovers `/chatter`.
 - The script exits successfully without starting `roscore`.
 
+## Current Validation Status
+
+Status: pending target ROS 2 environment.
+
+Attempted from the current repository shell on 2026-07-15:
+
+```text
+Get-Command ros2
+Get-Command bash
+```
+
+Result:
+
+- `ros2` was not available in the current shell.
+- `bash` was not available in the current shell.
+- DDS discovery could not be validated from this Windows shell.
+
+Run the local validation command above from the target Ubuntu + ROS 2 development
+environment before checking off the migration checklist item.
+
 ## Manual Equivalent
 
 Terminal 1:
@@ -55,4 +75,3 @@ For multiple machines:
 - Confirm multicast is allowed on the network.
 - Use `ROS_LOCALHOST_ONLY=1` only for local-only tests.
 - Add DDS vendor-specific configuration later only if remote discovery is unreliable.
-

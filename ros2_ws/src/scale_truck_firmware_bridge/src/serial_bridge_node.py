@@ -6,6 +6,7 @@ import time
 
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 
 from scale_truck_msgs.msg import Lrc2Ocr, Ocr2Lrc
 
@@ -13,6 +14,21 @@ try:
     import serial
 except ImportError:  # pragma: no cover - handled at runtime on ROS hosts
     serial = None
+
+
+COMMAND_QOS = QoSProfile(
+    history=HistoryPolicy.KEEP_LAST,
+    depth=1,
+    reliability=ReliabilityPolicy.RELIABLE,
+    durability=DurabilityPolicy.VOLATILE,
+)
+
+FEEDBACK_QOS = QoSProfile(
+    history=HistoryPolicy.KEEP_LAST,
+    depth=5,
+    reliability=ReliabilityPolicy.RELIABLE,
+    durability=DurabilityPolicy.VOLATILE,
+)
 
 
 class SerialBridgeNode(Node):
@@ -34,9 +50,9 @@ class SerialBridgeNode(Node):
         self.running = True
 
         self.command_sub = self.create_subscription(
-            Lrc2Ocr, self.command_topic, self.command_callback, 10
+            Lrc2Ocr, self.command_topic, self.command_callback, COMMAND_QOS
         )
-        self.feedback_pub = self.create_publisher(Ocr2Lrc, self.feedback_topic, 10)
+        self.feedback_pub = self.create_publisher(Ocr2Lrc, self.feedback_topic, FEEDBACK_QOS)
 
         self.open_serial()
         self.read_thread = threading.Thread(target=self.read_loop, daemon=True)
