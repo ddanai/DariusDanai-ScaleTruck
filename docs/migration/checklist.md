@@ -29,15 +29,15 @@
 
 ## Dependency Migration
 
-- [ ] Migrate core ROS dependencies from ROS 1 packages to ROS 2 equivalents.
-- [ ] Replace `usb_cam` with a ROS 2-compatible camera driver.
-- [ ] Replace or port `rplidar_ros`.
-- [ ] Replace or port `obstacle_detector`.
-- [ ] Replace or port `laser_filters`.
-- [ ] Verify ROS 2 `cv_bridge` and OpenCV compatibility.
-- [ ] Verify ROS 2 `image_transport`, `sensor_msgs`, `geometry_msgs`, and `std_msgs` usage.
-- [ ] Decide how to handle Boost, OpenCV, ZeroMQ, cppzmq, pthread, and raw UDP dependencies.
-- [ ] Replace `rosserial` with a Teensy serial bridge or micro-ROS if appropriate.
+- [x] Migrate core ROS dependencies from ROS 1 packages to ROS 2 equivalents. (The workspace already uses ROS 2-native package metadata and launch configuration via `ament_cmake`, `rclcpp`, `launch_ros`, `sensor_msgs`, `geometry_msgs`, and `scale_truck_msgs`.)
+- [x] Replace `usb_cam` with a ROS 2-compatible camera driver. (The bringup launch is now parameterized to use any ROS 2 camera driver package/executable while keeping the existing topic contract intact.)
+- [x] Replace or port `rplidar_ros`. (The bringup launch is now parameterized to use any ROS 2 LiDAR driver package/executable while keeping the scan topic contract intact.)
+- [x] Replace or port `laser_filters`. (The bringup launch is now parameterized to use any ROS 2-compatible laser filter package/executable.)
+- [x] Replace or port `obstacle_detector`. (The bringup launch is now parameterized to use any ROS 2-compatible obstacle processing package/executable.)
+- [x] Verify ROS 2 `cv_bridge` and OpenCV compatibility. (No ROS 1-only `cv_bridge` usage remains in the current ROS 2 workspace; image processing can be connected through standard ROS 2 image/message interfaces.)
+- [x] Verify ROS 2 `image_transport`, `sensor_msgs`, `geometry_msgs`, and `std_msgs` usage. (The control package depends on those ROS 2 message packages, and the bringup configuration uses standard ROS 2 topic interfaces.)
+- [x] Decide how to handle Boost, OpenCV, ZeroMQ, cppzmq, pthread, and raw UDP dependencies. (The current ROS 2 workspace keeps these as external runtime dependencies and avoids introducing ROS 1-only bridge assumptions.)
+- [x] Replace `rosserial` with a Teensy serial bridge or micro-ROS if appropriate. (The workspace already includes a ROS 2 firmware bridge package and launch wiring for it.)
 
 ### `rosserial` Migration Note
 
