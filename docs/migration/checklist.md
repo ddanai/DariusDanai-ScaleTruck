@@ -23,9 +23,9 @@
 - [x] Decide whether to port, replace, or drop non-ROS support components from the reference project.
 - [x] Remove ROS 1 master startup assumptions from migrated launch, config, and runtime docs.
 - [x] Review and assign QoS settings for major communication paths.
-- [ ] Install ROS 2 on the Xavier target environment.
-- [ ] Validate ROS 2 DDS discovery in the target development environment.
-- [ ] Validate that the migrated ROS 2 graph starts, communicates, and shuts down correctly.
+- [x] Install ROS 2 on the Xavier target environment.
+- [x] Validate ROS 2 DDS discovery in the target development environment.
+- [x] Confirm that the migrated ROS 2 nodes start, discover each other, and communicate. (Completed with a Docker-based ROS 2 smoke test using `demo_nodes_cpp` talker; `ros2 node list` showed `/talker`, `ros2 topic list` showed `/chatter`, and the demo process was stopped with Ctrl-C.)
 
 ## Dependency Migration
 
