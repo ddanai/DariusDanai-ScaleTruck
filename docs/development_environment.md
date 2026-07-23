@@ -6,6 +6,19 @@ Use ROS 2 Humble on Ubuntu 22.04 for development unless hardware constraints req
 
 The original reference repository used ROS 1 Melodic on Ubuntu 18.04 with JetPack 4.5.1. Treat that setup as a reference baseline for hardware assumptions, not the target environment for new code.
 
+## ROS 2 Humble Installation Notes
+
+- ROS 2 Humble is now the baseline environment for the migration work. If the install is on a Windows host, use WSL2 with Ubuntu 22.04 so the Linux-based ROS 2 tooling behaves the same way as the target development environment.
+- After installation, confirm the shell can find the distribution before building anything:
+
+```bash
+source /opt/ros/humble/setup.bash
+ros2 --version
+colcon --version
+```
+
+- If the workspace is being validated on the Xavier/Jetson target, repeat the same source step there and verify `ros2 node list` and `ros2 topic list` after the first bring-up test.
+
 ## Option A: Dev Container
 
 Prerequisites:

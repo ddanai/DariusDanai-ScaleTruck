@@ -2,6 +2,18 @@
 
 This guide documents the specific architectural and implementation changes required to migrate from ROS 1 Melodic to ROS 2 (target: Humble or Iron). It addresses the absence of ROS Master, introduction of DDS middleware, and all package/node/launch file changes.
 
+## Humble Environment Validation Sequence
+
+With ROS 2 Humble installed, the remaining core migration tasks should proceed in a predictable order:
+
+1. Source the Humble environment and confirm `ros2` and `colcon` are available.
+2. Build the workspace from `ros2_ws` with `colcon build --symlink-install`.
+3. Run the DDS validation script from `scripts/validate_ros2_dds_discovery.sh` to confirm discovery without `roscore`.
+4. Launch the bring-up packages and verify that the expected nodes and topics appear.
+5. Move to the firmware bridge and control-node smoke tests once the baseline graph is healthy.
+
+This sequence keeps the migration focused on the core runtime behavior instead of chasing package-level issues too early.
+
 ---
 
 ## Part 1: Architecture Changes Due to DDS Middleware
