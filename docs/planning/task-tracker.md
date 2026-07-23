@@ -1,4 +1,4 @@
-# Task Tracker
+# Project Task Tracker
 
 Use GitHub Issues with milestones for each project week. Suggested labels are listed below and can be created manually or through GitHub CLI.
 
@@ -42,4 +42,3 @@ Use GitHub Issues with milestones for each project week. Suggested labels are li
 8. Draft physical map requirements.
 9. Define ADDT telemetry interface requirements.
 10. Add build and validation workflow.
-

@@ -1,4 +1,4 @@
-# ROS 1 to ROS 2 Migration Guide for Scaletruck
+# ROS 1-to-ROS 2 Migration Guide
 
 This guide documents the specific architectural and implementation changes required to migrate from ROS 1 Melodic to ROS 2 (target: Humble or Iron). It addresses the absence of ROS Master, introduction of DDS middleware, and all package/node/launch file changes.
 

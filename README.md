@@ -27,7 +27,7 @@ ROS 2-based control stack for a physical scale truck capstone project. This repo
 ## Quick Start
 
 1. Install Docker Desktop or a native Ubuntu 22.04 + ROS 2 Humble environment.
-2. Open this folder in VS Code and reopen in the dev container, or follow [Development Environment](docs/development_environment.md).
+2. Open this folder in VS Code and reopen in the dev container, or follow the [development options](docs/setup/development-options.md).
 3. Build the ROS 2 workspace:
 
 ```bash
@@ -36,12 +36,7 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-4. Review the Week 1 documents:
-
-- [ROS 1 Inventory](docs/ros1_inventory.md)
-- [ROS 1 vs ROS 2](docs/ros1_vs_ros2.md)
-- [ROS 2 Migration Checklist](docs/ros2_migration_checklist.md)
-- [Task Tracker](docs/task_tracker.md)
+4. Use the [documentation index](docs/README.md) to find setup, design, migration, and planning material.
 
 ## Reference Project
 

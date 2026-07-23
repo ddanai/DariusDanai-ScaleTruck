@@ -1,4 +1,4 @@
-# ROS 2 Humble Environment Setup
+# ROS 2 Humble Environment
 
 This guide explains the everyday ROS 2 Humble workflow for the NVIDIA Xavier. ROS 2 runs in the persistent Docker container named `ros2-humble`, and the workspace is shared between the Xavier host and the container.
 
@@ -183,4 +183,3 @@ exit
 
 > [!WARNING]
 > Do not run `docker rm ros2-humble`. Removing the container deletes packages installed inside it. Files under `/home/krg/ros2_humble_ws` remain because that directory is stored on the Xavier host.
-

@@ -1,4 +1,4 @@
-# ROS 1 vs ROS 2
+# ROS 1 Versus ROS 2
 
 This document explains the main differences between ROS 1 and ROS 2, with notes on what those differences mean for the scale truck project.
 
@@ -232,9 +232,9 @@ ROS 1 is still useful as a reference when:
 
 However, new code in this repository should avoid adding ROS 1-only dependencies unless the team explicitly decides to preserve a compatibility layer.
 
-## Related Documentation
+## Related documentation
 
-- [ROS 1 Inventory](ros1_inventory.md)
-- [ROS 2 Migration Checklist](ros2_migration_checklist.md)
-- [ROS 1 to ROS 2 Migration Guide](ros2_migration_guide.md)
-- [System Architecture](architecture.md)
+- [ROS 1 inventory](ros1-inventory.md)
+- [ROS 2 migration checklist](checklist.md)
+- [ROS 1-to-ROS 2 migration guide](guide.md)
+- [System architecture](../design/architecture.md)

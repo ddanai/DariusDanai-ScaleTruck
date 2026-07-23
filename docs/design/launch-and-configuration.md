@@ -1,4 +1,4 @@
-# ROS 2 Launch and Runtime Configuration
+# ROS 2 Launch and Configuration
 
 This note records the first ROS 2 launch/config migration from the ROS 1 reference launch files.
 

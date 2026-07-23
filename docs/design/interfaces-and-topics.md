@@ -1,4 +1,4 @@
-# ROS 2 Interfaces and Topic Naming
+# ROS 2 Interfaces and Topics
 
 This document records the initial ROS 2 interface migration from the ROS 1 reference project. The first port keeps the original message fields and topic names so behavior can be compared directly during migration.
 

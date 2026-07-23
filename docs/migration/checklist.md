@@ -70,7 +70,7 @@ Teensy/OpenCR -> feedback transport -> ROS 2 feedback topic -> control node
 
 ## Related Validation Docs
 
-- [ROS 2 DDS Discovery Validation](dds_discovery_validation.md)
+- [ROS 2 DDS discovery validation](../setup/dds-validation.md)
 
 ## Control and Hardware
 

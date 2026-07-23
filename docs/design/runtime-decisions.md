@@ -1,4 +1,4 @@
-# ROS 2 Runtime Integration Decisions
+# ROS 2 Runtime Decisions
 
 This document records the migration decisions for ROS 1 runtime assumptions and non-ROS support components.
 
@@ -62,4 +62,3 @@ Migrated launch files do not start `roscore`, do not call ROS 1 `roslaunch`, and
 ```bash
 ros2 launch scale_truck_bringup lv.launch.py
 ```
-

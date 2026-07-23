@@ -1,4 +1,4 @@
-# ROS 2 DDS Discovery Validation
+# DDS Discovery Validation
 
 ROS 2 does not use `roscore` or a ROS master. Nodes discover each other through DDS, so validation should confirm that ROS 2 nodes can be discovered without starting any ROS 1 master process.
 

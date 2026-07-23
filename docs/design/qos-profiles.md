@@ -1,4 +1,4 @@
-# ROS 2 QoS Profiles
+# ROS 2 Quality-of-Service Profiles
 
 This document records the first QoS assignment for the scale truck ROS 2 migration.
 
@@ -35,4 +35,3 @@ Revisit QoS after hardware testing. In particular:
 - Emergency stop may need its own reliable profile and a separate topic.
 - If command loss is observed, add heartbeat/watchdog behavior rather than increasing queue depth.
 - If camera/LiDAR subscribers are incompatible with sensor-data QoS, adjust only that edge rather than changing command QoS.
-

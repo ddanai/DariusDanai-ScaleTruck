@@ -1,4 +1,4 @@
-# ROS 1 to ROS 2 File Map
+# ROS 1-to-ROS 2 File Map
 
 This map identifies where each important part of the imported ROS 1 reference project should land in the ROS 2 workspace.
 
@@ -61,7 +61,7 @@ ROS 1 message files should move to `scale_truck_msgs/msg` and use ROS 2 interfac
 | `msg/ocr2lrc.msg` | `ros2_ws/src/scale_truck_msgs/msg/Ocr2Lrc.msg` | Rename to CamelCase; keep serial bridge compatibility in mind. |
 | `msg/scale_truck_control_msgs.zip` | `docs/` or omit | Legacy generated/message archive; do not use as a ROS 2 source interface. |
 
-See [ROS 2 Interfaces and Topic Naming](ros2_interfaces_and_topics.md) for the migrated interface and topic mapping.
+See [ROS 2 interfaces and topics](../design/interfaces-and-topics.md) for the migrated interface and topic mapping.
 
 ## Launch Files
 
@@ -91,8 +91,8 @@ Runtime configuration should move to `scale_truck_bringup/config` unless it is c
 | `config/lrc.yaml` | `ros2_ws/src/scale_truck_bringup/config/lrc.yaml` or `scale_truck_control/config/lrc.yaml` | Convert LRC parameters and remaps. |
 | `config/laser_filter.yaml` | `ros2_ws/src/scale_truck_bringup/config/laser_filter.yaml` | Reuse if ROS 2 `laser_filters` accepts the same structure; otherwise update. |
 
-See [ROS 2 Launch and Runtime Configuration](ros2_launch_config_notes.md) for the converted bringup files.
-See [ROS 2 Runtime Integration Decisions](ros2_runtime_integration_decisions.md) for namespace, remapping, bridge, and legacy support-component decisions.
+See [ROS 2 launch and configuration](../design/launch-and-configuration.md) for the converted bringup files.
+See [ROS 2 runtime decisions](../design/runtime-decisions.md) for namespace, remapping, bridge, and legacy support-component decisions.
 
 ## Firmware and Hardware Bridge
 
@@ -129,7 +129,7 @@ These files are part of the ROS 1 reference project but should not automatically
 | `etc/Controller/build-Controller-Desktop-Debug/` | Omit | Generated build output; do not migrate. |
 | `etc/Controller/crc/` | `docs/legacy_crc_udp.md`, `scale_truck_telemetry`, or omit | Evaluate CRC/UDP tool behavior before porting. |
 | Generated binaries and object files under `etc/Controller/` | Omit | Build artifacts; do not migrate. |
-| `README.md`, `TREE.md` from reference repo | `docs/ros1_inventory.md` and migration docs | Keep as reference only; do not move into ROS 2 packages. |
+| `README.md`, `TREE.md` from reference repo | `docs/migration/ros1-inventory.md` and migration docs | Keep as reference only; do not move into ROS 2 packages. |
 
 ## Build Metadata
 
@@ -148,4 +148,4 @@ These files are part of the ROS 1 reference project but should not automatically
 6. Decide the fate of UDP/ZMQ, Qt controller, CRC tools, and track assets.
 7. Add build, launch, and hardware validation around each migrated slice.
 
-See [ROS 2 Node Port Notes](ros2_node_port_notes.md) for the first ROS 2 client-library port status.
+See [ROS 2 node-port notes](node-port-notes.md) for the first ROS 2 client-library port status.

@@ -1,4 +1,4 @@
-# High-Level Command to Actuator Pipeline
+# High-Level Command-to-Actuator Pipeline
 
 This document traces the ROS 1 reference pipeline from high-level command generation to steering and throttle actuation in `HyeonGyu-Lee/scale_truck_control`.
 

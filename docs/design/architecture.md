@@ -44,7 +44,7 @@ flowchart LR
 - Feedback: encoder speed, steering state, battery or fault status, sensor measurements.
 - Digital twin telemetry: pose, velocity, commands, sensor status, test-run metadata.
 
-See [control_pipeline.md](control_pipeline.md) for the ROS 1 command path from high-level velocity/steering generation through OpenCR PWM actuation.
+See [Control pipeline](control-pipeline.md) for the ROS 1 command path from high-level velocity/steering generation through OpenCR PWM actuation.
 
 ## Week 1 Architecture Tasks
 

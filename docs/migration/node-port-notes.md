@@ -1,4 +1,4 @@
-# ROS 2 Node Port Notes
+# ROS 2 Node-Port Notes
 
 This note records the first ROS 2 client-library port of the ROS 1 runtime nodes and support code.
 
@@ -31,4 +31,3 @@ The original high-level controller depended on ROS 1 `obstacle_detector`, `cv_br
 - LRC/vehicle coordination behavior validation.
 - Launch/config/parameter migration.
 - QoS review and runtime graph validation.
-
