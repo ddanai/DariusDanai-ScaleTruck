@@ -2,8 +2,8 @@
 """Analyze ROS 1 pipeline latency and topic timing from a ROS bag.
 
 The reference stack does not propagate a sensor sequence ID into its custom
-command messages. Latencies are therefore estimates: each downstream event is
-matched to the latest preceding upstream event inside --max-latency-ms.
+command messages. Latencies are therefore estimates: each upstream event is
+matched to the first following downstream event inside --max-latency-ms.
 """
 
 from __future__ import print_function
@@ -50,18 +50,48 @@ def distribution(values):
     }
 
 
-def latest_preceding_latencies(upstream, downstream, max_latency_s):
-    """Return delays where each output uses the latest prior input."""
+def first_following_matches(upstream, downstream, max_latency_s):
+    """Match every upstream event to the first downstream event after it."""
+    matches = []
+    downstream_index = 0
+    for input_time in upstream:
+        while (downstream_index < len(downstream)
+               and downstream[downstream_index] < input_time):
+            downstream_index += 1
+        if downstream_index >= len(downstream):
+            break
+        delay = downstream[downstream_index] - input_time
+        if delay <= max_latency_s:
+            matches.append((input_time, downstream[downstream_index], delay))
+        downstream_index += 1
+    return matches
+
+
+def first_following_latencies(upstream, downstream, max_latency_s):
+    """Return delays from each input to the first unused following output."""
+    return [
+        match[2]
+        for match in first_following_matches(
+            upstream, downstream, max_latency_s)
+    ]
+
+
+def chained_end_to_end_latencies(sensor, controller, actuator, max_latency_s):
+    """Match sensor->controller->actuator and return full-chain delays."""
     delays = []
-    upstream_index = -1
-    for output_time in downstream:
-        while (upstream_index + 1 < len(upstream)
-               and upstream[upstream_index + 1] <= output_time):
-            upstream_index += 1
-        if upstream_index >= 0:
-            delay = output_time - upstream[upstream_index]
-            if delay <= max_latency_s:
-                delays.append(delay)
+    sensor_controller = first_following_matches(
+        sensor, controller, max_latency_s)
+    actuator_index = 0
+    for sensor_time, controller_time, _delay in sensor_controller:
+        while (actuator_index < len(actuator)
+               and actuator[actuator_index] < controller_time):
+            actuator_index += 1
+        if actuator_index >= len(actuator):
+            break
+        delay = actuator[actuator_index] - sensor_time
+        if delay <= max_latency_s:
+            delays.append(delay)
+        actuator_index += 1
     return delays
 
 
@@ -99,14 +129,14 @@ def analyze_events(events, sensor_topic, controller_topic, actuator_topic,
     def latency(upstream, downstream):
         return distribution([
             value * 1000.0
-            for value in latest_preceding_latencies(
+            for value in first_following_latencies(
                 upstream, downstream, max_latency_s)
         ])
 
     return {
         "method": {
             "clock": "ROS bag record timestamp",
-            "correlation": "latest preceding upstream message",
+            "correlation": "first unused following downstream message",
             "max_latency_ms": max_latency_ms,
             "limitation": (
                 "The ROS1 reference messages do not propagate a common trace "
@@ -121,7 +151,11 @@ def analyze_events(events, sensor_topic, controller_topic, actuator_topic,
         "latency_ms": {
             "sensor_to_controller": latency(sensor, controller),
             "controller_to_actuator_command": latency(controller, actuator),
-            "end_to_end_command": latency(sensor, actuator),
+            "end_to_end_command": distribution([
+                value * 1000.0
+                for value in chained_end_to_end_latencies(
+                    sensor, controller, actuator, max_latency_s)
+            ]),
         },
         "topic_timing": {
             topic: timing_metrics(events.get(topic, []))
@@ -162,7 +196,7 @@ def write_latency_csv(path, events, sensor_topic, controller_topic,
         ("end_to_end_command", sensor_topic, actuator_topic),
     ]
     for name, upstream, downstream in pairs:
-        values = latest_preceding_latencies(
+        values = first_following_latencies(
             events.get(upstream, []), events.get(downstream, []),
             max_latency_ms / 1000.0)
         rows.extend((name, value * 1000.0) for value in values)

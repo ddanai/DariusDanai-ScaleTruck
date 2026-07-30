@@ -10,12 +10,20 @@ SPEC.loader.exec_module(LATENCY)
 
 
 class Ros1LatencyAnalysisTest(unittest.TestCase):
-    def test_latest_preceding_correlation_and_limit(self):
+    def test_first_following_correlation_and_limit(self):
         upstream = [0.0, 1.0, 2.0]
         downstream = [0.020, 1.030, 2.700]
         self.assertEqual(
-            LATENCY.latest_preceding_latencies(upstream, downstream, 0.5),
+            LATENCY.first_following_latencies(upstream, downstream, 0.5),
             [0.020, 0.030000000000000027],
+        )
+
+    def test_repeated_actuator_publications_use_first_response_only(self):
+        controller = [1.0, 2.0]
+        actuator = [1.001, 1.002, 1.003, 2.004, 2.005]
+        self.assertEqual(
+            LATENCY.first_following_latencies(controller, actuator, 0.1),
+            [0.0009999999999998899, 0.0040000000000000036],
         )
 
     def test_pipeline_metrics(self):
