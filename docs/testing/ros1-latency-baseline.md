@@ -11,11 +11,11 @@ repository's bag. It reports:
 ## Important measurement limitation
 
 The ROS 1 custom command messages do not carry a `Header`, sensor sequence ID,
-or common trace ID. The analyzer uses ROS bag record timestamps and associates
-each upstream message with the first unused following downstream message within
-a configurable limit. End-to-end latency requires a complete
-sensor-to-controller-to-actuator chain. This is a repeatable response-time
-estimate, not proof that a specific sensor frame caused a specific command.
+or common trace ID. The analyzer uses ROS bag record timestamps. Each controller
+command is associated with the latest preceding sensor frame and the first
+following actuator command within a configurable limit. End-to-end latency
+requires that complete chain. This is a repeatable response-time estimate, not
+proof that a specific sensor frame caused a specific command.
 
 For an exact live measurement, add a trace ID and sensor acquisition timestamp
 to the controller and actuator command messages and preserve both through the

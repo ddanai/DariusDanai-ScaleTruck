@@ -26,6 +26,14 @@ class Ros1LatencyAnalysisTest(unittest.TestCase):
             [0.0009999999999998899, 0.0040000000000000036],
         )
 
+    def test_controller_uses_latest_sensor_when_rates_differ(self):
+        sensor = [0.0, 0.1, 0.2, 0.3]
+        controller = [0.12, 0.32]
+        self.assertEqual(
+            LATENCY.latest_preceding_latencies(sensor, controller, 0.1),
+            [0.01999999999999999, 0.020000000000000018],
+        )
+
     def test_pipeline_metrics(self):
         events = {
             "/camera": [0.0, 0.1, 0.2, 0.3],
