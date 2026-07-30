@@ -1,0 +1,100 @@
+{
+  "bag": "/home/krg/ros1-latency-run.bag",
+  "latency_ms": {
+    "controller_to_actuator_command": {
+      "count": 307,
+      "max": 44.67129707336426,
+      "mean": 2.8871790982224654,
+      "median": 0.9872913360595703,
+      "min": 0.010251998901367188,
+      "p95": 12.366414070129391,
+      "p99": 22.30533123016357,
+      "stddev": 5.339099842073871
+    },
+    "end_to_end_command": {
+      "count": 61,
+      "max": 454.2512893676758,
+      "mean": 54.85350186707544,
+      "median": 26.26514434814453,
+      "min": 2.4487972259521484,
+      "p95": 295.34196853637695,
+      "p99": 421.06313705444325,
+      "stddev": 92.21579611094074
+    },
+    "sensor_to_controller": {
+      "count": 61,
+      "max": 452.7566432952881,
+      "mean": 49.89561096566622,
+      "median": 23.768186569213867,
+      "min": 0.17499923706054688,
+      "p95": 276.98445320129395,
+      "p99": 412.9483699798583,
+      "stddev": 91.62456796103945
+    }
+  },
+  "method": {
+    "clock": "ROS bag record timestamp",
+    "correlation": "latest sensor before each controller command; first actuator command after each controller command",
+    "limitation": "The ROS1 reference messages do not propagate a common trace ID. Results estimate timing proximity, not exact causality.",
+    "max_latency_ms": 500.0
+  },
+  "topic_timing": {
+    "/lrc2ocr_msg": {
+      "duration_s": 68.4754331111908,
+      "frequency_hz": 1800.0032186705005,
+      "interval_ms": {
+        "count": 123256,
+        "max": 60.52541732788086,
+        "mean": 0.5555545621405108,
+        "median": 0.3399848937988281,
+        "min": 0.0050067901611328125,
+        "p95": 1.39617919921875,
+        "p99": 4.213392734527584,
+        "stddev": 1.207986603187372
+      },
+      "jitter_stddev_ms": 1.2079866031873723,
+      "message_count": 123257
+    },
+    "/usb_cam/image_raw": {
+      "duration_s": 9.942843675613403,
+      "frequency_hz": 30.071879811743475,
+      "interval_ms": {
+        "count": 299,
+        "max": 62.0427131652832,
+        "mean": 33.25365777797125,
+        "median": 33.23674201965332,
+        "min": 1.051187515258789,
+        "p95": 45.70684432983398,
+        "p99": 55.24731636047358,
+        "stddev": 6.880464797393187
+      },
+      "jitter_stddev_ms": 6.880464797393187,
+      "message_count": 300
+    },
+    "/xav2lrc_msg": {
+      "duration_s": 16.57352566719055,
+      "frequency_hz": 18.4631807464942,
+      "interval_ms": {
+        "count": 306,
+        "max": 147.8860378265381,
+        "mean": 54.161848585590036,
+        "median": 51.0483980178833,
+        "min": 0.08869171142578125,
+        "p95": 84.228515625,
+        "p99": 111.2573027610778,
+        "stddev": 17.5729252383387
+      },
+      "jitter_stddev_ms": 17.572925238338705,
+      "message_count": 307
+    }
+  },
+  "topics": {
+    "actuator_command": "/lrc2ocr_msg",
+    "controller_command": "/xav2lrc_msg",
+    "sensor": "/usb_cam/image_raw"
+  },
+  "window": {
+    "duration_s": null,
+    "start_s": 0.0
+  }
+}
