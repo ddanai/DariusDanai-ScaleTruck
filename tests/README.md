@@ -9,4 +9,5 @@ Planned coverage:
 - Serial protocol parser tests.
 - PID bench-test logs.
 - Hardware bring-up checklist validation.
-
+- `test_ros1_latency.py`: unit tests for ROS 1 bag latency correlation and
+  timing statistics (does not require ROS).
