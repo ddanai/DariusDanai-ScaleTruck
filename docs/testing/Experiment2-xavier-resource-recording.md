@@ -36,9 +36,12 @@ Keep the following unchanged:
 ## Record one run
 
 Start the nodes and input publisher first. From the repository on the Xavier
-host, start resource capture immediately before starting the latency bag:
+host, cache sudo authorization so power and clock details can be read without
+pausing the measurement, then start resource capture immediately before the
+latency bag:
 
 ```bash
+sudo -v
 ./scripts/record_xavier_resources.sh ros2 01 35
 ```
 

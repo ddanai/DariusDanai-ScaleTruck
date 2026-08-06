@@ -28,13 +28,21 @@ mkdir -p "$output_dir"
   ip -brief link 2>&1 || true
   echo "xavier_power_mode:"
   if command -v nvpmodel >/dev/null 2>&1; then
-    nvpmodel -q 2>&1 || true
+    if sudo -n true 2>/dev/null; then
+      sudo -n nvpmodel -q 2>&1 || true
+    else
+      echo "sudo credentials unavailable; run 'sudo -v' before this script"
+    fi
   else
     echo "nvpmodel unavailable"
   fi
   echo "xavier_clocks:"
   if command -v jetson_clocks >/dev/null 2>&1; then
-    jetson_clocks --show 2>&1 || true
+    if sudo -n true 2>/dev/null; then
+      sudo -n jetson_clocks --show 2>&1 || true
+    else
+      echo "sudo credentials unavailable; run 'sudo -v' before this script"
+    fi
   else
     echo "jetson_clocks unavailable"
   fi
