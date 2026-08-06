@@ -13,5 +13,5 @@ Planned coverage:
   timing statistics (does not require ROS).
 - `test_ros2_latency.py`: unit tests for rosbag2 SQLite reading, analysis
   windows, pipeline latency correlation, frequency, and error reporting.
-- `test_ros2_trace_latency.py`: verifies the ROS 1 and ROS 2 exact trace
+- `test_experiment2_trace_latency.py`: verifies both Experiment 2 exact trace
   analyzers and rejection of repeated timer publications for one sensor frame.

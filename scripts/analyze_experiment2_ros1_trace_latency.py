@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Analyze a traced ROS 2 latency bag using exact command trace IDs."""
+"""Analyze an Experiment 2 ROS 1 bag using exact command trace IDs."""
 
 import argparse
 import csv
@@ -39,7 +39,7 @@ def analyze(events, controller_topic, actuator_topic):
     return {
         "method": {
             "correlation": "first controller and actuator messages with the same trace_id",
-            "clock": "sensor header stamp and rosbag2 receive timestamps",
+            "clock": "sensor header stamp and ROS bag receive timestamps",
         },
         "trace_count": len(rows),
         "latency_ms": {
@@ -50,46 +50,28 @@ def analyze(events, controller_topic, actuator_topic):
     }, rows
 
 
-def read_bag(uri, controller_topic, actuator_topic, start_s, duration_s):
+def read_bag(path, controller_topic, actuator_topic, start_s, duration_s):
     try:
-        import rosbag2_py
-        from rclpy.serialization import deserialize_message
-        from rosidl_runtime_py.utilities import get_message
+        import rosbag
     except ImportError as error:
-        raise RuntimeError(
-            "Run inside a sourced ROS 2 workspace with rosbag2_py available") from error
-
-    reader = rosbag2_py.SequentialReader()
-    reader.open(
-        rosbag2_py.StorageOptions(uri=uri, storage_id="sqlite3"),
-        rosbag2_py.ConverterOptions("cdr", "cdr"))
-    type_names = {item.name: item.type for item in reader.get_all_topics_and_types()}
-    required = {controller_topic, actuator_topic}
-    missing = required - set(type_names)
-    if missing:
-        raise RuntimeError("Missing topics: {}".format(", ".join(sorted(missing))))
-    types = {topic: get_message(type_names[topic]) for topic in required}
-    events = {topic: [] for topic in required}
-    bag_start_ns = None
-    while reader.has_next():
-        topic, data, receive_ns = reader.read_next()
-        if topic not in required:
-            continue
-        if bag_start_ns is None:
-            bag_start_ns = receive_ns
-        elapsed = (receive_ns - bag_start_ns) / 1e9
-        if elapsed < start_s or (duration_s is not None and elapsed > start_s + duration_s):
-            continue
-        message = deserialize_message(data, types[topic])
-        if not hasattr(message, "trace_id"):
-            raise RuntimeError("Bag was recorded before trace fields were added")
-        if message.trace_id == 0:
-            continue
-        events[topic].append({
-            "trace_id": int(message.trace_id),
-            "sensor_s": message.sensor_stamp.sec + message.sensor_stamp.nanosec / 1e9,
-            "receive_s": receive_ns / 1e9,
-        })
+        raise RuntimeError("Run inside a sourced ROS 1/catkin workspace") from error
+    events = {controller_topic: [], actuator_topic: []}
+    with rosbag.Bag(path, "r") as bag:
+        window_start = bag.get_start_time() + start_s
+        window_end = window_start + duration_s if duration_s is not None else None
+        for topic, message, receive_time in bag.read_messages(topics=list(events)):
+            receive_s = receive_time.to_sec()
+            if receive_s < window_start or (window_end is not None and receive_s > window_end):
+                continue
+            if not hasattr(message, "trace_id"):
+                raise RuntimeError("Bag was recorded before trace fields were added")
+            if message.trace_id == 0:
+                continue
+            events[topic].append({
+                "trace_id": int(message.trace_id),
+                "sensor_s": message.sensor_stamp.to_sec(),
+                "receive_s": receive_s,
+            })
     return events
 
 
@@ -100,7 +82,7 @@ def main():
     parser.add_argument("--actuator-topic", default="/lrc2ocr_msg")
     parser.add_argument("--start", type=float, default=0.0)
     parser.add_argument("--duration", type=float)
-    parser.add_argument("--output", default="ros2_trace_latency_report.json")
+    parser.add_argument("--output", default="experiment2_ros1_trace_latency_report.json")
     parser.add_argument("--csv")
     args = parser.parse_args()
     events = read_bag(

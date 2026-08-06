@@ -77,7 +77,7 @@ For bags recorded after the trace fields were added, use exact correlation
 inside the sourced ROS 2 workspace:
 
 ```bash
-python3 scripts/analyze_ros2_trace_latency.py /tmp/ros2-latency-run-01 \
+python3 scripts/analyze_experiment2_ros2_trace_latency.py /tmp/ros2-latency-run-01 \
   --start 1 --duration 30 \
   --output results/latency/ros2/ros2_trace_report_run_01.json \
   --csv results/latency/ros2/ros2_trace_samples_run_01.csv

@@ -12,12 +12,12 @@ def load_analyzer(filename):
 
 
 ANALYZERS = [
-    load_analyzer("analyze_ros1_trace_latency.py"),
-    load_analyzer("analyze_ros2_trace_latency.py"),
+    load_analyzer("analyze_experiment2_ros1_trace_latency.py"),
+    load_analyzer("analyze_experiment2_ros2_trace_latency.py"),
 ]
 
 
-class Ros2TraceLatencyTest(unittest.TestCase):
+class Experiment2TraceLatencyTest(unittest.TestCase):
     def test_matches_exact_trace_and_uses_first_timer_publication(self):
         events = {
             "/controller": [

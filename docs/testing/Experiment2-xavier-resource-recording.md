@@ -71,3 +71,26 @@ results/latency/resources/ros2-run-01-cpu-memory.txt
 The environment file records power, clocks, ROS/RMW, and network conditions.
 The `pidstat` file records per-process CPU percentage and resident memory.
 Compare runs only when the environment files show matching conditions.
+
+## Experiment 2 trace analyzers
+
+Analyze newly recorded ROS 1 bags from a sourced ROS 1/catkin terminal:
+
+```bash
+python3 scripts/analyze_experiment2_ros1_trace_latency.py \
+  ~/ros1-experiment2-run-01.bag --start 1 --duration 30 \
+  --output results/latency/experiment2/ros1-trace-report-run-01.json \
+  --csv results/latency/experiment2/ros1-trace-samples-run-01.csv
+```
+
+Analyze newly recorded ROS 2 bags from a sourced ROS 2 terminal:
+
+```bash
+python3 scripts/analyze_experiment2_ros2_trace_latency.py \
+  /tmp/ros2-experiment2-run-01 --start 1 --duration 30 \
+  --output results/latency/experiment2/ros2-trace-report-run-01.json \
+  --csv results/latency/experiment2/ros2-trace-samples-run-01.csv
+```
+
+Experiment 1 bags must continue using the original analyzers because they were
+recorded before the trace fields existed.
