@@ -118,6 +118,16 @@ source /ros2_ws/install/setup.bash
 cd /ros2_ws
 ```
 
+As a shortcut, open a new container terminal with both ROS 2 environments
+already sourced:
+
+```bash
+docker exec -it ros2-humble bash -c \
+  'source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && exec bash'
+```
+
+Run this shortcut from the Xavier host, not from inside the container.
+
 Run a second node, such as the demo listener:
 
 ```bash
