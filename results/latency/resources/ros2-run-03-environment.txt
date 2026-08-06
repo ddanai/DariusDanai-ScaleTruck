@@ -1,0 +1,49 @@
+system=ros2
+run=03
+utc_start=2026-08-06T10:05:47Z
+duration_s=18
+hostname=ubuntu
+kernel=Linux 5.10.216-tegra aarch64 GNU/Linux
+ros_distro=humble
+ros_domain_id=0
+rmw_implementation=rmw_fastrtps_cpp
+network_interfaces:
+lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+dummy0           DOWN           aa:e6:e0:20:51:f2 <BROADCAST,NOARP> 
+eth0             DOWN           48:b0:2d:3a:b5:4d <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+l4tbr0           DOWN           72:04:e0:6d:2d:c9 <BROADCAST,MULTICAST> 
+rndis0           DOWN           72:04:e0:6d:2d:c9 <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+usb0             DOWN           72:04:e0:6d:2d:cb <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+wlan0            UP             9c:da:3e:9c:7a:3e <BROADCAST,MULTICAST,UP,LOWER_UP> 
+docker0          DOWN           02:42:3f:79:d1:da <NO-CARRIER,BROADCAST,MULTICAST,UP> 
+xavier_power_mode:
+NV Power Mode: MODE_15W_DESKTOP
+7
+xavier_clocks:
+SOC family:tegra194  Machine:Jetson-AGX
+Online CPUs: 0-3
+cpu0:  Online=1 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+cpu1:  Online=1 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+cpu2:  Online=1 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+cpu3:  Online=1 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+cpu4:  Online=0 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+cpu5:  Online=0 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+cpu6:  Online=0 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+cpu7:  Online=0 Governor=schedutil MinFreq=1190400 MaxFreq=2188800 CurrentFreq=2188800 IdleStates: C1=1 c6=1 
+GPU MinFreq=318750000 MaxFreq=675750000 CurrentFreq=318750000
+EMC MinFreq=204000000 MaxFreq=1331200000 CurrentFreq=1331200000 FreqOverride=0
+DLA0_CORE:   Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+DLA0_FALCON: Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+DLA1_CORE:   Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+DLA1_FALCON: Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+PVA0_VPS0: Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+PVA0_VPS1: Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+PVA0_AXI:  Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+PVA1_VPS0: Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+PVA1_VPS1: Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+PVA1_AXI:  Online=1 MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+CVNAS MinFreq=0 MaxFreq=115200000 CurrentFreq=115200000
+FAN Dynamic Speed control=active hwmon3_pwm1=0
+NV Power Mode: MODE_15W_DESKTOP
+utc_end=2026-08-06T10:05:51Z
+utc_end=2026-08-06T10:06:08Z

@@ -1,0 +1,44 @@
+{
+  "bag": "/tmp/ros1-experiment2-run-02.bag",
+  "latency_ms": {
+    "controller_to_actuator_command": {
+      "count": 45,
+      "max": 71.83146476745605,
+      "mean": 12.765031390719944,
+      "median": 6.915807723999023,
+      "min": 1.692056655883789,
+      "p95": 36.68026924133298,
+      "p99": 67.31817245483401,
+      "stddev": 14.356078943919528
+    },
+    "end_to_end_command": {
+      "count": 45,
+      "max": 168.7319278717041,
+      "mean": 48.91252517700195,
+      "median": 40.101051330566406,
+      "min": 16.241788864135742,
+      "p95": 112.02330589294432,
+      "p99": 148.75890731811535,
+      "stddev": 30.428071085675747
+    },
+    "sensor_to_controller": {
+      "count": 45,
+      "max": 159.30771827697754,
+      "mean": 36.14749378628201,
+      "median": 31.559467315673828,
+      "min": 11.003732681274414,
+      "p95": 69.4045066833496,
+      "p99": 126.29227638244646,
+      "stddev": 25.15805318316859
+    }
+  },
+  "method": {
+    "clock": "sensor header stamp and ROS bag receive timestamps",
+    "correlation": "first controller and actuator messages with the same trace_id"
+  },
+  "trace_count": 45,
+  "window": {
+    "duration_s": 11.0,
+    "start_s": 3.0
+  }
+}
