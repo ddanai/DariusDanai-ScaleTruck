@@ -4,7 +4,7 @@ Start here instead of browsing individual files. Documentation is grouped by pur
 
 ## Start here
 
-1. [Set up and use ROS 2 Humble on the Xavier](setup/environment.md).
+1. [Set up and use ROS 2 Humble on the Xavier](setup/running-ros2.md).
 2. [Understand the target system architecture](design/architecture.md).
 3. [Follow the command-to-actuator path](design/control-pipeline.md).
 4. [Check the ROS 2 migration status](migration/checklist.md).
@@ -17,6 +17,7 @@ Start here instead of browsing individual files. Documentation is grouped by pur
 | [ROS 2 environment](setup/environment.md) | Daily Xavier Docker workflow, builds, terminals, and troubleshooting. |
 | [Development options](setup/development-options.md) | Native Ubuntu, development-container, and hardware environment choices. |
 | [DDS validation](setup/dds-validation.md) | Confirming ROS 2 discovery and publish/subscribe communication. |
+| [ROS 2 latency test](testing/ros2-latency-test.md) | Recording and analyzing repeatable Milestone 4 latency runs. |
 
 ## System design
 

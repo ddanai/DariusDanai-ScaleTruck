@@ -9,4 +9,7 @@ Scripts:
 - `analyze_ros1_latency.py`: calculates ROS 1 bag pipeline latency, publishing
   frequency, and jitter. See
   [`docs/testing/ros1-latency-baseline.md`](../docs/testing/ros1-latency-baseline.md).
+- `analyze_ros2_latency.py`: calculates the equivalent metrics directly from a
+  rosbag2 SQLite directory or `.db3` file. See
+  [`docs/testing/ros2-latency-test.md`](../docs/testing/ros2-latency-test.md).
 - Plot generation for jitter, frequency, and command delay.
