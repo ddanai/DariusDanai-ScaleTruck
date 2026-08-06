@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstdint>
 #include <mutex>
 #include <string>
 
+#include "builtin_interfaces/msg/time.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "scale_truck_msgs/msg/lane_coef.hpp"
 #include "scale_truck_msgs/msg/lrc2_xav.hpp"
@@ -34,6 +36,8 @@ private:
   std::mutex state_mutex_;
 
   bool image_seen_{false};
+  uint64_t latest_trace_id_{0};
+  builtin_interfaces::msg::Time latest_sensor_stamp_{};
   bool enable_console_output_{true};
   bool beta_{false};
   bool gamma_{false};

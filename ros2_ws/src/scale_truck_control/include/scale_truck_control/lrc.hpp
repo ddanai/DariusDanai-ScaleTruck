@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 
+#include "builtin_interfaces/msg/time.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "scale_truck_control/sock_udp.hpp"
 #include "scale_truck_msgs/msg/lrc2_ocr.hpp"
@@ -64,6 +65,8 @@ private:
   bool gamma_{false};
   uint8_t lrc_mode_{0};
   uint8_t crc_mode_{0};
+  uint64_t trace_id_{0};
+  builtin_interfaces::msg::Time sensor_stamp_{};
   float angle_degree_{0.0f};
   float current_dist_{0.0f};
   float target_dist_{0.0f};

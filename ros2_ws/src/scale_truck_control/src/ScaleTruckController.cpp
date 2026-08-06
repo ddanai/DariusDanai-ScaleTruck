@@ -57,10 +57,14 @@ void ScaleTruckController::init_ros_interfaces()
     std::bind(&ScaleTruckController::update, this));
 }
 
-void ScaleTruckController::image_callback(const sensor_msgs::msg::Image::SharedPtr)
+void ScaleTruckController::image_callback(const sensor_msgs::msg::Image::SharedPtr msg)
 {
   const std::lock_guard<std::mutex> lock(state_mutex_);
   image_seen_ = true;
+  ++latest_trace_id_;
+  const rclcpp::Time acquisition_time(msg->header.stamp);
+  latest_sensor_stamp_ = (
+    acquisition_time.nanoseconds() == 0 ? this->now() : acquisition_time).to_msg();
 }
 
 void ScaleTruckController::velocity_callback(
@@ -96,6 +100,8 @@ void ScaleTruckController::publish_control()
 
   {
     const std::lock_guard<std::mutex> lock(state_mutex_);
+    command.trace_id = latest_trace_id_;
+    command.sensor_stamp = latest_sensor_stamp_;
     command.steer_angle = angle_degree_;
     command.cur_dist = current_dist_;
     command.tar_dist = target_dist_;

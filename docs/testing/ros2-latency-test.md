@@ -73,6 +73,19 @@ Repeat for each bag. Every latency metric must have a nonzero `count`, and the
 two output topics should be near 50 Hz. A zero count means a boundary is absent,
 the test windows do not overlap, or the correlation interval is too small.
 
+For bags recorded after the trace fields were added, use exact correlation
+inside the sourced ROS 2 workspace:
+
+```bash
+python3 scripts/analyze_ros2_trace_latency.py /tmp/ros2-latency-run-01 \
+  --start 1 --duration 30 \
+  --output results/latency/ros2/ros2_trace_report_run_01.json \
+  --csv results/latency/ros2/ros2_trace_samples_run_01.csv
+```
+
+The report's `trace_count` must be greater than zero. Old bags cannot be used
+for exact correlation because their recorded message schema has no trace fields.
+
 ## Record CPU utilization
 
 While playback is active, sample the launched processes on the Xavier:
@@ -83,6 +96,8 @@ pidstat -h -u -r -p ALL 1 30 > /tmp/ros2-latency-run-01-pidstat.txt
 
 Use the same command and duration for ROS 1. Report mean CPU percentage and
 resident memory for the controller and LRC alongside the bag-derived metrics.
+The recommended repeatable resource procedure is documented in
+[`xavier-resource-recording.md`](xavier-resource-recording.md).
 
 ## Acceptance checklist
 

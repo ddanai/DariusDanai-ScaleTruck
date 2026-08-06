@@ -84,6 +84,8 @@ void LocalResiliencyCoordinator::xavier_callback(
   const scale_truck_msgs::msg::Xav2Lrc::SharedPtr msg)
 {
   const std::lock_guard<std::mutex> lock(state_mutex_);
+  trace_id_ = msg->trace_id;
+  sensor_stamp_ = msg->sensor_stamp;
   angle_degree_ = msg->steer_angle;
   current_dist_ = msg->cur_dist;
   target_dist_ = msg->tar_dist;
@@ -116,6 +118,8 @@ void LocalResiliencyCoordinator::publish_feedback()
 
   {
     const std::lock_guard<std::mutex> lock(state_mutex_);
+    firmware_msg.trace_id = trace_id_;
+    firmware_msg.sensor_stamp = sensor_stamp_;
     xavier_msg.cur_vel = current_vel_;
     firmware_msg.index = truck_index_;
     firmware_msg.steer_angle = angle_degree_;
