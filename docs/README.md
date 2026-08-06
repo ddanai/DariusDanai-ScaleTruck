@@ -18,6 +18,7 @@ Start here instead of browsing individual files. Documentation is grouped by pur
 | [Development options](setup/development-options.md) | Native Ubuntu, development-container, and hardware environment choices. |
 | [DDS validation](setup/dds-validation.md) | Confirming ROS 2 discovery and publish/subscribe communication. |
 | [ROS 2 latency test](testing/ros2-latency-test.md) | Recording and analyzing repeatable Milestone 4 latency runs. |
+| [ROS 1 vs. ROS 2 latency comparison](testing/ros1-vs-ros2-latency-comparison.md) | Milestone 4 results, plots, limitations, and timing conclusion. |
 
 ## System design
 
