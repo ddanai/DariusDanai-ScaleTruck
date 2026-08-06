@@ -17,6 +17,7 @@
 #include <vector>
 #include <sys/time.h>
 #include <string>
+#include <cstdint>
 
 //ROS
 #include <geometry_msgs/Twist.h>
@@ -99,6 +100,7 @@ class ScaleTruckController {
     boost::shared_mutex mutexObjectCallback_;
 
     std_msgs::Header imageHeader_;
+    uint64_t imageTraceId_ = 0;
     cv::Mat camImageCopy_, camImageTmp_;
     boost::shared_mutex mutexImageCallback_;
 

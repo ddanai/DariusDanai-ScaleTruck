@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sys/time.h>
 #include <string>
+#include <cstdint>
 
 #include "sock_udp/sock_udp.hpp"
 
@@ -63,6 +64,8 @@ class LocalRC{
 		bool isNodeRunning_;
 		uint8_t LrcMode_ = 0;
 		uint8_t CrcMode_ = 0;
+		uint64_t TraceId_ = 0;
+		ros::Time SensorStamp_;
 		float A_, B_, L_;
 		float Epsilon_;
 		float AngleDegree_;

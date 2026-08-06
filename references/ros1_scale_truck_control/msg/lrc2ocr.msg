@@ -1,3 +1,6 @@
+# Copied from xav2lrc for exact pipeline matching.
+uint64 trace_id
+time sensor_stamp
 int32 index
 float32 steer_angle
 float32 cur_dist

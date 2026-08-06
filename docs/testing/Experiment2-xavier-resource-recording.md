@@ -49,6 +49,13 @@ At the same time, record the latency bag for 35 seconds. Repeat with run numbers
 ./scripts/record_xavier_resources.sh ros1 01 35
 ```
 
+The tracked ROS 1 changes live under
+`references/ros1_scale_truck_control`. Before rebuilding the Xavier's active
+catkin workspace, synchronize the changed message, controller, and LRC files
+into `~/catkin_ws/src/scale_truck_control`, then run `catkin_make`. Keep the
+physical OpenCR disconnected because changing `lrc2ocr.msg` changes its
+rosserial wire format.
+
 Do not run `top`, `ros2 topic hz`, plotting programs, or other extra workloads
 during a measured run.
 

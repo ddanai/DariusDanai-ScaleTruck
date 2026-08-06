@@ -306,6 +306,11 @@ void ScaleTruckController::spin() {
       displayConsole();
 
     msg.steer_angle = AngleDegree_;
+    {
+      boost::shared_lock<boost::shared_mutex> lockImageCallback(mutexImageCallback_);
+      msg.trace_id = imageTraceId_;
+      msg.sensor_stamp = imageHeader_.stamp.isZero() ? ros::Time::now() : imageHeader_.stamp;
+    }
     msg.cur_dist = distance_;
     msg.tar_vel = ResultVel_;	//Xavier to LRC and LRC to OpenCR
     msg.tar_dist = TargetDist_;
@@ -355,6 +360,7 @@ void ScaleTruckController::imageCallback(const sensor_msgs::ImageConstPtr &msg) 
     {
       boost::unique_lock<boost::shared_mutex> lockImageCallback(mutexImageCallback_);
       imageHeader_ = msg->header;
+      ++imageTraceId_;
       camImageCopy_ = cam_image->image.clone();
     }
     {

@@ -16,6 +16,8 @@ Scripts:
   power, ROS/RMW, and network conditions for a labeled test run.
 - `analyze_ros2_trace_latency.py`: matches controller and actuator commands by
   exact trace ID and calculates latency from the sensor acquisition timestamp.
+- `analyze_ros1_trace_latency.py`: performs the equivalent exact trace analysis
+  for newly recorded ROS 1 bags in a sourced catkin workspace.
 - `compare_ros1_ros2_latency.py`: pools saved latency samples, summarizes topic
   timing across runs, and generates the Milestone 4 comparison data and plots.
 - Plot generation for jitter, frequency, and command delay.

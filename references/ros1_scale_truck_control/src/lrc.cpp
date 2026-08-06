@@ -100,6 +100,8 @@ bool LocalRC::isNodeRunning(){
 
 void LocalRC::XavCallback(const scale_truck_control::xav2lrc &msg){
 	const std::lock_guard<std::mutex> lock(mutexXavCallback_);
+	TraceId_ = msg.trace_id;
+	SensorStamp_ = msg.sensor_stamp;
 	AngleDegree_ = msg.steer_angle;
 	CurDist_ = msg.cur_dist;
 	TarDist_ = msg.tar_dist;
@@ -117,7 +119,12 @@ void LocalRC::OcrCallback(const scale_truck_control::ocr2lrc &msg){
 void LocalRC::LrcPub(){
 	scale_truck_control::lrc2xav xav;
 	scale_truck_control::lrc2ocr ocr;
-	
+
+	{
+		const std::lock_guard<std::mutex> lock(mutexXavCallback_);
+		ocr.trace_id = TraceId_;
+		ocr.sensor_stamp = SensorStamp_;
+	}
 	xav.cur_vel = CurVel_;
 	ocr.index = Index_;
 	ocr.steer_angle = AngleDegree_;
