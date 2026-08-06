@@ -63,8 +63,9 @@ void ScaleTruckController::image_callback(const sensor_msgs::msg::Image::SharedP
   image_seen_ = true;
   ++latest_trace_id_;
   const rclcpp::Time acquisition_time(msg->header.stamp);
-  latest_sensor_stamp_ = (
-    acquisition_time.nanoseconds() == 0 ? this->now() : acquisition_time).to_msg();
+  const rclcpp::Time effective_time =
+    acquisition_time.nanoseconds() == 0 ? this->now() : acquisition_time;
+  latest_sensor_stamp_ = effective_time;
 }
 
 void ScaleTruckController::velocity_callback(
