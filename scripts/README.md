@@ -18,6 +18,10 @@ Scripts:
   by exact trace ID and sensor acquisition timestamp.
 - `analyze_experiment2_ros1_trace_latency.py`: performs the equivalent exact
   trace analysis for Experiment 2 ROS 1 bags in a sourced catkin workspace.
+- `experiment2_restamp_ros1_images.py` and
+  `experiment2_restamp_ros2_images.py`: relay replayed camera frames to
+  `/usb_cam/image_raw` with current timestamps so historical bag stamps are not
+  misinterpreted as latency.
 - `compare_ros1_ros2_latency.py`: pools saved latency samples, summarizes topic
   timing across runs, and generates the Milestone 4 comparison data and plots.
 - Plot generation for jitter, frequency, and command delay.

@@ -97,3 +97,31 @@ python3 scripts/analyze_experiment2_ros2_trace_latency.py \
 
 Experiment 1 bags must continue using the original analyzers because they were
 recorded before the trace fields existed.
+
+## Replaying the public camera bag
+
+The public bag's image timestamps are from 2019. Replay images on an intermediate
+topic and use the matching relay to replace only the timestamp while preserving
+the image data.
+
+ROS 1 relay:
+
+```bash
+python3 scripts/experiment2_restamp_ros1_images.py
+```
+
+ROS 1 playback:
+
+```bash
+rosbag play --duration=10 ~/left_camera_templergraben.bag \
+  /sensors/camera/left/image_raw:=/experiment2/input_image
+```
+
+ROS 2 relay, from a sourced ROS 2 container terminal:
+
+```bash
+python3 scripts/experiment2_restamp_ros2_images.py
+```
+
+ROS 2 playback uses a rosbag2 conversion of the same source bag and the same
+remapping. Analyze the same ten-second playback interval in both systems.
