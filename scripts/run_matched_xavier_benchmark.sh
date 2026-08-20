@@ -33,6 +33,11 @@ if [[ -e "$report_root/${system}-trace-report-run-${run_id}.json" ]]; then
   exit 2
 fi
 command -v pidstat >/dev/null || { echo "Install sysstat first" >&2; exit 2; }
+available_kib=$(df -Pk . | awk 'NR==2 {print $4}')
+if [[ "$available_kib" -lt 204800 ]]; then
+  echo "Less than 200 MiB free in the results filesystem; free space before testing" >&2
+  exit 2
+fi
 
 pids=()
 cleanup() {
@@ -59,10 +64,11 @@ if [[ "$system" == "ros1" ]]; then
   setsid rosrun scale_truck_control LRC > "$log_root/${system}-${run_id}-lrc.log" 2>&1 & lrc_launcher_pid="$!"; pids+=("$lrc_launcher_pid")
   sleep 4
   lrc_pid=$(pgrep -P "$lrc_launcher_pid" | head -1 || true); lrc_pid="${lrc_pid:-$lrc_launcher_pid}"
-  setsid rosbag record -O "$bag_root/${system}-run-${run_id}.bag" /xav2lrc_msg /lrc2ocr_msg > "$log_root/${system}-${run_id}-record.log" 2>&1 & recorder_pid="$!"; pids+=("$recorder_pid")
+  setsid rosbag record --min-space=100M -O "$bag_root/${system}-run-${run_id}.bag" /xav2lrc_msg /lrc2ocr_msg > "$log_root/${system}-${run_id}-record.log" 2>&1 & recorder_pid="$!"; pids+=("$recorder_pid")
   RESOURCE_OUTPUT_DIR="$resource_root" RESOURCE_PIDS="$controller_pid,$lrc_pid" CONTROLLER_PID="$controller_pid" LRC_PID="$lrc_pid" \
     scripts/record_xavier_resources.sh "$system" "$run_id" "$((duration_s + start_s + 15))" > "$log_root/${system}-${run_id}-resources.log" 2>&1 & resource_pid="$!"; pids+=("$resource_pid")
   sleep 2
+  kill -0 "$recorder_pid" 2>/dev/null || { echo "Recorder exited before playback; inspect the record log" >&2; exit 1; }
   rosbag play --delay=10 "$input_bag" /sensors/camera/left/image_raw:=/experiment2/input_image
   sleep 2
   kill -INT "$recorder_pid" 2>/dev/null || true
@@ -82,6 +88,7 @@ else
   RESOURCE_OUTPUT_DIR="$resource_root" RESOURCE_PIDS="$controller_pid,$lrc_pid" CONTROLLER_PID="$controller_pid" LRC_PID="$lrc_pid" \
     scripts/record_xavier_resources.sh "$system" "$run_id" "$((duration_s + start_s + 15))" > "$log_root/${system}-${run_id}-resources.log" 2>&1 & resource_pid="$!"; pids+=("$resource_pid")
   sleep 2
+  kill -0 "$recorder_pid" 2>/dev/null || { echo "Recorder exited before playback; inspect the record log" >&2; exit 1; }
   ros2 bag play "$input_bag" --delay 10 --remap /sensors/camera/left/image_raw:=/experiment2/input_image
   sleep 2
   kill -INT "$recorder_pid" 2>/dev/null || true
