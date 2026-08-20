@@ -103,22 +103,67 @@ test -x scripts/run_matched_xavier_benchmark.sh && echo "benchmark script ready"
 ## Phase 5: prepare and verify the input bags
 
 Use the original rosbag1 camera bag for ROS 1 and a rosbag2 conversion of that exact file for ROS 2.
-Keep the ROS 2 bag inside the shared repository so the container can read it:
+Do not merely create a conversion and assume it is correct. Perform every check below. Keep the ROS 2
+bag inside the shared repository so the container can read it:
 
 ```text
 ~/ros2_humble_ws/src/DariusDanai-ScaleTruck/test-data/left_camera_ros2
 ```
 
-In the host/ROS 1 terminal, inspect the original:
+### 5.1 Inspect the ROS 1 bag
+
+In the host/ROS 1 terminal:
 
 ```bash
 rosbag info ~/left_camera_templergraben.bag
 ```
 
-Record the image topic, image count, type, duration, and approximate frequency. The expected image
-topic is `/sensors/camera/left/image_raw`.
+Record these values:
 
-If a verified conversion does not already exist, create it in the host terminal:
+- image topic, expected to be `/sensors/camera/left/image_raw`;
+- image count, expected to be 540;
+- message type, expected to be `sensor_msgs/Image`;
+- duration, expected to be approximately 18 seconds; and
+- frequency, expected to be approximately 30 Hz.
+
+Inspect one image header:
+
+```bash
+rostopic echo -b ~/left_camera_templergraben.bag -n 1 \
+  /sensors/camera/left/image_raw/header
+```
+
+Inspect the image dimensions and encoding:
+
+```bash
+rostopic echo -b ~/left_camera_templergraben.bag -n 1 \
+  /sensors/camera/left/image_raw | grep -E "height:|width:|encoding:|step:"
+```
+
+Record the reported height, width, encoding, and step. Save a checksum identifying the source bag:
+
+```bash
+sha256sum ~/left_camera_templergraben.bag
+```
+
+Copy the checksum into the experiment notes.
+
+**Check:** Did the ROS 1 bag report 540 images over approximately 18 seconds at approximately 30 Hz?
+Did the image inspection print valid dimensions and encoding? If no, stop and investigate the bag.
+
+### 5.2 Create the ROS 2 conversion
+
+If a conversion already exists and its source is documented as this exact ROS 1 bag checksum, it can
+be reused. Otherwise, recreate it to eliminate uncertainty.
+
+Check for the converter in the host terminal:
+
+```bash
+rosbags-convert --help
+```
+
+If the command exists, create the conversion in the shared repository:
+
 
 ```bash
 cd ~/ros2_humble_ws/src/DariusDanai-ScaleTruck
@@ -126,17 +171,82 @@ mkdir -p test-data
 rosbags-convert --src ~/left_camera_templergraben.bag --dst test-data/left_camera_ros2
 ```
 
-Open the ROS 2 container and inspect the conversion:
+Confirm that the destination contains `metadata.yaml` and at least one `.db3` file:
+
+```bash
+ls -l test-data/left_camera_ros2
+```
+
+**Check:** Are `metadata.yaml` and a `.db3` file present? If no, the conversion did not complete.
+
+### 5.3 Inspect the ROS 2 bag
+
+Open the ROS 2 container from the host:
 
 ```bash
 docker start -ai ros2-humble
+```
+
+Inside the container:
+
+```bash
 source /opt/ros/humble/setup.bash
 ros2 bag info /ros2_ws/src/DariusDanai-ScaleTruck/test-data/left_camera_ros2
 ```
 
-**Check:** Do both bags report the same image count, image message type, duration, and approximate
-frequency? Was the ROS 2 bag converted directly from this ROS 1 bag? If any answer is no, do not use
-those bags for the official comparison.
+Record the ROS 2 image topic, count, message type, duration, and approximate frequency. ROS 2 may show
+the type as `sensor_msgs/msg/Image`; this is the ROS 2 form of `sensor_msgs/Image`.
+
+### 5.4 Compare ROS 1 and ROS 2 bag information
+
+Confirm all of the following:
+
+- both contain the same image topic;
+- both contain 540 image messages;
+- both use the Image message type;
+- both last approximately 18 seconds;
+- both represent approximately 30 images per second;
+- the recorded height, width, encoding, and step are unchanged; and
+- the ROS 2 bag was converted directly from the ROS 1 bag whose checksum was recorded.
+
+**Check:** Are all seven statements true? If any answer is no, do not use the bags for the official
+comparison.
+
+### 5.5 Use the same playback rate
+
+The automated runner uses the default playback rate of 1.0 for both systems. Do not add a different
+rate to either system. The equivalent manual commands are:
+
+```bash
+rosbag play --rate 1.0 ~/left_camera_templergraben.bag
+```
+
+and, inside the ROS 2 container:
+
+```bash
+ros2 bag play /ros2_ws/src/DariusDanai-ScaleTruck/test-data/left_camera_ros2 --rate 1.0
+```
+
+These manual playback commands are examples only; do not run them at the same time as the automated
+benchmark.
+
+### 5.6 Confirm contents through the pilot runs
+
+During Phases 7 through 9, confirm:
+
+- similar input duration;
+- the same image dimensions and encoding;
+- the same matched-workload version and pass count;
+- similar processed-frame counts; and
+- identical controller command values for corresponding input frames.
+
+The experiment record should state:
+
+> The ROS 2 bag was generated directly from the recorded ROS 1 bag without modifying the image
+> messages, and both bags were replayed at rate 1.0.
+
+Do not commit either test bag to Git because the files are large. Keep them under `test-data/`, which
+should remain untracked or ignored.
 
 ## Phase 6: prepare the Xavier before each test session
 
