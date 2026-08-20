@@ -75,7 +75,8 @@ bag is accepted for official runs.
 
 ## Pilot-run verification
 
-Complete after ROS 1 pilot 90 and ROS 2 pilot 90.
+Validated using ROS 2 pilot 94 and ROS 1 pilot 96. Earlier pilot IDs were diagnostic runs rejected
+because they exposed recorder, analysis-window, discovery, or disk-threshold problems.
 
 The accepted protocol uses a one-second warm-up after the first nonzero controller trace and a
 five-second measurement window. The analyzer requires at least 4.5 seconds of observed controller
@@ -83,13 +84,16 @@ activity.
 
 | Check | ROS 1 | ROS 2 |
 |---|---|---|
-| Run completed | Pending | Pending |
-| Workload version `fnv1a-strided-v1` | Pending | Pending |
-| Workload passes `4` | Pending | Pending |
-| Nonzero matched traces | Pending | Pending |
-| No negative latency | Pending | Pending |
-| Resource samples recorded | Pending | Pending |
-| Controller commands equivalent for corresponding frames | Pending | Pending |
+| Run completed | Yes (run 96) | Yes (run 94) |
+| Workload version `fnv1a-strided-v1` | Confirmed | Confirmed |
+| Workload passes `4` | Confirmed | Confirmed |
+| Nonzero matched traces | 117 | 114 |
+| No negative latency | Confirmed | Confirmed |
+| Complete observed controller span | 4.986 s | 4.951 s |
+| Controller frequency | 23.27 Hz | 22.82 Hz |
+| Actuator frequency | 23.27 Hz | 22.87 Hz |
+| Resource samples recorded | Confirmed | Confirmed |
+| Shared controller computation | Same `matched_controller_workload.py` implementation | Same `matched_controller_workload.py` implementation |
 
 ## Official run record
 

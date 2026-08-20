@@ -386,6 +386,8 @@ python3 -m unittest discover -s tests -v
 
 The analyzer intentionally stops if run IDs differ, sample files are missing, a run contains no
 matched traces, resource samples are missing, timing data are absent, or latency is negative.
+Only official run IDs 01 through 10 are aggregated; diagnostic pilot IDs 90 through 99 are preserved
+but ignored automatically.
 
 **Check:** Did the analyzer write
 `results/latency/experiment3/comparison/experiment3-summary.json`, and did every automated test pass?

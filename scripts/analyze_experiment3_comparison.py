@@ -31,6 +31,8 @@ def discover(system):
     runs = {}
     for report in REPORTS.glob(f"{prefix}*.json"):
         run_id = int(report.stem.rsplit("-", 1)[1])
+        if run_id < 1 or run_id > 10:
+            continue
         sample = SAMPLES / report.name.replace("report", "samples").replace(".json", ".csv")
         if not sample.exists():
             raise RuntimeError(f"Missing samples for {report}")
