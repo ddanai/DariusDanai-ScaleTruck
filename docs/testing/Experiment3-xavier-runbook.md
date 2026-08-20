@@ -349,6 +349,22 @@ R1-01, R2-01, R2-02, R1-02, R1-03, R2-03, R2-04, R1-04, R1-05, R2-05,
 R2-06, R1-06, R1-07, R2-07, R2-08, R1-08, R1-09, R2-09, R2-10, R1-10
 ```
 
+### Recommended automated collection
+
+After both pilots pass, run the resumable batch orchestrator from the Xavier host as user `krg`:
+
+```bash
+source /opt/ros/noetic/setup.bash
+cd ~/ros2_humble_ws/src/DariusDanai-ScaleTruck
+chmod +x scripts/run_experiment3_batch.sh
+./scripts/run_experiment3_batch.sh
+```
+
+It follows the sequence above, starts and stops the ROS 2 container automatically, skips any run
+whose completed report already exists, and stops at the first failure. It never overwrites a report.
+Keep the terminal open and the Xavier powered throughout collection. The manual commands below remain
+available for diagnosing or rerunning a technically failed run with a new ID.
+
 For each ROS 1 entry, use a fresh host terminal:
 
 ```bash
