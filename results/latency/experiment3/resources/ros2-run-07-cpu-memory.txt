@@ -1,0 +1,85 @@
+Linux 5.10.216-tegra (ubuntu) 	08/20/26 	_aarch64_	(8 CPU)
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:48        0        45    0.00    0.99    0.00    0.00    0.99     0      4.95      0.00  623060   53432   0.17  python3
+09:43:48        0        48    0.99    0.99    0.00    0.00    1.98     2      3.96      0.00  582188   20852   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:49        0        45    1.00    0.00    0.00    0.00    1.00     0     33.00      0.00  623652   53584   0.17  python3
+09:43:49        0        48    3.00    1.00    0.00    0.00    4.00     3     32.00      0.00  582780   21032   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:50        0        45    0.00    0.00    0.00    0.00    0.00     0      5.00      0.00  623652   53584   0.17  python3
+09:43:50        0        48    2.00    1.00    0.00    0.00    3.00     1      4.00      0.00  582780   21032   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:51        0        45    1.00    1.00    0.00    0.00    2.00     0     44.00      0.00  624244   53764   0.17  python3
+09:43:51        0        48    2.00    3.00    0.00    0.00    5.00     1     45.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:52        0        45    0.00    1.00    0.00    0.00    1.00     0      1.00      0.00  624244   53764   0.17  python3
+09:43:52        0        48    2.00    1.00    0.00    0.00    3.00     2      1.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:53        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:43:53        0        48    1.00    1.00    0.00    0.00    2.00     2      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:54        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:43:54        0        48    1.00    1.00    0.00    1.00    2.00     2      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:55        0        45    1.00    0.00    0.00    0.00    1.00     0      0.00      0.00  624244   53764   0.17  python3
+09:43:55        0        48    2.00    1.00    0.00    0.00    3.00     2      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:56        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:43:56        0        48    1.00    1.00    0.00    0.00    2.00     2      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:57        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:43:57        0        48    1.00    1.00    0.00    1.00    2.00     2      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:58        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:43:58        0        48    1.00    1.00    0.00    0.00    2.00     2      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:43:59        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:43:59        0        48    1.00    1.00    0.00    0.00    2.00     2      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:00        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:00        0        48    2.00    2.00    0.00    0.00    4.00     1      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:01        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:01        0        48    2.00    2.00    0.00    0.00    4.00     1      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:02        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:02        0        48    2.00    1.00    0.00    0.00    3.00     1      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:03        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:03        0        48    2.00    2.00    0.00    0.00    4.00     1      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:04        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:04        0        48    2.00    2.00    0.00    0.00    4.00     0      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:05        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:05        0        48    2.00    2.00    0.00    1.00    4.00     0      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:06        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:06        0        48    2.00    1.00    0.00    0.00    3.00     0      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:07        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:07        0        48    2.00    2.00    0.00    0.00    4.00     0      0.00      0.00  583372   21220   0.07  lrc_node
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+09:44:08        0        45    0.00    0.00    0.00    0.00    0.00     0      0.00      0.00  624244   53764   0.17  python3
+09:44:08        0        48    2.00    2.00    0.00    1.00    4.00     0      0.00      0.00  583372   21220   0.07  lrc_node
