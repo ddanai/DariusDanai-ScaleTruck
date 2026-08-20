@@ -66,12 +66,8 @@ def read_bag(path, controller_topic, actuator_topic, start_s, duration_s):
         raise RuntimeError("Run inside a sourced ROS 1/catkin workspace") from error
     events = {controller_topic: [], actuator_topic: []}
     with rosbag.Bag(path, "r") as bag:
-        window_start = bag.get_start_time() + start_s
-        window_end = window_start + duration_s if duration_s is not None else None
         for topic, message, receive_time in bag.read_messages(topics=list(events)):
             receive_s = receive_time.to_sec()
-            if receive_s < window_start or (window_end is not None and receive_s > window_end):
-                continue
             if not hasattr(message, "trace_id"):
                 raise RuntimeError("Bag was recorded before trace fields were added")
             if message.trace_id == 0:
@@ -81,7 +77,16 @@ def read_bag(path, controller_topic, actuator_topic, start_s, duration_s):
                 "sensor_s": message.sensor_stamp.to_sec(),
                 "receive_s": receive_s,
             })
-    return events
+    valid_controller = events[controller_topic]
+    if not valid_controller:
+        return events
+    window_start = min(item["receive_s"] for item in valid_controller) + start_s
+    window_end = window_start + duration_s if duration_s is not None else None
+    return {
+        topic: [item for item in items if item["receive_s"] >= window_start and
+                (window_end is None or item["receive_s"] <= window_end)]
+        for topic, items in events.items()
+    }
 
 
 def main():
@@ -99,7 +104,11 @@ def main():
         args.start, args.duration)
     report, rows = analyze(events, args.controller_topic, args.actuator_topic)
     report["bag"] = str(Path(args.bag).resolve())
-    report["window"] = {"start_s": args.start, "duration_s": args.duration}
+    report["window"] = {
+        "origin": "first nonzero controller trace",
+        "start_s": args.start,
+        "duration_s": args.duration,
+    }
     Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     if args.csv:
         with open(args.csv, "w", newline="") as handle:

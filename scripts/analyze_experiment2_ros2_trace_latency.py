@@ -79,15 +79,9 @@ def read_bag(uri, controller_topic, actuator_topic, start_s, duration_s):
         raise RuntimeError("Missing topics: {}".format(", ".join(sorted(missing))))
     types = {topic: get_message(type_names[topic]) for topic in required}
     events = {topic: [] for topic in required}
-    bag_start_ns = None
     while reader.has_next():
         topic, data, receive_ns = reader.read_next()
         if topic not in required:
-            continue
-        if bag_start_ns is None:
-            bag_start_ns = receive_ns
-        elapsed = (receive_ns - bag_start_ns) / 1e9
-        if elapsed < start_s or (duration_s is not None and elapsed > start_s + duration_s):
             continue
         message = deserialize_message(data, types[topic])
         if not hasattr(message, "trace_id"):
@@ -99,7 +93,16 @@ def read_bag(uri, controller_topic, actuator_topic, start_s, duration_s):
             "sensor_s": message.sensor_stamp.sec + message.sensor_stamp.nanosec / 1e9,
             "receive_s": receive_ns / 1e9,
         })
-    return events
+    valid_controller = events[controller_topic]
+    if not valid_controller:
+        return events
+    window_start = min(item["receive_s"] for item in valid_controller) + start_s
+    window_end = window_start + duration_s if duration_s is not None else None
+    return {
+        topic: [item for item in items if item["receive_s"] >= window_start and
+                (window_end is None or item["receive_s"] <= window_end)]
+        for topic, items in events.items()
+    }
 
 
 def main():
@@ -117,7 +120,11 @@ def main():
         args.start, args.duration)
     report, rows = analyze(events, args.controller_topic, args.actuator_topic)
     report["bag"] = str(Path(args.bag).resolve())
-    report["window"] = {"start_s": args.start, "duration_s": args.duration}
+    report["window"] = {
+        "origin": "first nonzero controller trace",
+        "start_s": args.start,
+        "duration_s": args.duration,
+    }
     Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     if args.csv:
         with open(args.csv, "w", newline="") as handle:

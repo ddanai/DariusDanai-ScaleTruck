@@ -39,7 +39,12 @@ cleanup() {
   for pid in "${pids[@]:-}"; do
     kill -INT "$pid" 2>/dev/null || true
   done
-  wait 2>/dev/null || true
+  sleep 2
+  for pid in "${pids[@]:-}"; do
+    if kill -0 "$pid" 2>/dev/null; then
+      kill -TERM "$pid" 2>/dev/null || true
+    fi
+  done
 }
 trap cleanup EXIT INT TERM
 
