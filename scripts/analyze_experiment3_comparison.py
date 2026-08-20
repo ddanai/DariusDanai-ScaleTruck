@@ -66,12 +66,15 @@ def resource_run(system, run_id):
     by_pid = {pid: role for role, pid in expected.items()}
     for line in samples.read_text(errors="replace").splitlines():
         parts = line.split()
-        if len(parts) < 16 or parts[1] not in {"AM", "PM"}:
+        if len(parts) < 15 or parts[0].startswith("#"):
             continue
         try:
-            pid = int(parts[3])
+            # pidstat includes a separate AM/PM column under some locales.
+            offset = 1 if len(parts) > 1 and parts[1] in {"AM", "PM"} else 0
+            pid = int(parts[2 + offset])
             if pid in by_pid:
-                rows[by_pid[pid]].append((float(parts[8]), float(parts[13]) / 1024.0))
+                rows[by_pid[pid]].append(
+                    (float(parts[7 + offset]), float(parts[12 + offset]) / 1024.0))
         except ValueError:
             continue
     result = {}
