@@ -162,13 +162,18 @@ Check for the converter in the host terminal:
 rosbags-convert --help
 ```
 
-If the command exists, create the conversion in the shared repository:
+If the command exists, create the conversion in the shared repository. In the installed converter,
+the source path is positional; there is no `--src` option. Convert only the image topic required by
+the benchmark:
 
 
 ```bash
 cd ~/ros2_humble_ws/src/DariusDanai-ScaleTruck
 mkdir -p test-data
-rosbags-convert --src ~/left_camera_templergraben.bag --dst test-data/left_camera_ros2
+rosbags-convert \
+  ~/left_camera_templergraben.bag \
+  --dst test-data/left_camera_ros2 \
+  --include-topic /sensors/camera/left/image_raw
 ```
 
 Confirm that the destination contains `metadata.yaml` and at least one `.db3` file:
@@ -177,7 +182,9 @@ Confirm that the destination contains `metadata.yaml` and at least one `.db3` fi
 ls -l test-data/left_camera_ros2
 ```
 
-**Check:** Are `metadata.yaml` and a `.db3` file present? If no, the conversion did not complete.
+**Check:** Are `metadata.yaml` and a `.db3` file present? If no, the conversion did not complete. If
+the command reports `unrecognized arguments: --src`, remove `--src` and pass the source path exactly
+as shown above.
 
 ### 5.3 Inspect the ROS 2 bag
 
