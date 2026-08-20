@@ -119,11 +119,17 @@ def main():
         args.bag, args.controller_topic, args.actuator_topic,
         args.start, args.duration)
     report, rows = analyze(events, args.controller_topic, args.actuator_topic)
+    observed_span_s = rows[-1][4] - rows[0][4] if len(rows) > 1 else 0.0
+    if args.duration is not None and observed_span_s < args.duration * 0.9:
+        raise RuntimeError(
+            f"Incomplete measurement window: observed {observed_span_s:.3f}s, "
+            f"expected about {args.duration:.3f}s")
     report["bag"] = str(Path(args.bag).resolve())
     report["window"] = {
         "origin": "first nonzero controller trace",
         "start_s": args.start,
         "duration_s": args.duration,
+        "observed_controller_span_s": observed_span_s,
     }
     Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     if args.csv:

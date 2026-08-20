@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $# -lt 3 || $# -gt 5 ]]; then
-  echo "Usage: $0 ros1|ros2 RUN_ID INPUT_BAG [START_S=3] [DURATION_S=11]" >&2
+  echo "Usage: $0 ros1|ros2 RUN_ID INPUT_BAG [START_S=1] [DURATION_S=5]" >&2
   echo "Run from a terminal where the selected ROS and workspace are already sourced." >&2
   exit 2
 fi
@@ -10,8 +10,8 @@ fi
 system="$1"
 run_id=$(printf "%02d" "$((10#$2))")
 input_bag="$3"
-start_s="${4:-3}"
-duration_s="${5:-11}"
+start_s="${4:-1}"
+duration_s="${5:-5}"
 root="results/latency/experiment3"
 bag_root="$root/bags"
 report_root="$root/reports"

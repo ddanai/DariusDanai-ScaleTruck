@@ -12,6 +12,8 @@ ROS 2 is "lower" or "better" only if the new results and confidence intervals su
 
 This benchmark uses the same `matched_controller_workload.py` computation through thin ROS 1 and
 ROS 2 wrappers. It is a controlled application workload, not the production lane-detection algorithm.
+Each accepted run uses a one-second post-trace warm-up followed by a five-second measured window.
+The analyzer rejects a run automatically if at least 90% of that window is not observed.
 
 ## Terminal guide
 

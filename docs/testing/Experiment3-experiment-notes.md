@@ -77,6 +77,10 @@ bag is accepted for official runs.
 
 Complete after ROS 1 pilot 90 and ROS 2 pilot 90.
 
+The accepted protocol uses a one-second warm-up after the first nonzero controller trace and a
+five-second measurement window. The analyzer requires at least 4.5 seconds of observed controller
+activity.
+
 | Check | ROS 1 | ROS 2 |
 |---|---|---|
 | Run completed | Pending | Pending |
