@@ -39,22 +39,39 @@ sha256sum ~/left_camera_templergraben.bag
 
 ## ROS 2 conversion verification
 
-Complete this section after creating and inspecting the rosbag2 conversion.
+An existing rosbag2 conversion was found in the shared Xavier workspace and inspected inside the
+`ros2-humble` container with `ros2 bag info`.
+
+| Bag property | Recorded value |
+|---|---|
+| Path inside ROS 2 container | `/ros2_ws/bags/left_camera_templergraben_ros2` |
+| Database file | `left_camera_templergraben_ros2.db3` |
+| Bag size | 1.2 GiB |
+| Storage ID | `sqlite3` |
+| Serialization format | `cdr` |
+| Duration | 17.978476936 seconds |
+| Start timestamp | 1565341141.833875233 |
+| End timestamp | 1565341159.812352169 |
+| Total messages | 540 |
 
 | Property | Expected value | Recorded value |
 |---|---|---|
-| Converted directly from the verified ROS 1 bag | Yes | Pending |
-| Source ROS 1 SHA-256 recorded above | Match | Pending |
-| Image topic | `/sensors/camera/left/image_raw` | Pending |
-| Message type | `sensor_msgs/msg/Image` | Pending |
-| Image count | 540 | Pending |
-| Bag duration | Approximately 18.0 seconds | Pending |
-| Approximate image rate | 30 Hz | Pending |
+| Converted directly from the verified ROS 1 bag | Yes | Existing Experiment 2 conversion; provenance documented, pilot confirmation pending |
+| Source ROS 1 SHA-256 recorded above | Match | Source checksum now recorded; historical conversion checksum linkage not independently recorded |
+| Image topic | `/sensors/camera/left/image_raw` | `/sensors/camera/left/image_raw` |
+| Message type | `sensor_msgs/msg/Image` | `sensor_msgs/msg/Image` |
+| Image count | 540 | 540 |
+| Bag duration | Approximately 18.0 seconds | 17.978476936 seconds |
+| Approximate image rate | 30 Hz | Approximately 30.04 Hz |
 | Image height | 1216 pixels | Pending |
 | Image width | 1936 pixels | Pending |
 | Image encoding | `bayer_rggb8` | Pending |
 | Row step | 1936 bytes | Pending |
 | Playback rate | 1.0 | Pending |
+
+The ROS 1 and ROS 2 metadata match for topic, message count, message type, duration, and approximate
+rate. Image fields and corresponding workload outputs will be confirmed during the pilot before the
+bag is accepted for official runs.
 
 ## Pilot-run verification
 
