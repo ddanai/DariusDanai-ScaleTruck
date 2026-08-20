@@ -4,6 +4,7 @@
 import csv
 import json
 from pathlib import Path
+import random
 import statistics
 
 import matplotlib
@@ -45,6 +46,33 @@ def distribution(values):
         "p99": percentile(values, 0.99),
         "max": max(values),
         "stddev": statistics.pstdev(values),
+    }
+
+
+def run_level_estimate(runs, metric, statistic):
+    """Treat runs, rather than correlated frames, as experimental units."""
+    estimates = []
+    for run in sorted(runs):
+        values = runs[run][metric]
+        estimates.append(statistics.median(values) if statistic == "median"
+                         else percentile(values, 0.95))
+    return estimates
+
+
+def bootstrap_difference(left, right, iterations=20000, seed=20260819):
+    """Independent run-cluster bootstrap CI for ROS2 - ROS1."""
+    rng = random.Random(seed)
+    differences = []
+    for _ in range(iterations):
+        left_draw = [rng.choice(left) for _ in left]
+        right_draw = [rng.choice(right) for _ in right]
+        differences.append(statistics.mean(right_draw) - statistics.mean(left_draw))
+    return {
+        "estimate": statistics.mean(right) - statistics.mean(left),
+        "ci95_low": percentile(differences, 0.025),
+        "ci95_high": percentile(differences, 0.975),
+        "bootstrap_iterations": iterations,
+        "unit": "run",
     }
 
 
@@ -238,6 +266,8 @@ def write_report(summary):
                 f"{item['median']:.2f} | {item['p95']:.2f} | {item['p99']:.2f} | {item['max']:.2f} |")
     r1 = latency["end_to_end_command"]["ros1"]
     r2 = latency["end_to_end_command"]["ros2"]
+    median_effect = summary["run_level_inference"]["end_to_end_command"]["median"]
+    p95_effect = summary["run_level_inference"]["end_to_end_command"]["p95"]
     lines.extend([
         "",
         "## Xavier resource comparison",
@@ -264,6 +294,17 @@ def write_report(summary):
         f"{r2['p95']:.2f} ms ({-percent_change(r1['p95'], r2['p95']):.1f}% lower).",
         f"- End-to-end standard deviation fell from {r1['stddev']:.2f} ms to "
         f"{r2['stddev']:.2f} ms, indicating more consistent timing in this implementation.",
+        f"- Using runs as the experimental units, the ROS 2 minus ROS 1 difference in the "
+        f"mean per-run median was {median_effect['ros2_minus_ros1']['estimate']:.2f} ms "
+        f"(run-cluster bootstrap 95% CI "
+        f"{median_effect['ros2_minus_ros1']['ci95_low']:.2f} to "
+        f"{median_effect['ros2_minus_ros1']['ci95_high']:.2f} ms).",
+        f"- The corresponding difference in the mean per-run p95 was "
+        f"{p95_effect['ros2_minus_ros1']['estimate']:.2f} ms (95% CI "
+        f"{p95_effect['ros2_minus_ros1']['ci95_low']:.2f} to "
+        f"{p95_effect['ros2_minus_ros1']['ci95_high']:.2f} ms).",
+        "- Pooled frame counts are descriptive only; frames within one replay are correlated and "
+        "must not be treated as independent replicates.",
         "- The exact trace fields remove the main Experiment 1 uncertainty: controller and actuator "
         "commands are matched to the sensor frame that actually produced them.",
         "- This experiment compares the current ROS 1 and ROS 2 implementations, not middleware alone. "
@@ -291,10 +332,25 @@ def main():
         reports[system], samples[system], run_samples[system] = read_latency(system)
         resources[system] = aggregate_resources(read_resources(system))
 
+    inference = {}
+    for metric, _ in METRICS:
+        inference[metric] = {}
+        for statistic in ["median", "p95"]:
+            ros1_values = run_level_estimate(run_samples["ros1"], metric, statistic)
+            ros2_values = run_level_estimate(run_samples["ros2"], metric, statistic)
+            inference[metric][statistic] = {
+                "ros1_per_run": ros1_values,
+                "ros2_per_run": ros2_values,
+                "ros1_run_mean": statistics.mean(ros1_values),
+                "ros2_run_mean": statistics.mean(ros2_values),
+                "ros2_minus_ros1": bootstrap_difference(ros1_values, ros2_values),
+            }
+
     summary = {
         "method": {
             "runs_per_system": 5,
-            "latency_aggregation": "all exact-trace samples pooled by ROS version",
+            "latency_descriptive_aggregation": "all exact-trace samples pooled by ROS version",
+            "latency_inference": "run is the experimental unit; independent run-cluster bootstrap",
             "resource_aggregation": "per-run process means, then mean and population SD across runs",
         },
         "trace_counts": {system: sum(report["trace_count"] for report in reports[system]) for system in reports},
@@ -303,6 +359,7 @@ def main():
             for metric, _ in METRICS
         },
         "resources": resources,
+        "run_level_inference": inference,
     }
     (DATA / "experiment2-summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     with (DATA / "experiment2-comparison.csv").open("w", newline="") as handle:

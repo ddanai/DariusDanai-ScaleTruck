@@ -33,6 +33,9 @@ Values are means across five runs. CPU can exceed 100% when a process uses more 
 - ROS 2 reduced pooled median end-to-end latency from 40.00 ms to 15.59 ms (61.0% lower).
 - ROS 2 reduced pooled p95 end-to-end latency from 93.33 ms to 27.85 ms (70.2% lower).
 - End-to-end standard deviation fell from 28.01 ms to 6.64 ms, indicating more consistent timing in this implementation.
+- Using runs as the experimental units, the ROS 2 minus ROS 1 difference in the mean per-run median was -23.97 ms (run-cluster bootstrap 95% CI -25.99 to -22.03 ms).
+- The corresponding difference in the mean per-run p95 was -70.09 ms (95% CI -81.06 to -58.84 ms).
+- Pooled frame counts are descriptive only; frames within one replay are correlated and must not be treated as independent replicates.
 - The exact trace fields remove the main Experiment 1 uncertainty: controller and actuator commands are matched to the sensor frame that actually produced them.
 - This experiment compares the current ROS 1 and ROS 2 implementations, not middleware alone. The image-processing workloads are not identical, so lower ROS 2 latency and resource use cannot be attributed only to ROS 2 or DDS.
 

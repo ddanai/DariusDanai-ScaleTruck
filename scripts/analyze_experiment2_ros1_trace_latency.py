@@ -34,8 +34,16 @@ def analyze(events, controller_topic, actuator_topic):
             (output["receive_s"] - command["sensor_s"]) * 1000.0,
         ]
         if min(values) >= 0:
-            rows.append([trace_id] + values)
+            rows.append([trace_id] + values + [command["receive_s"], output["receive_s"]])
     columns = list(zip(*[row[1:] for row in rows])) if rows else [[], [], []]
+    timing = {}
+    for name, index in [("controller", 4), ("actuator", 5)]:
+        times = sorted(row[index] for row in rows)
+        intervals_ms = [(right - left) * 1000.0 for left, right in zip(times, times[1:])]
+        timing[name] = {
+            "frequency_hz": ((len(times) - 1) / (times[-1] - times[0])) if len(times) > 1 else None,
+            "interarrival_ms": COMMON.distribution(intervals_ms) if intervals_ms else None,
+        }
     return {
         "method": {
             "correlation": "first controller and actuator messages with the same trace_id",
@@ -47,6 +55,7 @@ def analyze(events, controller_topic, actuator_topic):
             "controller_to_actuator_command": COMMON.distribution(list(columns[1])),
             "end_to_end_command": COMMON.distribution(list(columns[2])),
         },
+        "topic_timing": timing,
     }, rows
 
 
@@ -97,7 +106,8 @@ def main():
             writer = csv.writer(handle)
             writer.writerow([
                 "trace_id", "sensor_to_controller_ms",
-                "controller_to_actuator_ms", "end_to_end_ms"])
+                "controller_to_actuator_ms", "end_to_end_ms",
+                "controller_receive_s", "actuator_receive_s"])
             writer.writerows(rows)
     print(json.dumps(report, indent=2, sort_keys=True))
 

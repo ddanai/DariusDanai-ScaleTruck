@@ -10,7 +10,7 @@ fi
 system="$1"
 run="$2"
 duration="$3"
-output_dir="results/latency/resources"
+output_dir="${RESOURCE_OUTPUT_DIR:-results/latency/resources}"
 prefix="$output_dir/${system}-run-${run}"
 mkdir -p "$output_dir"
 
@@ -24,6 +24,9 @@ mkdir -p "$output_dir"
   echo "ros_distro=${ROS_DISTRO:-unset}"
   echo "ros_domain_id=${ROS_DOMAIN_ID:-0}"
   echo "rmw_implementation=${RMW_IMPLEMENTATION:-default}"
+  echo "controller_pid=${CONTROLLER_PID:-unset}"
+  echo "lrc_pid=${LRC_PID:-unset}"
+  echo "git_commit=$(git rev-parse HEAD 2>/dev/null || echo unavailable)"
   echo "network_interfaces:"
   ip -brief link 2>&1 || true
   echo "xavier_power_mode:"
@@ -53,7 +56,8 @@ if ! command -v pidstat >/dev/null 2>&1; then
   exit 2
 fi
 
-pidstat -h -u -r -p ALL 1 "$duration" > "${prefix}-cpu-memory.txt"
+pid_selection="${RESOURCE_PIDS:-ALL}"
+pidstat -h -u -r -p "$pid_selection" 1 "$duration" > "${prefix}-cpu-memory.txt"
 echo "utc_end=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "${prefix}-environment.txt"
 echo "Wrote ${prefix}-environment.txt"
 echo "Wrote ${prefix}-cpu-memory.txt"
