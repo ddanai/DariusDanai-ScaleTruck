@@ -10,7 +10,7 @@ from matched_controller_workload import WORKLOAD_VERSION, process_image
 
 class Controller:
     def __init__(self):
-        self.passes = rospy.get_param("~workload_passes", 8)
+        self.passes = rospy.get_param("~workload_passes", 4)
         self.trace_id = 0
         self.publisher = rospy.Publisher("/xav2lrc_msg", xav2lrc, queue_size=1)
         self.subscriber = rospy.Subscriber(

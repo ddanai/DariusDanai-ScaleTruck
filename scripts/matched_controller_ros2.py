@@ -13,7 +13,7 @@ from matched_controller_workload import WORKLOAD_VERSION, process_image
 class Controller(Node):
     def __init__(self):
         super().__init__("matched_controller")
-        self.declare_parameter("workload_passes", 8)
+        self.declare_parameter("workload_passes", 4)
         self.passes = self.get_parameter("workload_passes").value
         self.trace_id = 0
         self.publisher = self.create_publisher(Xav2Lrc, "/xav2lrc_msg", 1)
@@ -43,6 +43,8 @@ def main():
     node = Controller()
     try:
         rclpy.spin(node)
+    except (KeyboardInterrupt, rclpy.executors.ExternalShutdownException):
+        pass
     finally:
         node.destroy_node()
         if rclpy.ok():

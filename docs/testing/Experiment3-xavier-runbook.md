@@ -328,7 +328,7 @@ grep -Rh "matched workload=" results/latency/experiment3/logs
 
 **Check all of the following:**
 
-- Do both controller logs show `fnv1a-strided-v1` and `passes=8`?
+- Do both controller logs show `fnv1a-strided-v1` and `passes=4`?
 - Do both reports contain nonzero matched-trace counts?
 - Are ROS 1 and ROS 2 processed-frame counts reasonably close?
 - Are all latencies nonnegative?

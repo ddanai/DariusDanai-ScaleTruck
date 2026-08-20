@@ -81,7 +81,7 @@ Complete after ROS 1 pilot 90 and ROS 2 pilot 90.
 |---|---|---|
 | Run completed | Pending | Pending |
 | Workload version `fnv1a-strided-v1` | Pending | Pending |
-| Workload passes `8` | Pending | Pending |
+| Workload passes `4` | Pending | Pending |
 | Nonzero matched traces | Pending | Pending |
 | No negative latency | Pending | Pending |
 | Resource samples recorded | Pending | Pending |
