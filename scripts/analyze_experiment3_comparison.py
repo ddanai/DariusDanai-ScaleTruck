@@ -19,6 +19,7 @@ METRICS = {
     "controller_to_actuator_command": "controller_to_actuator_ms",
     "end_to_end_command": "end_to_end_ms",
 }
+RUN_LIMIT = 10
 
 spec = importlib.util.spec_from_file_location(
     "comparison_common", Path(__file__).with_name("analyze_experiment2_comparison.py"))
@@ -31,7 +32,7 @@ def discover(system):
     runs = {}
     for report in REPORTS.glob(f"{prefix}*.json"):
         run_id = int(report.stem.rsplit("-", 1)[1])
-        if run_id < 1 or run_id > 10:
+        if run_id < 1 or run_id > RUN_LIMIT:
             continue
         sample = SAMPLES / report.name.replace("report", "samples").replace(".json", ".csv")
         if not sample.exists():
@@ -84,6 +85,7 @@ def resource_run(system, run_id):
         result[role] = {
             "cpu_pct": statistics.mean(value[0] for value in values),
             "rss_mib": statistics.mean(value[1] for value in values),
+            "sample_count": len(values),
         }
     result["combined"] = {
         field: result["controller"][field] + result["lrc"][field]

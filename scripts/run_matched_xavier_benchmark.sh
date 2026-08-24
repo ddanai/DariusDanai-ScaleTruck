@@ -12,7 +12,7 @@ run_id=$(printf "%02d" "$((10#$2))")
 input_bag="$3"
 start_s="${4:-1}"
 duration_s="${5:-5}"
-root="results/latency/experiment3"
+root="${EXPERIMENT_ROOT:-results/latency/experiment3}"
 bag_root="$root/bags"
 report_root="$root/reports"
 sample_root="$root/samples"
@@ -61,15 +61,19 @@ if [[ "$system" == "ros1" ]]; then
   fi
   setsid python3 scripts/experiment2_restamp_ros1_images.py > "$log_root/${system}-${run_id}-relay.log" 2>&1 & relay_pid="$!"; pids+=("$relay_pid")
   setsid python3 scripts/matched_controller_ros1.py > "$log_root/${system}-${run_id}-controller.log" 2>&1 & controller_pid="$!"; pids+=("$controller_pid")
-  setsid rosrun scale_truck_control LRC > "$log_root/${system}-${run_id}-lrc.log" 2>&1 & lrc_launcher_pid="$!"; pids+=("$lrc_launcher_pid")
+  if [[ -n "${EXPERIMENT_ROOT:-}" ]]; then lrc_command=(python3 scripts/matched_lrc_ros1.py); else lrc_command=(rosrun scale_truck_control LRC); fi
+  setsid "${lrc_command[@]}" > "$log_root/${system}-${run_id}-lrc.log" 2>&1 & lrc_launcher_pid="$!"; pids+=("$lrc_launcher_pid")
   sleep 4
   lrc_pid=$(pgrep -P "$lrc_launcher_pid" | head -1 || true); lrc_pid="${lrc_pid:-$lrc_launcher_pid}"
   setsid rosbag record --min-space=100M -O "$bag_root/${system}-run-${run_id}.bag" /xav2lrc_msg /lrc2ocr_msg > "$log_root/${system}-${run_id}-record.log" 2>&1 & recorder_pid="$!"; pids+=("$recorder_pid")
-  RESOURCE_OUTPUT_DIR="$resource_root" RESOURCE_PIDS="$controller_pid,$lrc_pid" CONTROLLER_PID="$controller_pid" LRC_PID="$lrc_pid" \
-    scripts/record_xavier_resources.sh "$system" "$run_id" "$((duration_s + start_s + 15))" > "$log_root/${system}-${run_id}-resources.log" 2>&1 & resource_pid="$!"; pids+=("$resource_pid")
   sleep 2
   kill -0 "$recorder_pid" 2>/dev/null || { echo "Recorder exited before playback; inspect the record log" >&2; exit 1; }
-  rosbag play --delay=10 "$input_bag" /sensors/camera/left/image_raw:=/experiment2/input_image
+  rosbag play --delay=2 "$input_bag" /sensors/camera/left/image_raw:=/experiment2/input_image & playback_pid="$!"; pids+=("$playback_pid")
+  rostopic echo -n 1 /xav2lrc_msg >/dev/null
+  sleep "$start_s"
+  RESOURCE_OUTPUT_DIR="$resource_root" RESOURCE_PIDS="$controller_pid,$lrc_pid" CONTROLLER_PID="$controller_pid" LRC_PID="$lrc_pid" \
+    scripts/record_xavier_resources.sh "$system" "$run_id" "$duration_s" > "$log_root/${system}-${run_id}-resources.log" 2>&1
+  wait "$playback_pid"
   sleep 2
   kill -INT "$recorder_pid" 2>/dev/null || true
   wait "$recorder_pid" 2>/dev/null || true
@@ -81,15 +85,19 @@ else
   command -v ros2 >/dev/null || { echo "ROS 2 is not sourced" >&2; exit 2; }
   setsid python3 scripts/experiment2_restamp_ros2_images.py > "$log_root/${system}-${run_id}-relay.log" 2>&1 & relay_pid="$!"; pids+=("$relay_pid")
   setsid python3 scripts/matched_controller_ros2.py > "$log_root/${system}-${run_id}-controller.log" 2>&1 & controller_pid="$!"; pids+=("$controller_pid")
-  setsid ros2 run scale_truck_control lrc_node > "$log_root/${system}-${run_id}-lrc.log" 2>&1 & lrc_launcher_pid="$!"; pids+=("$lrc_launcher_pid")
+  if [[ -n "${EXPERIMENT_ROOT:-}" ]]; then lrc_command=(python3 scripts/matched_lrc_ros2.py); else lrc_command=(ros2 run scale_truck_control lrc_node); fi
+  setsid "${lrc_command[@]}" > "$log_root/${system}-${run_id}-lrc.log" 2>&1 & lrc_launcher_pid="$!"; pids+=("$lrc_launcher_pid")
   sleep 4
   lrc_pid=$(pgrep -P "$lrc_launcher_pid" | head -1 || true); lrc_pid="${lrc_pid:-$lrc_launcher_pid}"
   setsid ros2 bag record -o "$bag_root/${system}-run-${run_id}" /xav2lrc_msg /lrc2ocr_msg > "$log_root/${system}-${run_id}-record.log" 2>&1 & recorder_pid="$!"; pids+=("$recorder_pid")
-  RESOURCE_OUTPUT_DIR="$resource_root" RESOURCE_PIDS="$controller_pid,$lrc_pid" CONTROLLER_PID="$controller_pid" LRC_PID="$lrc_pid" \
-    scripts/record_xavier_resources.sh "$system" "$run_id" "$((duration_s + start_s + 15))" > "$log_root/${system}-${run_id}-resources.log" 2>&1 & resource_pid="$!"; pids+=("$resource_pid")
   sleep 2
   kill -0 "$recorder_pid" 2>/dev/null || { echo "Recorder exited before playback; inspect the record log" >&2; exit 1; }
-  ros2 bag play "$input_bag" --delay 10 --remap /sensors/camera/left/image_raw:=/experiment2/input_image
+  ros2 bag play "$input_bag" --delay 2 --remap /sensors/camera/left/image_raw:=/experiment2/input_image & playback_pid="$!"; pids+=("$playback_pid")
+  ros2 topic echo --once /xav2lrc_msg >/dev/null
+  sleep "$start_s"
+  RESOURCE_OUTPUT_DIR="$resource_root" RESOURCE_PIDS="$controller_pid,$lrc_pid" CONTROLLER_PID="$controller_pid" LRC_PID="$lrc_pid" \
+    scripts/record_xavier_resources.sh "$system" "$run_id" "$duration_s" > "$log_root/${system}-${run_id}-resources.log" 2>&1
+  wait "$playback_pid"
   sleep 2
   kill -INT "$recorder_pid" 2>/dev/null || true
   wait "$recorder_pid" 2>/dev/null || true
