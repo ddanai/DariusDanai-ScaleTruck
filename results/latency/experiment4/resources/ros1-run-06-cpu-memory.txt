@@ -1,0 +1,21 @@
+Linux 5.10.216-tegra (ubuntu) 	08/24/2026 	_aarch64_	(8 CPU)
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+12:18:43 AM  1000    219930   35.00   27.00    0.00    0.00   62.00     3  17478.00      0.00  651148   50500   0.16  python3
+12:18:43 AM  1000    219931    3.00    3.00    0.00    0.00    6.00     3      0.00      0.00  724080   47440   0.15  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+12:18:44 AM  1000    219930   34.00   28.00    0.00    0.00   62.00     2  17441.00      0.00  651148   50500   0.16  python3
+12:18:44 AM  1000    219931    2.00    4.00    0.00    0.00    6.00     1      0.00      0.00  724080   47440   0.15  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+12:18:45 AM  1000    219930   33.00   30.00    0.00    0.00   63.00     2  17457.00      0.00  653444   50500   0.16  python3
+12:18:45 AM  1000    219931    3.00    3.00    0.00    0.00    6.00     0      0.00      0.00  724080   47440   0.15  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+12:18:46 AM  1000    219930   34.00   28.00    0.00    0.00   62.00     2  17456.00      0.00  651148   50500   0.16  python3
+12:18:46 AM  1000    219931    3.00    3.00    0.00    0.00    6.00     1      0.00      0.00  724080   47440   0.15  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+12:18:47 AM  1000    219930   34.00   28.00    0.00    0.00   62.00     2  17419.00      0.00  653892   52800   0.17  python3
+12:18:47 AM  1000    219931    3.00    2.00    0.00    0.00    5.00     0      0.00      0.00  724080   47440   0.15  python3

@@ -1,0 +1,21 @@
+Linux 5.10.216-tegra (ubuntu) 	08/24/26 	_aarch64_	(8 CPU)
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+08:20:29        0        45   27.00    1.00    0.00    0.00   28.00     1      4.00      0.00  645896   75304   0.24  python3
+08:20:29        0        46   12.00    0.00    0.00    1.00   12.00     2      4.00      0.00  600264   38856   0.12  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+08:20:30        0        45   25.00    2.00    0.00    1.00   27.00     0      4.00      0.00  645896   75304   0.24  python3
+08:20:30        0        46   10.00    2.00    0.00    1.00   12.00     2      3.00      0.00  600264   38856   0.12  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+08:20:31        0        45   26.00    1.00    0.00    0.00   27.00     1      4.00      0.00  645896   75304   0.24  python3
+08:20:31        0        46    9.00    3.00    0.00    1.00   12.00     2      1.00      0.00  600264   38856   0.12  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+08:20:32        0        45   23.00    3.00    0.00    1.00   26.00     0      1.00      0.00  645896   75304   0.24  python3
+08:20:32        0        46    7.00    4.00    0.00    2.00   11.00     3      1.00      0.00  600264   38856   0.12  python3
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+08:20:33        0        45   27.00    2.00    0.00    0.00   29.00     1      2.00      0.00  645896   75304   0.24  python3
+08:20:33        0        46   12.00    1.00    0.00    1.00   13.00     2      0.00      0.00  600264   38856   0.12  python3

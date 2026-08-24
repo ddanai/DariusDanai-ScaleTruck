@@ -1,0 +1,74 @@
+{
+  "bag": "/ros2_ws/src/DariusDanai-ScaleTruck/results/latency/experiment4/bags/ros2-run-26",
+  "latency_ms": {
+    "controller_to_actuator_command": {
+      "count": 89,
+      "max": 21.34251594543457,
+      "mean": 11.996113852168737,
+      "median": 12.115955352783203,
+      "min": 1.642465591430664,
+      "p95": 20.95475196838379,
+      "p99": 21.237821578979492,
+      "stddev": 6.11697885954219
+    },
+    "end_to_end_command": {
+      "count": 89,
+      "max": 33.503055572509766,
+      "mean": 23.858943682038383,
+      "median": 24.04618263244629,
+      "min": 13.158082962036133,
+      "p95": 32.7028751373291,
+      "p99": 33.38451385498047,
+      "stddev": 6.129976424587298
+    },
+    "sensor_to_controller": {
+      "count": 89,
+      "max": 12.857437133789062,
+      "mean": 11.862829829869645,
+      "median": 11.790990829467773,
+      "min": 11.24882698059082,
+      "p95": 12.542390823364258,
+      "p99": 12.762813568115234,
+      "stddev": 0.3360054434739364
+    }
+  },
+  "method": {
+    "clock": "sensor header stamp and rosbag2 receive timestamps",
+    "correlation": "first controller and actuator messages with the same trace_id"
+  },
+  "topic_timing": {
+    "actuator": {
+      "frequency_hz": 17.95947344261255,
+      "interarrival_ms": {
+        "count": 88,
+        "max": 260.03217697143555,
+        "mean": 55.68091977726329,
+        "median": 40.308475494384766,
+        "min": 18.438100814819336,
+        "p95": 159.82720851898193,
+        "p99": 244.41936016082758,
+        "stddev": 46.09606988717716
+      }
+    },
+    "controller": {
+      "frequency_hz": 17.95264503278886,
+      "interarrival_ms": {
+        "count": 88,
+        "max": 265.58661460876465,
+        "mean": 55.702098391272806,
+        "median": 33.938050270080566,
+        "min": 30.780792236328125,
+        "p95": 165.61115980148315,
+        "p99": 238.02409172058088,
+        "stddev": 45.91677469124541
+      }
+    }
+  },
+  "trace_count": 89,
+  "window": {
+    "duration_s": 5.0,
+    "observed_controller_span_s": 4.901784658432007,
+    "origin": "first nonzero controller trace",
+    "start_s": 1.0
+  }
+}

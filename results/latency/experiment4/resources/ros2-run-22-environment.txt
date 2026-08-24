@@ -1,0 +1,19 @@
+system=ros2
+run=22
+utc_start=2026-08-24T08:12:57Z
+duration_s=5
+hostname=ubuntu
+kernel=Linux 5.10.216-tegra aarch64 GNU/Linux
+ros_distro=humble
+ros_domain_id=0
+rmw_implementation=rmw_fastrtps_cpp
+controller_pid=175
+lrc_pid=176
+git_commit=6772560100a9772481ac287e3da3bb7b1ec04ff2
+network_interfaces:
+scripts/record_xavier_resources.sh: line 31: ip: command not found
+xavier_power_mode:
+nvpmodel unavailable
+xavier_clocks:
+jetson_clocks unavailable
+utc_end=2026-08-24T08:13:02Z
