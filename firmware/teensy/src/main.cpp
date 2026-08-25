@@ -67,6 +67,10 @@ void setup() {
   digitalWrite(firmware_config::kStatusLedPin, LOW);
 
   Serial.begin(firmware_config::kSerialBaud);
+  const uint32_t serial_wait_start = millis();
+  while (!Serial && millis() - serial_wait_start < 5000) {
+  // Wait up to five seconds for the Xavier to open USB serial.
+  }
 
   Serial.print("BOOT ");
   Serial.print(firmware_config::kFirmwareName);
