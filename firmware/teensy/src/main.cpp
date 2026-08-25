@@ -12,6 +12,7 @@ char command_buffer[firmware_config::kCommandBufferSize] = {};
 size_t command_length = 0;
 uint32_t last_heartbeat_ms = 0;
 uint32_t last_led_toggle_ms = 0;
+bool heartbeat_enabled = true;
 PidControllers controllers;
 SafetyController safety(controllers);
 
@@ -39,7 +40,16 @@ void handleCommand(const char* command) {
     Serial.print(" throttle_cmd=");
     Serial.print(safety.throttleCommand(), 4);
     Serial.print(" steering_cmd=");
-    Serial.println(safety.steeringCommand(), 4);
+    Serial.print(safety.steeringCommand(), 4);
+    Serial.print(" heartbeat=");
+    Serial.println(heartbeat_enabled ? "ON" : "OFF");
+  } else if (std::strcmp(command, "HEARTBEAT ON") == 0) {
+    heartbeat_enabled = true;
+    last_heartbeat_ms = millis();
+    Serial.println("OK HEARTBEAT ON");
+  } else if (std::strcmp(command, "HEARTBEAT OFF") == 0) {
+    heartbeat_enabled = false;
+    Serial.println("OK HEARTBEAT OFF");
   } else if (std::strcmp(command, "DISARM") == 0) {
     safety.disarm();
     Serial.println("OK DISARMED");
@@ -107,7 +117,8 @@ void loop() {
                  !digitalRead(firmware_config::kStatusLedPin));
   }
 
-  if (now_ms - last_heartbeat_ms >= firmware_config::kHeartbeatPeriodMs) {
+  if (heartbeat_enabled &&
+      now_ms - last_heartbeat_ms >= firmware_config::kHeartbeatPeriodMs) {
     last_heartbeat_ms = now_ms;
     Serial.print("HEARTBEAT ");
     Serial.println(now_ms);

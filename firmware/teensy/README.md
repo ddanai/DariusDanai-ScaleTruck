@@ -68,6 +68,8 @@ Type one of these newline-terminated diagnostic commands:
 | `PING` | `PONG` |
 | `INFO` | firmware name, version, and build timestamp |
 | `STATUS` | uptime, PID enable state, and normalized PID outputs |
+| `HEARTBEAT ON` | enable periodic heartbeat messages |
+| `HEARTBEAT OFF` | stop periodic heartbeat messages |
 | `DISARM` | disable both PIDs and force both safe outputs to zero |
 | `ESTOP` | simulate and latch an emergency stop (reset required) |
 | anything else | `ERR UNKNOWN_COMMAND` |
