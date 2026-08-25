@@ -1,6 +1,6 @@
 # Scale Truck Teensy Firmware
 
-This directory is the firmware repository for the scale-truck low-level controller. It currently provides the Milestone 5 project foundation and a serial/LED bring-up program. PID control, actuator drivers, and the production command protocol are intentionally reserved for later deliverables.
+This directory is the firmware repository for the scale-truck low-level controller. It provides the Milestone 5 project foundation, serial/LED bring-up, and separate speed and steering PID controllers. Actuator drivers and the production command protocol are intentionally reserved for later deliverables.
 
 ## Hardware and toolchain
 
@@ -17,8 +17,10 @@ If the truck uses another Teensy model, change `board` in `platformio.ini` to th
 firmware/teensy/
 |-- include/
 |   `-- firmware_config.h   # Firmware constants and hardware selection
+|   `-- pid_controllers.h   # Independent speed and steering PID interface
 |-- src/
 |   `-- main.cpp            # Bring-up firmware
+|   `-- pid_controllers.cpp # PID_v1-backed controller implementation
 |-- test/                   # Future native/unit tests
 |-- .gitignore
 |-- platformio.ini          # Reproducible build and upload configuration
@@ -65,7 +67,7 @@ Type one of these newline-terminated diagnostic commands:
 |---|---|
 | `PING` | `PONG` |
 | `INFO` | firmware name, version, and build timestamp |
-| `STATUS` | uptime and a `bringup_only=1` marker |
+| `STATUS` | uptime, PID enable state, and normalized PID outputs |
 | anything else | `ERR UNKNOWN_COMMAND` |
 
 Successful `PING`/`PONG`, periodic heartbeats, and LED blinking verify the development environment, firmware upload, and bidirectional USB serial communication.
@@ -73,6 +75,20 @@ Successful `PING`/`PONG`, periodic heartbeats, and LED blinking verify the devel
 ## Configuration
 
 Project-wide constants are in `include/firmware_config.h`. Pin assignments for throttle, steering, encoders, and emergency stop should be added only after the exact Teensy model and wiring are confirmed.
+
+## PID controllers
+
+`PidControllers` contains two independent instances of Brett Beauregard's
+MIT-licensed Arduino PID library: one maps speed error to normalized throttle
+and one maps steering-angle error to a normalized steering command. Both
+outputs are limited to `[-1, 1]`, use a 20 ms sample period, and remain disabled
+by default. The initial gains are safe placeholders, not tuned vehicle values.
+
+Call `enable()` only after the emergency stop, command watchdog, sensors, and
+actuator drivers are operational. Feed current speed and steering angle to
+`update()` on every pass through `loop()`, then map `throttleCommand()` and
+`steeringCommand()` to the verified hardware ranges. `disable()` immediately
+returns both computed commands to zero.
 
 ## Safety note
 

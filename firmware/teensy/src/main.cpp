@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "firmware_config.h"
+#include "pid_controllers.h"
 
 namespace {
 
@@ -10,6 +11,7 @@ char command_buffer[firmware_config::kCommandBufferSize] = {};
 size_t command_length = 0;
 uint32_t last_heartbeat_ms = 0;
 uint32_t last_led_toggle_ms = 0;
+PidControllers controllers;
 
 void printInfo() {
   Serial.print("INFO name=");
@@ -30,7 +32,12 @@ void handleCommand(const char* command) {
   } else if (std::strcmp(command, "STATUS") == 0) {
     Serial.print("STATUS uptime_ms=");
     Serial.print(millis());
-    Serial.println(" bringup_only=1");
+    Serial.print(" pid_enabled=");
+    Serial.print(controllers.enabled() ? 1 : 0);
+    Serial.print(" throttle_cmd=");
+    Serial.print(controllers.throttleCommand(), 4);
+    Serial.print(" steering_cmd=");
+    Serial.println(controllers.steeringCommand(), 4);
   } else if (command[0] != '\0') {
     Serial.println("ERR UNKNOWN_COMMAND");
   }
@@ -63,6 +70,7 @@ void pollSerial() {
 }  // namespace
 
 void setup() {
+  controllers.begin();
   pinMode(firmware_config::kStatusLedPin, OUTPUT);
   digitalWrite(firmware_config::kStatusLedPin, LOW);
 
