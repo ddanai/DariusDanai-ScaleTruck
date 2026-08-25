@@ -41,6 +41,9 @@ pio --version
 For the complete Jetson Xavier connection, build, upload, and serial test
 procedure, see [Xavier-Teensy Bring-Up](XAVIER_TEENSY_BRINGUP.md).
 
+For the Windows PC procedure used to upload and verify the Teensy directly, see
+[Teensy Upload Guide](TEENSY_UPLOAD_GUIDE.md).
+
 Run these commands from this directory:
 
 ```bash
