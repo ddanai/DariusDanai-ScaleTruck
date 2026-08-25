@@ -68,6 +68,8 @@ Type one of these newline-terminated diagnostic commands:
 | `PING` | `PONG` |
 | `INFO` | firmware name, version, and build timestamp |
 | `STATUS` | uptime, PID enable state, and normalized PID outputs |
+| `DISARM` | disable both PIDs and force both safe outputs to zero |
+| `ESTOP` | simulate and latch an emergency stop (reset required) |
 | anything else | `ERR UNKNOWN_COMMAND` |
 
 Successful `PING`/`PONG`, periodic heartbeats, and LED blinking verify the development environment, firmware upload, and bidirectional USB serial communication.
@@ -89,6 +91,23 @@ actuator drivers are operational. Feed current speed and steering angle to
 `update()` on every pass through `loop()`, then map `throttleCommand()` and
 `steeringCommand()` to the verified hardware ranges. `disable()` immediately
 returns both computed commands to zero.
+
+## Safety supervisor
+
+`SafetyController` is the only approved source of actuator commands. It boots
+`DISARMED`, requires an explicit arm followed by a valid command before entering
+`ACTIVE`, limits initial throttle authority to `[-0.20, 0.20]`, and limits
+steering authority to `[-0.25, 0.25]`. Invalid/non-finite feedback, implausible
+commands, or a command gap longer than 250 ms disable both PIDs, force neutral
+outputs, and latch a fault. An emergency stop does the same immediately and
+cannot be cleared while its physical input remains asserted.
+
+The current bring-up program intentionally exposes no `ARM` command and does
+not call the control cycle, because sensor inputs, the physical E-stop pin, and
+actuator-neutral signals are not defined yet. Hardware integration must call
+`setEmergencyStop()` and `update()` every loop, send only the supervisor's
+clamped outputs to drivers, and provide an explicit operator-controlled path to
+`clearFaults()` and `arm()`.
 
 ## Safety note
 

@@ -4,6 +4,7 @@
 
 #include "firmware_config.h"
 #include "pid_controllers.h"
+#include "safety_controller.h"
 
 namespace {
 
@@ -12,6 +13,7 @@ size_t command_length = 0;
 uint32_t last_heartbeat_ms = 0;
 uint32_t last_led_toggle_ms = 0;
 PidControllers controllers;
+SafetyController safety(controllers);
 
 void printInfo() {
   Serial.print("INFO name=");
@@ -32,12 +34,18 @@ void handleCommand(const char* command) {
   } else if (std::strcmp(command, "STATUS") == 0) {
     Serial.print("STATUS uptime_ms=");
     Serial.print(millis());
-    Serial.print(" pid_enabled=");
-    Serial.print(controllers.enabled() ? 1 : 0);
+    Serial.print(" safety_state=");
+    Serial.print(safety.stateName());
     Serial.print(" throttle_cmd=");
-    Serial.print(controllers.throttleCommand(), 4);
+    Serial.print(safety.throttleCommand(), 4);
     Serial.print(" steering_cmd=");
-    Serial.println(controllers.steeringCommand(), 4);
+    Serial.println(safety.steeringCommand(), 4);
+  } else if (std::strcmp(command, "DISARM") == 0) {
+    safety.disarm();
+    Serial.println("OK DISARMED");
+  } else if (std::strcmp(command, "ESTOP") == 0) {
+    safety.setEmergencyStop(true);
+    Serial.println("OK ESTOP_LATCHED");
   } else if (command[0] != '\0') {
     Serial.println("ERR UNKNOWN_COMMAND");
   }
@@ -71,6 +79,7 @@ void pollSerial() {
 
 void setup() {
   controllers.begin();
+  safety.begin();
   pinMode(firmware_config::kStatusLedPin, OUTPUT);
   digitalWrite(firmware_config::kStatusLedPin, LOW);
 
