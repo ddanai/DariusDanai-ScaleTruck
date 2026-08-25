@@ -36,6 +36,9 @@ pio --version
 
 ## Build and upload
 
+For the complete Jetson Xavier connection, build, upload, and serial test
+procedure, see [Xavier-Teensy Bring-Up](XAVIER_TEENSY_BRINGUP.md).
+
 Run these commands from this directory:
 
 ```bash
