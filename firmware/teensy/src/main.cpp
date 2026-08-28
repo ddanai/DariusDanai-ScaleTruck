@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include <cstdio>
 #include <cstring>
 
 #include "firmware_config.h"
@@ -15,6 +16,8 @@ uint32_t last_led_toggle_ms = 0;
 bool heartbeat_enabled = true;
 PidControllers controllers;
 SafetyController safety(controllers);
+double simulated_speed_mps = 0.0;
+double simulated_steering_degrees = 0.0;
 
 void printInfo() {
   Serial.print("INFO name=");
@@ -50,14 +53,53 @@ void handleCommand(const char* command) {
   } else if (std::strcmp(command, "HEARTBEAT OFF") == 0) {
     heartbeat_enabled = false;
     Serial.println("OK HEARTBEAT OFF");
+  } else if (std::strcmp(command, "ARM") == 0) {
+    if (safety.arm(millis())) {
+      Serial.println("OK ARMED");
+    } else {
+      Serial.print("ERR ARM_REJECTED state=");
+      Serial.println(safety.stateName());
+    }
+  } else if (std::strcmp(command, "CLEAR") == 0) {
+    // Software-only bring-up: simulate releasing the physical E-stop before
+    // clearing a latched fault. Replace this with the real input later.
+    safety.setEmergencyStop(false);
+    if (safety.clearFaults()) {
+      Serial.println("OK FAULTS_CLEARED");
+    } else {
+      Serial.print("ERR CLEAR_REJECTED state=");
+      Serial.println(safety.stateName());
+    }
   } else if (std::strcmp(command, "DISARM") == 0) {
     safety.disarm();
     Serial.println("OK DISARMED");
   } else if (std::strcmp(command, "ESTOP") == 0) {
     safety.setEmergencyStop(true);
     Serial.println("OK ESTOP_LATCHED");
-  } else if (command[0] != '\0') {
-    Serial.println("ERR UNKNOWN_COMMAND");
+  } else {
+    double first_value = 0.0;
+    double second_value = 0.0;
+    char trailing_character = '\0';
+
+    if (std::sscanf(command, "FEEDBACK %lf %lf %c", &first_value,
+                    &second_value, &trailing_character) == 2) {
+      simulated_speed_mps = first_value;
+      simulated_steering_degrees = second_value;
+      Serial.print("OK FEEDBACK speed=");
+      Serial.print(simulated_speed_mps, 4);
+      Serial.print(" steering=");
+      Serial.println(simulated_steering_degrees, 4);
+    } else if (std::sscanf(command, "CMD %lf %lf %c", &first_value,
+                           &second_value, &trailing_character) == 2) {
+      if (safety.acceptCommand(first_value, second_value, millis())) {
+        Serial.println("OK COMMAND_ACCEPTED");
+      } else {
+        Serial.print("ERR COMMAND_REJECTED state=");
+        Serial.println(safety.stateName());
+      }
+    } else if (command[0] != '\0') {
+      Serial.println("ERR UNKNOWN_COMMAND");
+    }
   }
 }
 
@@ -107,9 +149,10 @@ void setup() {
 }
 
 void loop() {
-  const uint32_t now_ms = millis();
-
   pollSerial();
+
+  const uint32_t now_ms = millis();
+  safety.update(simulated_speed_mps, simulated_steering_degrees, now_ms);
 
   if (now_ms - last_led_toggle_ms >= firmware_config::kLedTogglePeriodMs) {
     last_led_toggle_ms = now_ms;
