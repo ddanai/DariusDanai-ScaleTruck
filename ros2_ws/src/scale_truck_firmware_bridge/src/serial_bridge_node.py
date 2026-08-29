@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import struct
 import threading
 import time
 
@@ -9,6 +8,7 @@ from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 
 from scale_truck_msgs.msg import Lrc2Ocr, Ocr2Lrc
+from std_srvs.srv import Trigger
 
 try:
     import serial
@@ -34,9 +34,6 @@ FEEDBACK_QOS = QoSProfile(
 class SerialBridgeNode(Node):
     """Bridge ROS 2 command/feedback topics to the low-level controller serial link."""
 
-    COMMAND_FORMAT = "<ifffff?"
-    FEEDBACK_FORMAT = "<ff"
-
     def __init__(self):
         super().__init__("serial_bridge_node")
 
@@ -47,12 +44,20 @@ class SerialBridgeNode(Node):
         self.feedback_topic = self.declare_parameter("feedback_topic", "ocr2lrc_msg").value
 
         self.serial = None
+        self.serial_lock = threading.Lock()
         self.running = True
 
         self.command_sub = self.create_subscription(
             Lrc2Ocr, self.command_topic, self.command_callback, COMMAND_QOS
         )
         self.feedback_pub = self.create_publisher(Ocr2Lrc, self.feedback_topic, FEEDBACK_QOS)
+        self.arm_service = self.create_service(Trigger, "firmware/arm", self.arm_callback)
+        self.disarm_service = self.create_service(
+            Trigger, "firmware/disarm", self.disarm_callback
+        )
+        self.clear_service = self.create_service(
+            Trigger, "firmware/clear_faults", self.clear_faults_callback
+        )
 
         self.open_serial()
         self.read_thread = threading.Thread(target=self.read_loop, daemon=True)
@@ -63,6 +68,11 @@ class SerialBridgeNode(Node):
         if self.read_thread.is_alive():
             self.read_thread.join(timeout=1.0)
         if self.serial is not None:
+            try:
+                self.serial.write(b"DISARM\n")
+                self.serial.flush()
+            except serial.SerialException:
+                pass
             self.serial.close()
         super().destroy_node()
 
@@ -74,6 +84,9 @@ class SerialBridgeNode(Node):
         try:
             self.serial = serial.Serial(self.port, self.baud, timeout=self.timeout)
             self.get_logger().info(f"Opened {self.port} at {self.baud} baud")
+            time.sleep(2.0)
+            self.serial.reset_input_buffer()
+            self.write_command("HEARTBEAT OFF")
         except serial.SerialException as exc:
             self.get_logger().error(f"Could not open serial port {self.port}: {exc}")
 
@@ -81,34 +94,62 @@ class SerialBridgeNode(Node):
         if self.serial is None:
             return
 
-        packet = struct.pack(
-            self.COMMAND_FORMAT,
-            msg.index,
-            msg.steer_angle,
-            msg.cur_dist,
-            msg.tar_dist,
-            msg.tar_vel,
-            msg.pred_vel,
-            msg.alpha,
+        # Use the same newline-delimited command path exercised by the fixed
+        # command acceptance test. ROS publications refresh the firmware's
+        # watchdog; if they stop for 250 ms, the Teensy forces neutral.
+        command = f"CMD {msg.tar_vel:.6f} {msg.steer_angle:.6f}"
+        self.write_command(command)
+
+    def write_command(self, command):
+        if self.serial is None:
+            return False
+        try:
+            with self.serial_lock:
+                self.serial.write((command + "\n").encode("ascii"))
+                self.serial.flush()
+            return True
+        except serial.SerialException as exc:
+            self.get_logger().error(f"Serial command write failed: {exc}")
+            return False
+
+    def trigger_command(self, command, response):
+        response.success = self.write_command(command)
+        response.message = (
+            f"Sent {command}; check Teensy status for acceptance"
+            if response.success
+            else f"Could not send {command}"
         )
-        self.serial.write(packet)
+        return response
+
+    def arm_callback(self, request, response):
+        del request
+        return self.trigger_command("ARM", response)
+
+    def disarm_callback(self, request, response):
+        del request
+        return self.trigger_command("DISARM", response)
+
+    def clear_faults_callback(self, request, response):
+        del request
+        return self.trigger_command("CLEAR", response)
 
     def read_loop(self):
-        packet_size = struct.calcsize(self.FEEDBACK_FORMAT)
         while self.running and rclpy.ok():
             if self.serial is None:
                 time.sleep(0.1)
                 continue
 
-            data = self.serial.read(packet_size)
-            if len(data) != packet_size:
+            try:
+                data = self.serial.readline()
+            except serial.SerialException as exc:
+                self.get_logger().error(f"Serial read failed: {exc}")
+                time.sleep(0.1)
                 continue
-
-            cur_vel, u_k = struct.unpack(self.FEEDBACK_FORMAT, data)
-            msg = Ocr2Lrc()
-            msg.cur_vel = cur_vel
-            msg.u_k = u_k
-            self.feedback_pub.publish(msg)
+            if not data:
+                continue
+            line = data.decode("ascii", errors="replace").strip()
+            if line.startswith("ERR"):
+                self.get_logger().warning(f"Teensy: {line}")
 
 
 def main(args=None):
