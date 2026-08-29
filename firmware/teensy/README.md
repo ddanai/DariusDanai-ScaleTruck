@@ -38,8 +38,9 @@ pio --version
 
 ## Build and upload
 
-For the complete Jetson Xavier connection, build, upload, and serial test
-procedure, see [Xavier-Teensy Bring-Up](XAVIER_TEENSY_BRINGUP.md).
+For the short Jetson Xavier build, upload, and serial checklist, see
+[Xavier-Teensy Bring-Up](XAVIER_TEENSY_BRINGUP.md). Then run the
+[Xavier Fixed-Command Test](XAVIER_FIXED_COMMAND_TEST.md) before connecting ROS.
 
 For the Windows PC procedure used to upload and verify the Teensy directly, see
 [Teensy Upload Guide](TEENSY_UPLOAD_GUIDE.md).
