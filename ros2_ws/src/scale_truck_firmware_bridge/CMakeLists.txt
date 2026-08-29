@@ -14,4 +14,10 @@ install(PROGRAMS
   RENAME serial_bridge_node
 )
 
+install(PROGRAMS
+  test/ros_command_path_test.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME ros_command_path_test
+)
+
 ament_package()
