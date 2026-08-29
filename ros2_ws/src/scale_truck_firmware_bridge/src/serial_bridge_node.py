@@ -8,6 +8,7 @@ from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 
 from scale_truck_msgs.msg import Lrc2Ocr, Ocr2Lrc
+from std_msgs.msg import String
 from std_srvs.srv import Trigger
 
 try:
@@ -51,12 +52,18 @@ class SerialBridgeNode(Node):
             Lrc2Ocr, self.command_topic, self.command_callback, COMMAND_QOS
         )
         self.feedback_pub = self.create_publisher(Ocr2Lrc, self.feedback_topic, FEEDBACK_QOS)
+        self.serial_status_pub = self.create_publisher(
+            String, "firmware/serial_status", FEEDBACK_QOS
+        )
         self.arm_service = self.create_service(Trigger, "firmware/arm", self.arm_callback)
         self.disarm_service = self.create_service(
             Trigger, "firmware/disarm", self.disarm_callback
         )
         self.clear_service = self.create_service(
             Trigger, "firmware/clear_faults", self.clear_faults_callback
+        )
+        self.status_service = self.create_service(
+            Trigger, "firmware/status", self.status_callback
         )
 
         self.open_serial()
@@ -133,6 +140,10 @@ class SerialBridgeNode(Node):
         del request
         return self.trigger_command("CLEAR", response)
 
+    def status_callback(self, request, response):
+        del request
+        return self.trigger_command("STATUS", response)
+
     def read_loop(self):
         while self.running and rclpy.ok():
             if self.serial is None:
@@ -148,6 +159,9 @@ class SerialBridgeNode(Node):
             if not data:
                 continue
             line = data.decode("ascii", errors="replace").strip()
+            status_msg = String()
+            status_msg.data = line
+            self.serial_status_pub.publish(status_msg)
             if line.startswith("ERR"):
                 self.get_logger().warning(f"Teensy: {line}")
 
@@ -159,7 +173,8 @@ def main(args=None):
         rclpy.spin(node)
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":
