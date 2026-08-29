@@ -1,0 +1,135 @@
+  TX  HEARTBEAT OFF
+  RX  OK HEARTBEAT OFF
+  TX  CLEAR
+  RX  OK FAULTS_CLEARED
+  TX  ARM
+  RX  OK ARMED
+  TX  FEEDBACK 0.0 0.0
+  RX  OK FEEDBACK speed=0.0000 steering=0.0000
+  TX  CMD 0.000 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  STATUS
+  RX  STATUS uptime_ms=192881 safety_state=ACTIVE throttle_cmd=0.0000 steering_cmd=0.0000 heartbeat=OFF
+PASS neutral: state=ACTIVE, throttle=0.0000, steering=0.0000
+  TX  CMD 0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  STATUS
+  RX  STATUS uptime_ms=193196 safety_state=ACTIVE throttle_cmd=0.1000 steering_cmd=0.0000 heartbeat=OFF
+PASS forward: state=ACTIVE, throttle=0.1000, steering=0.0000
+  TX  CMD -0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD -0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD -0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD -0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD -0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD -0.200 0.000
+  RX  OK COMMAND_ACCEPTED
+  TX  STATUS
+  RX  STATUS uptime_ms=193510 safety_state=ACTIVE throttle_cmd=-0.1000 steering_cmd=0.0000 heartbeat=OFF
+PASS reverse: state=ACTIVE, throttle=-0.1000, steering=0.0000
+  TX  CMD 0.000 10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  STATUS
+  RX  STATUS uptime_ms=193824 safety_state=ACTIVE throttle_cmd=0.0000 steering_cmd=0.2500 heartbeat=OFF
+PASS left: state=ACTIVE, throttle=0.0000, steering=0.2500
+  TX  CMD 0.000 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.000 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  STATUS
+  RX  STATUS uptime_ms=194137 safety_state=ACTIVE throttle_cmd=0.0000 steering_cmd=-0.2500 heartbeat=OFF
+PASS right: state=ACTIVE, throttle=0.0000, steering=-0.2500
+  TX  CMD 0.200 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  CMD 0.200 -10.000
+  RX  OK COMMAND_ACCEPTED
+  TX  STATUS
+  RX  STATUS uptime_ms=194452 safety_state=ACTIVE throttle_cmd=0.1000 steering_cmd=-0.2500 heartbeat=OFF
+PASS combined: state=ACTIVE, throttle=0.1000, steering=-0.2500
+  TX  CMD 16.0 0.0
+  RX  ERR COMMAND_REJECTED state=COMMAND_FAULT
+  TX  STATUS
+  RX  STATUS uptime_ms=194460 safety_state=COMMAND_FAULT throttle_cmd=0.0000 steering_cmd=0.0000 heartbeat=OFF
+PASS invalid command: state=COMMAND_FAULT, throttle=0.0000, steering=0.0000
+  TX  CLEAR
+  RX  OK FAULTS_CLEARED
+  TX  ARM
+  RX  OK ARMED
+  TX  FEEDBACK 0.0 0.0
+  RX  OK FEEDBACK speed=0.0000 steering=0.0000
+  TX  CMD 0.2 0.0
+  RX  OK COMMAND_ACCEPTED
+  TX  STATUS
+  RX  STATUS uptime_ms=194822 safety_state=WATCHDOG_FAULT throttle_cmd=0.0000 steering_cmd=0.0000 heartbeat=OFF
+PASS watchdog: state=WATCHDOG_FAULT, throttle=0.0000, steering=0.0000
+  TX  CLEAR
+  RX  OK FAULTS_CLEARED
+  TX  ARM
+  RX  OK ARMED
+  TX  DISARM
+  RX  OK DISARMED
+  TX  STATUS
+  RX  STATUS uptime_ms=194831 safety_state=DISARMED throttle_cmd=0.0000 steering_cmd=0.0000 heartbeat=OFF
+PASS disarm: state=DISARMED, throttle=0.0000, steering=0.0000
+  TX  ESTOP
+  RX  OK ESTOP_LATCHED
+  TX  STATUS
+  RX  STATUS uptime_ms=194838 safety_state=ESTOP throttle_cmd=0.0000 steering_cmd=0.0000 heartbeat=OFF
+PASS emergency stop: state=ESTOP, throttle=0.0000, steering=0.0000
+  TX  CLEAR
+  RX  OK FAULTS_CLEARED
+  TX  STATUS
+  RX  STATUS uptime_ms=194845 safety_state=DISARMED throttle_cmd=0.0000 steering_cmd=0.0000 heartbeat=OFF
+PASS clear fault: state=DISARMED
+
+RESULT: 11 passed, 0 failed
