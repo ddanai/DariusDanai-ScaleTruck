@@ -18,7 +18,7 @@ class CommandPathTest(Node):
         self.lines = []
         self.command_pub = self.create_publisher(Lrc2Ocr, "lrc2ocr_msg", 1)
         self.create_subscription(String, "firmware/serial_status", self.on_line, 10)
-        self.clients = {
+        self.service_clients = {
             name: self.create_client(Trigger, f"firmware/{name}")
             for name in ("arm", "disarm", "clear_faults", "status")
         }
@@ -29,12 +29,12 @@ class CommandPathTest(Node):
         self.lines.append(msg.data)
 
     def wait_for_services(self):
-        for name, client in self.clients.items():
+        for name, client in self.service_clients.items():
             if not client.wait_for_service(timeout_sec=5.0):
                 raise RuntimeError(f"firmware/{name} service is unavailable")
 
     def call(self, name):
-        future = self.clients[name].call_async(Trigger.Request())
+        future = self.service_clients[name].call_async(Trigger.Request())
         rclpy.spin_until_future_complete(self, future, timeout_sec=2.0)
         if not future.done() or not future.result().success:
             raise RuntimeError(f"firmware/{name} could not send its command")
