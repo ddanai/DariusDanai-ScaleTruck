@@ -1,0 +1,8 @@
+PASS clear: OK FAULTS_CLEARED
+PASS arm: OK ARMED
+PASS active command: STATUS uptime_ms=3773170 safety_state=ACTIVE throttle_cmd=0.1000 steering_cmd=0.0000 heartbeat=OFF
+PASS watchdog neutral: STATUS uptime_ms=3773529 safety_state=WATCHDOG_FAULT throttle_cmd=0.0000 steering_cmd=0.0000 heartbeat=OFF
+PASS clear watchdog: OK FAULTS_CLEARED
+PASS disarm: OK DISARMED
+
+RESULT: 6 passed, 0 failed
