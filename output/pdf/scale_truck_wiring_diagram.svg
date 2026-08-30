@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      @page{size:14in 9in;margin:0}
+      .bg{fill:#f7f8fa}.panel{fill:#fff;stroke:#243247;stroke-width:2}.power{fill:none;stroke:#d62828;stroke-width:6}.ground{fill:none;stroke:#20242b;stroke-width:5}.signal{fill:none;stroke:#2476d3;stroke-width:4}.data{fill:none;stroke:#7b3fb2;stroke-width:4;stroke-dasharray:11 7}.sensor{fill:none;stroke:#18835b;stroke-width:4}.unknown{fill:none;stroke:#8a929e;stroke-width:3;stroke-dasharray:7 7}.title{font:700 30px Arial,sans-serif;fill:#172033}.subtitle{font:16px Arial,sans-serif;fill:#536071}.h{font:700 18px Arial,sans-serif;fill:#172033}.t{font:15px Arial,sans-serif;fill:#263244}.small{font:13px Arial,sans-serif;fill:#526071}.warn{fill:#fff5d9;stroke:#c78a00;stroke-width:2}.legend{font:14px Arial,sans-serif;fill:#263244}.port{fill:#edf3fa;stroke:#62748a;stroke-width:1.5}.arrow{marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2476d3"/></marker>
+  </defs>
+  <rect class="bg" width="1400" height="900"/>
+  <text class="title" x="55" y="55">Scale-Truck Wiring Diagram</text>
+  <text class="subtitle" x="55" y="82">Component-level diagram derived from Milestone 6; pin numbers and unlisted voltage ratings require verification.</text>
+
+  <!-- Power chain -->
+  <rect class="panel" x="55" y="135" rx="12" width="180" height="95"/>
+  <text class="h" x="145" y="170" text-anchor="middle">Traction Battery</text>
+  <text class="t" x="145" y="196" text-anchor="middle">Pack voltage: TBD</text>
+  <text class="small" x="145" y="217" text-anchor="middle">+ / - high-current leads</text>
+
+  <rect class="panel" x="300" y="135" rx="12" width="185" height="95"/>
+  <text class="h" x="392" y="170" text-anchor="middle">Main Switch / E-stop</text>
+  <text class="t" x="392" y="196" text-anchor="middle">Series with battery +</text>
+  <text class="small" x="392" y="217" text-anchor="middle">Must remove motor power</text>
+
+  <rect class="panel" x="560" y="120" rx="12" width="235" height="125"/>
+  <text class="h" x="677" y="155" text-anchor="middle">Tamiya TBLE-02S ESC</text>
+  <text class="t" x="677" y="181" text-anchor="middle">Battery input + / -</text>
+  <text class="t" x="677" y="205" text-anchor="middle">Motor phases: orange/yellow/blue</text>
+  <text class="small" x="677" y="228" text-anchor="middle">3-wire control lead to Teensy</text>
+
+  <rect class="panel" x="890" y="135" rx="12" width="205" height="95"/>
+  <text class="h" x="992" y="170" text-anchor="middle">Brushless Drive Motor</text>
+  <text class="t" x="992" y="196" text-anchor="middle">Tamiya sensored motor</text>
+  <text class="small" x="992" y="217" text-anchor="middle">Encoder/sensor harness</text>
+
+  <path class="power" d="M235 165H300"/><text class="small" x="267" y="153" text-anchor="middle">BAT +</text>
+  <path class="power" d="M485 165H560"/><text class="small" x="522" y="153" text-anchor="middle">switched +</text>
+  <path class="ground" d="M235 205C350 280 455 265 560 210"/><text class="small" x="397" y="276" text-anchor="middle">BAT - / return</text>
+  <path class="power" d="M795 155H890"/><path d="M795 182H890" stroke="#f2b705" stroke-width="6"/><path d="M795 209H890" stroke="#2774d8" stroke-width="6"/>
+
+  <!-- Controller -->
+  <rect class="panel" x="515" y="340" rx="14" width="325" height="245"/>
+  <text class="h" x="677" y="375" text-anchor="middle">Teensy 4.1 Low-Level Controller</text>
+  <text class="small" x="677" y="398" text-anchor="middle">Custom carrier labels observed: ENCODER, STEER, ESC, GEAR</text>
+  <rect class="port" x="545" y="430" width="115" height="36" rx="6"/><text class="t" x="602" y="453" text-anchor="middle">ENCODER</text>
+  <rect class="port" x="695" y="430" width="115" height="36" rx="6"/><text class="t" x="752" y="453" text-anchor="middle">STEER</text>
+  <rect class="port" x="545" y="490" width="115" height="36" rx="6"/><text class="t" x="602" y="513" text-anchor="middle">ESC</text>
+  <rect class="port" x="695" y="490" width="115" height="36" rx="6"/><text class="t" x="752" y="513" text-anchor="middle">GEAR</text>
+  <rect class="port" x="620" y="545" width="115" height="28" rx="6"/><text class="small" x="677" y="564" text-anchor="middle">Micro-USB</text>
+
+  <path class="signal" d="M602 490V290H677V245"/><text class="small" x="610" y="315">PWM/control + GND</text>
+  <path class="sensor" d="M890 210C850 290 780 302 602 430"/><text class="small" x="807" y="298">motor encoder/sensor feedback</text>
+
+  <!-- Servos -->
+  <rect class="panel" x="930" y="375" rx="12" width="235" height="95"/>
+  <text class="h" x="1047" y="408" text-anchor="middle">Steering Servo</text>
+  <text class="t" x="1047" y="434" text-anchor="middle">3-wire: signal / +V / GND</text>
+  <text class="small" x="1047" y="456" text-anchor="middle">Supply rating: verify</text>
+  <path class="signal arrow" d="M810 448H930"/>
+
+  <rect class="panel" x="930" y="515" rx="12" width="235" height="95"/>
+  <text class="h" x="1047" y="548" text-anchor="middle">Gear Servo</text>
+  <text class="t" x="1047" y="574" text-anchor="middle">3-wire: signal / +V / GND</text>
+  <text class="small" x="1047" y="596" text-anchor="middle">Supply rating: verify</text>
+  <path class="signal arrow" d="M810 508C865 508 875 562 930 562"/>
+
+  <!-- High-level compute and sensors -->
+  <rect class="panel" x="70" y="390" rx="12" width="260" height="125"/>
+  <text class="h" x="200" y="425" text-anchor="middle">NVIDIA Jetson Xavier</text>
+  <text class="t" x="200" y="452" text-anchor="middle">High-level controller / ROS 2</text>
+  <text class="small" x="200" y="477" text-anchor="middle">Uses its own internal battery</text>
+  <text class="small" x="200" y="498" text-anchor="middle">Do not back-power from Teensy</text>
+  <path class="data" d="M330 455H515"/><text class="small" x="422" y="443" text-anchor="middle">USB serial</text>
+
+  <rect class="panel" x="70" y="585" rx="12" width="260" height="82"/>
+  <text class="h" x="200" y="619" text-anchor="middle">Camera</text>
+  <text class="t" x="200" y="646" text-anchor="middle">Interface/power not specified</text>
+  <path class="unknown" d="M200 585V515"/>
+
+  <rect class="panel" x="70" y="710" rx="12" width="260" height="82"/>
+  <text class="h" x="200" y="744" text-anchor="middle">RPLIDAR</text>
+  <text class="t" x="200" y="771" text-anchor="middle">Interface/power not specified</text>
+  <path class="unknown" d="M200 710V667"/>
+
+  <!-- Legend and notes -->
+  <rect class="panel" x="420" y="655" rx="12" width="430" height="170"/>
+  <text class="h" x="445" y="690">Legend</text>
+  <line class="power" x1="450" y1="720" x2="515" y2="720"/><text class="legend" x="530" y="725">Battery / high-current power</text>
+  <line class="signal" x1="450" y1="750" x2="515" y2="750"/><text class="legend" x="530" y="755">Actuator control and common ground</text>
+  <line class="data" x1="450" y1="780" x2="515" y2="780"/><text class="legend" x="530" y="785">USB/data link</text>
+  <line class="unknown" x1="450" y1="810" x2="515" y2="810"/><text class="legend" x="530" y="815">Connection present, details unknown</text>
+
+  <rect class="warn" x="900" y="680" rx="12" width="430" height="145"/>
+  <text class="h" x="925" y="714">Before energizing</text>
+  <text class="t" x="925" y="742">1. Confirm pack voltage, polarity, fuse, and connector ratings.</text>
+  <text class="t" x="925" y="770">2. Verify servo rail voltage and that all control grounds are common.</text>
+  <text class="t" x="925" y="798">3. Test the E-stop physically removes motor power, wheels raised.</text>
+  <text class="small" x="55" y="865">Source: milestone 6 (1).pdf. This is a functional wiring diagram, not a pinout; no unverified pin numbers were inferred.</text>
+</svg>
