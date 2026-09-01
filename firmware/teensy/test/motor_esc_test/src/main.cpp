@@ -9,7 +9,7 @@ namespace {
 
 constexpr uint8_t kEscSignalPin = 9;
 constexpr int kNeutralPulseUs = 1500;
-constexpr int kRunPulseUs = 1550;
+constexpr int kRunPulseUs = 1600;
 constexpr uint32_t kRunTimeoutMs = 1000;
 
 Servo motor_esc;
