@@ -9,8 +9,8 @@ namespace {
 
 constexpr uint8_t kServoPin = 6;
 constexpr int kCenterPulseUs = 1480;
-constexpr int kLeftPulseUs = 1430;
-constexpr int kRightPulseUs = 1530;
+constexpr int kLeftPulseUs = 1380;
+constexpr int kRightPulseUs = 1580;
 constexpr uint32_t kCommandTimeoutMs = 2000;
 
 Servo steering_servo;
