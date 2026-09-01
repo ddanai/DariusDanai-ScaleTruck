@@ -75,10 +75,10 @@ void pollSerial() {
 void setup() {
   Serial.begin(115200);
 
-  // Establish the center command before attaching the output pin, avoiding a
-  // startup pulse at an arbitrary position.
-  steering_servo.writeMicroseconds(kCenterPulseUs);
+  // attach() initializes the Servo library at its default 1500 us, so command
+  // the truck's calibrated center immediately after attaching the output pin.
   steering_servo.attach(kServoPin);
+  steering_servo.writeMicroseconds(kCenterPulseUs);
 
   const uint32_t serial_wait_start = millis();
   while (!Serial && millis() - serial_wait_start < 3000) {
