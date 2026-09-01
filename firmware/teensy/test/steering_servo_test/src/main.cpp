@@ -16,6 +16,7 @@ constexpr uint32_t kCommandTimeoutMs = 2000;
 Servo steering_servo;
 uint32_t last_command_ms = 0;
 bool command_active = false;
+String command_buffer;
 
 void commandPulse(const int pulse_us, const char* name) {
   steering_servo.writeMicroseconds(pulse_us);
@@ -56,6 +57,19 @@ void handleCommand(String command) {
   }
 }
 
+void pollSerial() {
+  while (Serial.available() > 0) {
+    const char incoming = static_cast<char>(Serial.read());
+
+    if (incoming == '\n') {
+      handleCommand(command_buffer);
+      command_buffer = "";
+    } else if (incoming != '\r') {
+      command_buffer += incoming;
+    }
+  }
+}
+
 }  // namespace
 
 void setup() {
@@ -81,9 +95,7 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-    handleCommand(Serial.readStringUntil('\n'));
-  }
+  pollSerial();
 
   if (command_active && millis() - last_command_ms >= kCommandTimeoutMs) {
     commandPulse(kCenterPulseUs, "AUTO_CENTER");
