@@ -28,7 +28,7 @@ def generate_launch_description():
         ("lrc2ocr_msg", LaunchConfiguration("lrc2ocr_topic")),
         ("ocr2lrc_msg", LaunchConfiguration("ocr2lrc_topic")),
         ("lane_msg", LaunchConfiguration("lane_topic")),
-        ("usb_cam/image_raw", LaunchConfiguration("camera_topic")),
+        ("image_raw", LaunchConfiguration("camera_topic")),
         ("tracked_obstacles", LaunchConfiguration("tracked_obstacles_topic")),
     ]
 
