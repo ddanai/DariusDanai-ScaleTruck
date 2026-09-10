@@ -1,0 +1,214 @@
+krg@ubuntu:~$ docker exec -it ros2-humble bash -lc "source /opt/ros/humble/setup.bash; ros2 topic hz /usb_cam/image_raw"
+average rate: 29.391
+        min: 0.030s max: 0.066s std dev: 0.00589s window: 31
+average rate: 26.915
+        min: 0.030s max: 0.101s std dev: 0.01282s window: 56
+average rate: 28.059
+        min: 0.030s max: 0.101s std dev: 0.01049s window: 87
+average rate: 28.615
+        min: 0.030s max: 0.101s std dev: 0.00908s window: 118
+average rate: 28.949
+        min: 0.030s max: 0.101s std dev: 0.00812s window: 149
+average rate: 29.173
+        min: 0.030s max: 0.101s std dev: 0.00741s window: 180
+average rate: 29.194
+        min: 0.030s max: 0.101s std dev: 0.00722s window: 210
+average rate: 28.481
+        min: 0.030s max: 0.101s std dev: 0.00975s window: 234
+average rate: 28.682
+        min: 0.030s max: 0.101s std dev: 0.00919s window: 265
+average rate: 28.841
+        min: 0.030s max: 0.101s std dev: 0.00871s window: 296
+average rate: 28.976
+        min: 0.030s max: 0.101s std dev: 0.00831s window: 327
+average rate: 28.531
+        min: 0.030s max: 0.132s std dev: 0.01040s window: 354
+average rate: 28.592
+        min: 0.028s max: 0.132s std dev: 0.01013s window: 384
+average rate: 28.713
+        min: 0.028s max: 0.132s std dev: 0.00976s window: 415
+average rate: 28.753
+        min: 0.028s max: 0.132s std dev: 0.00955s window: 445
+average rate: 28.849
+        min: 0.028s max: 0.132s std dev: 0.00925s window: 476
+average rate: 28.934
+        min: 0.028s max: 0.132s std dev: 0.00897s window: 507
+average rate: 29.009
+        min: 0.028s max: 0.132s std dev: 0.00871s window: 538
+average rate: 28.467
+        min: 0.028s max: 0.132s std dev: 0.00971s window: 558
+average rate: 28.219
+        min: 0.028s max: 0.132s std dev: 0.01010s window: 582
+average rate: 28.271
+        min: 0.028s max: 0.132s std dev: 0.00996s window: 612
+average rate: 28.230
+        min: 0.028s max: 0.132s std dev: 0.00997s window: 640
+average rate: 28.319
+        min: 0.028s max: 0.132s std dev: 0.00975s window: 671
+average rate: 28.318
+        min: 0.028s max: 0.132s std dev: 0.00970s window: 700
+average rate: 28.400
+        min: 0.028s max: 0.132s std dev: 0.00951s window: 731
+average rate: 28.472
+        min: 0.028s max: 0.132s std dev: 0.00932s window: 762
+average rate: 28.215
+        min: 0.028s max: 0.132s std dev: 0.01005s window: 784
+average rate: 28.151
+        min: 0.028s max: 0.132s std dev: 0.01012s window: 811
+average rate: 28.225
+        min: 0.028s max: 0.132s std dev: 0.00994s window: 842
+average rate: 28.293
+        min: 0.028s max: 0.132s std dev: 0.00978s window: 873
+average rate: 28.356
+        min: 0.028s max: 0.132s std dev: 0.00962s window: 904
+^Ckrg@ubuntu:~$ docker exec -it ros2-humble bash -lc "source /opt/ros/humble/setup.bash; ros2 topic hz /scan"
+WARNING: topic [/scan] does not appear to be published yet
+average rate: 13.603
+        min: 0.000s max: 0.301s std dev: 0.06737s window: 15
+average rate: 13.662
+        min: 0.000s max: 0.301s std dev: 0.04856s window: 29
+average rate: 13.670
+        min: 0.000s max: 0.301s std dev: 0.03998s window: 43
+average rate: 13.673
+        min: 0.000s max: 0.301s std dev: 0.03480s window: 57
+average rate: 13.650
+        min: 0.000s max: 0.301s std dev: 0.03125s window: 71
+average rate: 13.657
+        min: 0.000s max: 0.301s std dev: 0.02863s window: 85
+average rate: 13.661
+        min: 0.000s max: 0.301s std dev: 0.02659s window: 99
+average rate: 13.664
+        min: 0.000s max: 0.301s std dev: 0.02495s window: 113
+average rate: 13.666
+        min: 0.000s max: 0.301s std dev: 0.02359s window: 127
+average rate: 13.668
+        min: 0.000s max: 0.301s std dev: 0.02244s window: 141
+average rate: 13.670
+        min: 0.000s max: 0.301s std dev: 0.02145s window: 155
+average rate: 13.671
+        min: 0.000s max: 0.301s std dev: 0.02059s window: 169
+average rate: 13.673
+        min: 0.000s max: 0.301s std dev: 0.01983s window: 183
+average rate: 13.664
+        min: 0.000s max: 0.301s std dev: 0.01915s window: 197
+average rate: 13.666
+        min: 0.000s max: 0.301s std dev: 0.01855s window: 211
+average rate: 13.667
+        min: 0.000s max: 0.301s std dev: 0.01800s window: 225
+average rate: 13.668
+        min: 0.000s max: 0.301s std dev: 0.01750s window: 239
+average rate: 13.669
+        min: 0.000s max: 0.301s std dev: 0.01705s window: 253
+average rate: 13.670
+        min: 0.000s max: 0.301s std dev: 0.01663s window: 267
+average rate: 13.664
+        min: 0.000s max: 0.301s std dev: 0.01625s window: 281
+average rate: 13.665
+        min: 0.000s max: 0.301s std dev: 0.01589s window: 295
+average rate: 13.666
+        min: 0.000s max: 0.301s std dev: 0.01556s window: 309
+average rate: 13.667
+        min: 0.000s max: 0.301s std dev: 0.01525s window: 323
+average rate: 13.668
+        min: 0.000s max: 0.301s std dev: 0.01496s window: 337
+average rate: 13.669
+        min: 0.000s max: 0.301s std dev: 0.01470s window: 351
+average rate: 13.669
+        min: 0.000s max: 0.301s std dev: 0.01444s window: 365
+average rate: 13.670
+        min: 0.000s max: 0.301s std dev: 0.01420s window: 379
+average rate: 13.671
+        min: 0.000s max: 0.301s std dev: 0.01398s window: 393
+average rate: 13.671
+        min: 0.000s max: 0.301s std dev: 0.01376s window: 407
+average rate: 13.672
+        min: 0.000s max: 0.301s std dev: 0.01356s window: 421
+average rate: 13.672
+        min: 0.000s max: 0.301s std dev: 0.01337s window: 435
+average rate: 13.673
+        min: 0.000s max: 0.301s std dev: 0.01319s window: 449
+average rate: 13.673
+        min: 0.000s max: 0.301s std dev: 0.01301s window: 463
+average rate: 13.670
+        min: 0.000s max: 0.301s std dev: 0.01284s window: 477
+average rate: 13.670
+        min: 0.000s max: 0.301s std dev: 0.01269s window: 491
+average rate: 13.671
+        min: 0.000s max: 0.301s std dev: 0.01253s window: 505
+^Ckrg@ubuntu:~$ docker exec -it ros2-humble bash -lc "source /opt/ros/humble/setup.bash; ros2 topic echo /motor_encoder/raw"
+WARNING: topic [/motor_encoder/raw] does not appear to be published yet
+Could not determine the type for the passed topic
+krg@ubuntu:~$ docker exec -it ros2-humble bash -lc "source /opt/ros/humble/setup.bash; ros2 topic echo /motor_encoder/raw"
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=19 delta=0 direction=STOP
+---
+data: ENCODER count=29 delta=10 direction=FORWARD
+---
+data: ENCODER count=73 delta=44 direction=FORWARD
+---
+data: ENCODER count=137 delta=64 direction=FORWARD
+---
+data: ENCODER count=183 delta=46 direction=FORWARD
+---
+data: ENCODER count=183 delta=0 direction=STOP
+---
+data: ENCODER count=183 delta=0 direction=STOP
+---
+data: ENCODER count=186 delta=3 direction=FORWARD
+---
+data: ENCODER count=277 delta=91 direction=FORWARD
+---
+data: ENCODER count=337 delta=60 direction=FORWARD
+---
+data: ENCODER count=335 delta=-2 direction=REVERSE
+---
+data: ENCODER count=335 delta=0 direction=STOP

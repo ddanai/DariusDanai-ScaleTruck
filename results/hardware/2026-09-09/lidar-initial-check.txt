@@ -1,0 +1,338 @@
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ docker exec -it ros2-humble bash
+Error response from daemon: container 4a4f4b2dca34434164bf3035ed773c4bbb09fd4b77ed39cfc8f67eeab03d09a9 is not running
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ source /opt/ros/humble/setup.bash
+bash: /opt/ros/humble/setup.bash: No such file or directory
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ source /ros2_ws/install/setup.bash
+bash: /ros2_ws/install/setup.bash: No such file or directory
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ ros2 topic list -t
+bash: ros2: command not found
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ docker start ros2-humble 
+ros2-humble
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ docker exec -it ros2-humble bash
+root@ubuntu:/ros2_ws# source /opt/ros/humble/setup.bash
+source /ros2_ws/install/setup.bash
+ros2 topic list -t
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/rosout [rcl_interfaces/msg/Log]
+root@ubuntu:/ros2_ws# krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ docker exec -it ros2-humble bash -lc "source /opt/ros/humble/setup.bash; ros2 topic hz /scan"
+average rate: 13.174
+        min: 0.067s max: 0.078s std dev: 0.00325s window: 15
+average rate: 13.178
+        min: 0.067s max: 0.078s std dev: 0.00341s window: 29
+average rate: 13.222
+        min: 0.067s max: 0.078s std dev: 0.00363s window: 43
+average rate: 13.214
+        min: 0.067s max: 0.078s std dev: 0.00356s window: 57
+average rate: 13.209
+        min: 0.067s max: 0.078s std dev: 0.00354s window: 71
+average rate: 13.206
+        min: 0.067s max: 0.078s std dev: 0.00352s window: 85
+average rate: 13.203
+        min: 0.067s max: 0.079s std dev: 0.00352s window: 99
+average rate: 13.202
+        min: 0.067s max: 0.079s std dev: 0.00349s window: 113
+average rate: 13.214
+        min: 0.067s max: 0.079s std dev: 0.00355s window: 127
+average rate: 13.211
+        min: 0.067s max: 0.079s std dev: 0.00354s window: 141
+average rate: 13.209
+        min: 0.067s max: 0.079s std dev: 0.00352s window: 155
+average rate: 13.207
+        min: 0.067s max: 0.079s std dev: 0.00351s window: 169
+average rate: 13.206
+        min: 0.067s max: 0.079s std dev: 0.00350s window: 183
+average rate: 13.213
+        min: 0.067s max: 0.079s std dev: 0.00354s window: 197
+average rate: 13.212
+        min: 0.067s max: 0.079s std dev: 0.00353s window: 211
+average rate: 13.210
+        min: 0.067s max: 0.079s std dev: 0.00352s window: 225
+average rate: 13.216
+        min: 0.067s max: 0.079s std dev: 0.00356s window: 239
+average rate: 13.214
+        min: 0.067s max: 0.079s std dev: 0.00355s window: 253
+average rate: 13.213
+        min: 0.067s max: 0.079s std dev: 0.00354s window: 267
+average rate: 13.218
+        min: 0.067s max: 0.079s std dev: 0.00357s window: 281
+average rate: 13.216
+        min: 0.067s max: 0.079s std dev: 0.00356s window: 295
+average rate: 13.221
+        min: 0.067s max: 0.079s std dev: 0.00358s window: 309
+average rate: 13.219
+        min: 0.067s max: 0.079s std dev: 0.00357s window: 323
+^Ckrg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ docker exec -it ros2-humble bash -lc "source /opt/ros/humble/setup.bash; ros2 topic echo /scan --once --qos-reliability best_effort"
+header:
+  stamp:
+    sec: 1788997805
+    nanosec: 403621192
+  frame_id: laser
+angle_min: -3.1241390705108643
+angle_max: 3.1415927410125732
+angle_increment: 0.005806980188935995
+time_increment: 7.089759310474619e-05
+scan_time: 0.07649850100278854
+range_min: 0.15000000596046448
+range_max: 25.0
+ranges:
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- .inf
+- '...'
+intensities:
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 0.0
+- 47.0
+- 47.0
+- 47.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 0.0
+- 47.0
+- 47.0
+- 47.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 0.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- 47.0
+- '...'
+---
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ 

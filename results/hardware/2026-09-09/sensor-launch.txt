@@ -1,0 +1,83 @@
+krg@ubuntu:~/ros2_humble_ws/src/DariusDanai-ScaleTruck$ docker exec -it ros2-humble bash -lc "source /opt/ros/humble/setup.bash; source /ros2_ws/install/setup.bash; ros2 launch scale_truck_bringup sensors.launch.py"
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-09-10-01-17-56-344446-ubuntu-424
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [usb_cam_node_exe-1]: process started with pid [448]
+[INFO] [rplidar_node-2]: process started with pid [450]
+[INFO] [serial_bridge_node-3]: process started with pid [452]
+[rplidar_node-2] [INFO] [1789003078.212308249] [rplidar_node]: RPLidar running on ROS2 package rplidar_ros. RPLIDAR SDK Version:2.0.0
+[rplidar_node-2] [INFO] [1789003078.260739985] [rplidar_node]: RPLidar S/N: C2CDED93C0EA98C9A5E698F257134669
+[rplidar_node-2] [INFO] [1789003078.260942363] [rplidar_node]: Firmware Ver: 1.32
+[rplidar_node-2] [INFO] [1789003078.261012991] [rplidar_node]: Hardware Rev: 6
+[rplidar_node-2] [INFO] [1789003078.312570354] [rplidar_node]: RPLidar health status : 0
+[rplidar_node-2] [INFO] [1789003078.312734554] [rplidar_node]: RPLidar health status : OK.
+[rplidar_node-2] [INFO] [1789003078.312830687] [rplidar_node]: Start
+[usb_cam_node_exe-1] [INFO] [1789003078.590232295] [usb_cam]: camera_name value: default_cam
+[usb_cam_node_exe-1] [WARN] [1789003078.593168664] [usb_cam]: framerate: 30.000000
+[usb_cam_node_exe-1] [INFO] [1789003078.605884300] [usb_cam]: using default calibration URL
+[usb_cam_node_exe-1] [INFO] [1789003078.608103034] [usb_cam]: camera calibration URL: file:///root/.ros/camera_info/default_cam.yaml
+[usb_cam_node_exe-1] [ERROR] [1789003078.609768684] [camera_calibration_parsers]: Unable to open camera calibration file [/root/.ros/camera_info/default_cam.yaml]
+[usb_cam_node_exe-1] [WARN] [1789003078.611225076] [usb_cam]: Camera calibration file /root/.ros/camera_info/default_cam.yaml not found
+[usb_cam_node_exe-1] [INFO] [1789003078.680444559] [usb_cam]: Starting 'default_cam' (/dev/video0) at 640x480 via mmap (yuyv) at 30 FPS
+[usb_cam_node_exe-1] [swscaler @ 0xaaaaf124cb90] No accelerated colorspace conversion found from yuv422p to rgb24.
+[usb_cam_node_exe-1] This device supports the following formats:
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1280 x 720 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1280 x 720 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1280 x 720 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 800 x 600 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 800 x 600 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 800 x 600 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 640 x 480 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 640 x 480 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 640 x 480 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 640 x 360 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 640 x 360 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 640 x 360 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 352 x 288 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 352 x 288 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 352 x 288 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 320 x 240 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 320 x 240 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 320 x 240 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (15 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (30 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (25 Hz)
+[usb_cam_node_exe-1]    Motion-JPEG 1920 x 1080 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (30 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (25 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (30 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (25 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 800 x 600 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 360 (30 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 360 (25 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 360 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 352 x 288 (30 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 352 x 288 (25 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 352 x 288 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 320 x 240 (30 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 320 x 240 (25 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 320 x 240 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (30 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (25 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (15 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (30 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (25 Hz)
+[usb_cam_node_exe-1]    YUYV 4:2:2 640 x 480 (15 Hz)
+[usb_cam_node_exe-1] [INFO] [1789003078.720715221] [usb_cam]: Setting 'brightness' to 50
+[usb_cam_node_exe-1] [INFO] [1789003078.798188296] [usb_cam]: Setting 'white_balance_temperature_auto' to 1
+[usb_cam_node_exe-1] [INFO] [1789003078.798351664] [usb_cam]: Setting 'exposure_auto' to 3
+[usb_cam_node_exe-1] [INFO] [1789003078.821246747] [usb_cam]: Setting 'focus_auto' to 0
+[usb_cam_node_exe-1] unknown control 'focus_auto'
+[usb_cam_node_exe-1] 
+[serial_bridge_node-3] [INFO] [1789003078.894670246] [serial_bridge_node]: Opened /dev/ttyACM0 at 115200 baud
+[usb_cam_node_exe-1] [INFO] [1789003079.335577500] [usb_cam]: Timer triggering every 33 ms
+[rplidar_node-2] [INFO] [1789003079.960481363] [rplidar_node]: current scan mode: Stability, sample rate: 10 Khz, max_distance: 25.0 m, scan frequency:10.0 Hz, 
