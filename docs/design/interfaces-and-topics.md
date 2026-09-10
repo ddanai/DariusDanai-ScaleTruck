@@ -1,5 +1,10 @@
 # ROS 2 Interfaces and Topics
 
+For the current hardware interface, use [Actuator commands and sensor feedback](actuator-and-sensor-topics.md).
+It defines fields, units, rates, QoS, services and verified versus reserved topics.
+The tables below retain the historical migration mapping; `/ocr2lrc_msg` is
+reserved and is not published by the current Teensy bridge.
+
 This document records the initial ROS 2 interface migration from the ROS 1 reference project. The first port keeps the original message fields and topic names so behavior can be compared directly during migration.
 
 ## Interface Package

@@ -28,6 +28,7 @@ Start here instead of browsing individual files. Documentation is grouped by pur
 | [Architecture](design/architecture.md) | Target and legacy component-level architecture. |
 | [Control pipeline](design/control-pipeline.md) | Detailed command flow from high-level control to actuator PWM. |
 | [Interfaces and topics](design/interfaces-and-topics.md) | Message mappings, topic names, and interface conventions. |
+| [Actuator commands and sensor feedback](design/actuator-and-sensor-topics.md) | Current hardware topic definitions, units, rates, command services and implementation limits. |
 | [QoS profiles](design/qos-profiles.md) | Reliability and queue-depth decisions by communication path. |
 | [Launch and configuration](design/launch-and-configuration.md) | Launch files, YAML, namespaces, and remapping. |
 | [Runtime decisions](design/runtime-decisions.md) | ROS 1 replacements and decisions about non-ROS components. |
