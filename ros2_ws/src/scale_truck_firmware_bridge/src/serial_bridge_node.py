@@ -2,13 +2,14 @@
 
 import threading
 import time
+import re
 
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 
-from scale_truck_msgs.msg import Lrc2Ocr, Ocr2Lrc
-from std_msgs.msg import String
+from scale_truck_msgs.msg import Lrc2Ocr
+from std_msgs.msg import String, Int32
 from std_srvs.srv import Trigger
 
 try:
@@ -42,7 +43,7 @@ class SerialBridgeNode(Node):
         self.baud = self.declare_parameter("baud", 115200).value
         self.timeout = self.declare_parameter("timeout", 1.0).value
         self.command_topic = self.declare_parameter("command_topic", "lrc2ocr_msg").value
-        self.feedback_topic = self.declare_parameter("feedback_topic", "ocr2lrc_msg").value
+        self.commands_enabled = self.declare_parameter("commands_enabled", True).value
 
         self.serial = None
         self.serial_lock = threading.Lock()
@@ -50,8 +51,10 @@ class SerialBridgeNode(Node):
 
         self.command_sub = self.create_subscription(
             Lrc2Ocr, self.command_topic, self.command_callback, COMMAND_QOS
-        )
-        self.feedback_pub = self.create_publisher(Ocr2Lrc, self.feedback_topic, FEEDBACK_QOS)
+        ) if self.commands_enabled else None
+        self.encoder_raw_pub = self.create_publisher(String, "motor_encoder/raw", FEEDBACK_QOS)
+        self.encoder_count_pub = self.create_publisher(Int32, "motor_encoder/count", FEEDBACK_QOS)
+        self.encoder_delta_pub = self.create_publisher(Int32, "motor_encoder/delta", FEEDBACK_QOS)
         self.serial_status_pub = self.create_publisher(
             String, "firmware/serial_status", FEEDBACK_QOS
         )
@@ -76,8 +79,9 @@ class SerialBridgeNode(Node):
             self.read_thread.join(timeout=1.0)
         if self.serial is not None:
             try:
-                self.serial.write(b"DISARM\n")
-                self.serial.flush()
+                if self.commands_enabled:
+                    self.serial.write(b"DISARM\n")
+                    self.serial.flush()
             except serial.SerialException:
                 pass
             self.serial.close()
@@ -93,7 +97,8 @@ class SerialBridgeNode(Node):
             self.get_logger().info(f"Opened {self.port} at {self.baud} baud")
             time.sleep(2.0)
             self.serial.reset_input_buffer()
-            self.write_command("HEARTBEAT OFF")
+            if self.commands_enabled:
+                self.write_command("HEARTBEAT OFF")
         except serial.SerialException as exc:
             self.get_logger().error(f"Could not open serial port {self.port}: {exc}")
 
@@ -108,7 +113,7 @@ class SerialBridgeNode(Node):
         self.write_command(command)
 
     def write_command(self, command):
-        if self.serial is None:
+        if self.serial is None or not self.commands_enabled:
             return False
         try:
             with self.serial_lock:
@@ -162,8 +167,27 @@ class SerialBridgeNode(Node):
             status_msg = String()
             status_msg.data = line
             self.serial_status_pub.publish(status_msg)
+            self.publish_encoder(line)
             if line.startswith("ERR"):
                 self.get_logger().warning(f"Teensy: {line}")
+
+    def publish_encoder(self, line):
+        match = re.fullmatch(
+            r"ENCODER count=(-?\d+) delta=(-?\d+) direction=(FORWARD|REVERSE|STOP)", line
+        )
+        if match is None:
+            return
+        count, delta = int(match[1]), int(match[2])
+        if not all(-(2**31) <= value < 2**31 for value in (count, delta)):
+            return
+        direction = "FORWARD" if delta > 0 else "REVERSE" if delta < 0 else "STOP"
+        if match[3] != direction:
+            return
+        raw_msg, count_msg, delta_msg = String(), Int32(), Int32()
+        raw_msg.data, count_msg.data, delta_msg.data = line, count, delta
+        self.encoder_raw_pub.publish(raw_msg)
+        self.encoder_count_pub.publish(count_msg)
+        self.encoder_delta_pub.publish(delta_msg)
 
 
 def main(args=None):

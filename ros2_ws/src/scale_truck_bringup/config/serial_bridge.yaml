@@ -4,4 +4,4 @@ serial_bridge_node:
     baud: 115200
     timeout: 1.0
     command_topic: lrc2ocr_msg
-    feedback_topic: ocr2lrc_msg
+    commands_enabled: true

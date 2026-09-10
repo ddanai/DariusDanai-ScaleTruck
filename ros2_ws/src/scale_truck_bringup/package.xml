@@ -11,6 +11,8 @@
 
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
+  <exec_depend>usb_cam</exec_depend>
+  <exec_depend>rplidar_ros</exec_depend>
   <exec_depend>scale_truck_control</exec_depend>
   <exec_depend>scale_truck_description</exec_depend>
   <exec_depend>scale_truck_firmware_bridge</exec_depend>
@@ -23,4 +25,3 @@
     <build_type>ament_cmake</build_type>
   </export>
 </package>
-
