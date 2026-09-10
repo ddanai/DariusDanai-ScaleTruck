@@ -17,6 +17,7 @@ Start here instead of browsing individual files. Documentation is grouped by pur
 | [ROS 2 environment](setup/environment.md) | Daily Xavier Docker workflow, builds, terminals, and troubleshooting. |
 | [Development options](setup/development-options.md) | Native Ubuntu, development-container, and hardware environment choices. |
 | [DDS validation](setup/dds-validation.md) | Confirming ROS 2 discovery and publish/subscribe communication. |
+| [Hardware bring-up checklist](testing/hardware-bringup-checklist.md) | Device connections, sensor startup, encoder checks, separate Teensy command tests and evidence recording. |
 | [ROS 2 latency test](testing/ros2-latency-test.md) | Recording and analyzing repeatable Milestone 4 latency runs. |
 | [Xavier CPU and memory recording](testing/xavier-resource-recording.md) | Capturing resource samples and comparable power/DDS/network conditions. |
 | [ROS 1 vs. ROS 2 latency comparison](testing/ros1-vs-ros2-latency-comparison.md) | Milestone 4 results, plots, limitations, and timing conclusion. |
