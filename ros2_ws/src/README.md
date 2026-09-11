@@ -2,6 +2,9 @@
 
 ROS 2 packages for the scale truck control stack live in this directory.
 
+The `ros_to_teensy_test/` folder contains the standalone ROS-to-Teensy command test.
+See [Teensy Command Test](ros_to_teensy_test/README.md) for instructions and test scope.
+
 Package layout:
 
 - `scale_truck_bringup`: launch files and runtime configuration.
@@ -12,4 +15,3 @@ Package layout:
 - `scale_truck_telemetry`: ADDT telemetry bridge.
 
 These package directories are scaffolded first so migration work has clear ownership. Package metadata, build files, and executable code are tracked as separate migration tasks.
-
