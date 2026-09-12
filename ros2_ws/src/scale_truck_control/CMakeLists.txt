@@ -82,4 +82,13 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+if(BUILD_TESTING)
+  enable_testing()
+  add_executable(distance_control_test test/distance_control_test.cpp)
+  target_include_directories(distance_control_test PRIVATE include)
+  # Keep assertions enabled even for release builds.
+  target_compile_options(distance_control_test PRIVATE -UNDEBUG)
+  add_test(NAME distance_control_test COMMAND distance_control_test)
+endif()
+
 ament_package()

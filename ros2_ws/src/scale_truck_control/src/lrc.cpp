@@ -84,6 +84,8 @@ void LocalResiliencyCoordinator::xavier_callback(
   const scale_truck_msgs::msg::Xav2Lrc::SharedPtr msg)
 {
   const std::lock_guard<std::mutex> lock(state_mutex_);
+  command_seen_ = true;
+  command_received_ = std::chrono::steady_clock::now();
   trace_id_ = msg->trace_id;
   sensor_stamp_ = msg->sensor_stamp;
   angle_degree_ = msg->steer_angle;
@@ -128,6 +130,15 @@ void LocalResiliencyCoordinator::publish_feedback()
     firmware_msg.tar_vel = target_vel_;
     firmware_msg.pred_vel = predicted_vel_;
     firmware_msg.alpha = alpha_;
+    // Do not keep a moving setpoint alive if the upstream controller stops.
+    const double command_age = std::chrono::duration<double>(
+      std::chrono::steady_clock::now() - command_received_).count();
+    if (!command_seen_ || command_age > 0.25 ||
+      !std::isfinite(firmware_msg.tar_vel) || !std::isfinite(firmware_msg.steer_angle))
+    {
+      firmware_msg.tar_vel = 0.0f;
+      firmware_msg.steer_angle = 0.0f;
+    }
   }
 
   xavier_pub_->publish(xavier_msg);

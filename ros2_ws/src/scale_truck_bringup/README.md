@@ -13,20 +13,23 @@ Expected contents:
 bridge with command sending enabled, the camera and LiDAR drivers, and the
 control and LRC nodes. The control node publishes to the LRC, which publishes
 `/lrc2ocr_msg`; the bridge forwards speed and steering setpoints over USB.
-The launch does not arm the Teensy. The default `lv.yaml` target speed is zero.
+The launch does not arm the Teensy. Its default `closed_loop_test.yaml` target
+speed is zero; set it to at most 0.2 m/s for nonzero distance commands.
 
 This is an integration launch, not completed physical closed-loop control:
 
 - The camera callback currently records image arrival, not lane steering.
-- The control node does not currently consume LiDAR scans or encoder counts.
+- The control node consumes LiDAR scans for straight-line distance control,
+  stopping on invalid/stale data. It does not consume raw encoder counts.
 - The bridge publishes raw encoder counts, not calibrated `/ocr2lrc_msg` speed.
 - The main Teensy firmware uses simulated feedback and has no actuator drivers;
   encoder, motor, and servo tests are still separate firmware programs.
 
-Sensor-to-actuator testing requires implementing those connections and selecting
-the intended sensor-driven behavior. Starting all five programs does not itself
-make the sensors affect motor or steering outputs. Laser filtering and obstacle
-processing remain disabled because they are not wired into the current controller.
+LiDAR distance now changes requested speed; steering stays centered. Physical
+sensor-to-actuator testing still requires the firmware connections above.
+See [controller testing](../scale_truck_control/README.md) for parameters,
+sector alignment, and synthetic ROS tests. Laser filtering and obstacle
+processing remain disabled; the controller consumes raw scans directly.
 
 Copy the changes to the Xavier checkout, then build in its ROS 2 environment
 (inside the `ros2-humble` container if using Docker):

@@ -30,6 +30,7 @@ def generate_launch_description():
         ("lane_msg", LaunchConfiguration("lane_topic")),
         ("image_raw", LaunchConfiguration("camera_topic")),
         ("tracked_obstacles", LaunchConfiguration("tracked_obstacles_topic")),
+        ("scan", LaunchConfiguration("scan_topic")),
     ]
 
     return LaunchDescription([

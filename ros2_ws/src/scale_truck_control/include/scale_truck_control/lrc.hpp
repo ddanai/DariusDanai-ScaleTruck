@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <chrono>
 #include <cstdint>
 #include <mutex>
 #include <string>
@@ -49,6 +50,8 @@ private:
   std::atomic_bool running_{false};
 
   std::mutex state_mutex_;
+  bool command_seen_{false};
+  std::chrono::steady_clock::time_point command_received_{};
 
   std::string udp_group_addr_;
   int truck_index_{0};

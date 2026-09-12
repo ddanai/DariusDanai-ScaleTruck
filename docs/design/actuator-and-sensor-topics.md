@@ -57,8 +57,10 @@ validated operating speeds or physical steering limits.
 The firmware command watchdog is 250 ms. Commands must arrive with margin inside
 that interval; the default LRC timer is 20 ms (50 Hz), and the acceptance test
 sends approximately every 50 ms. Firmware uses command arrival time, not
-`sensor_stamp`, for this watchdog. Current code does not enforce upstream sensor
-freshness: repeating a stale setpoint can still refresh the firmware watchdog.
+`sensor_stamp`, for this watchdog. The distance-test controller now zeros speed
+for missing/invalid scans or scan age above 0.3 s. LRC zeros speed and steering
+after 250 ms without a controller message. These checks apply to that control
+path; a manual publisher can still repeat a stale setpoint directly to the bridge.
 
 Command topic QoS: reliable, volatile, keep-last depth 1. A DDS delivery or a
 successful serial write does not prove board acceptance. Observe
