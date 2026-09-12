@@ -35,7 +35,8 @@ void PidControllers::enable() {
     throttle_command_ = 0.0;
     steering_command_ = 0.0;
     speed_pid_.SetMode(AUTOMATIC);
-    steering_pid_.SetMode(AUTOMATIC);
+    // Steering uses the servo's internal position loop; no angle sensor exists.
+    steering_pid_.SetMode(MANUAL);
     enabled_ = true;
   }
 }
@@ -72,7 +73,6 @@ void PidControllers::update(double measured_speed_metres_per_second,
   measured_steering_ = measured_steering_degrees;
   if (enabled_) {
     speed_pid_.Compute();
-    steering_pid_.Compute();
   }
 }
 

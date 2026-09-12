@@ -14,7 +14,7 @@ enum class SafetyState : uint8_t {
   kSensorFault,
 };
 
-// Supervises both PID loops. Only the commands returned by this class may be
+// Supervises throttle and steering. Only the commands returned by this class may be
 // sent to actuator drivers; raw PID outputs bypass the safety envelope.
 class SafetyController {
  public:
@@ -25,7 +25,8 @@ class SafetyController {
   void disarm();
 
   // The emergency stop is level-sensitive and latched. Once asserted, it must
-  // be physically released and clearFaults() must be called before arming.
+  // be released and clearFaults() must be called before arming. Main currently
+  // supplies a software latch; there is no physical E-stop on this truck.
   void setEmergencyStop(bool asserted);
   bool clearFaults();
 
@@ -35,11 +36,9 @@ class SafetyController {
                      double steering_target_degrees,
                      uint32_t now_ms);
 
-  // Call every loop with the latest feedback and physical E-stop state already
+  // Call every loop with the latest feedback and E-stop state already
   // supplied through setEmergencyStop().
-  void update(double measured_speed_mps,
-              double measured_steering_degrees,
-              uint32_t now_ms);
+  void update(double measured_speed_mps, uint32_t now_ms);
 
   SafetyState state() const;
   const char* stateName() const;
@@ -50,7 +49,7 @@ class SafetyController {
  private:
   void enterFault(SafetyState fault);
   void forceNeutral();
-  bool sensorsValid(double speed_mps, double steering_degrees) const;
+  bool sensorsValid(double speed_mps) const;
   static double clamp(double value, double minimum, double maximum);
 
   PidControllers& controllers_;

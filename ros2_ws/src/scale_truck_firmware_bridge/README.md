@@ -20,10 +20,12 @@ The existing command path sends `CMD <tar_vel> <steer_angle>`. Services send
 ARM, DISARM, CLEAR and STATUS; service success means the write succeeded, not
 that the firmware accepted it. Check serial_status for acceptance.
 
-The encoder-test and command-test firmware are separate programs. This bridge
-supports both protocols but does not combine the firmware. Encoder-test firmware
-cannot accept actuator commands. No `/ocr2lrc_msg` publisher is advertised because
-calibrated speed and controller output are not available.
+Main firmware 0.2.0 now combines real encoder counts with ESC/servo command
+outputs, using these same protocols. Its default OPEN_LOOP mode maps the speed
+field to restricted throttle because encoder calibration is unknown. The old
+encoder-only test firmware still cannot accept actuator commands. No
+`/ocr2lrc_msg` publisher is advertised: calibrated speed and the legacy observer
+input scaling are not established. See [firmware commissioning](../../../firmware/teensy/README.md).
 
 ## Build on Ubuntu
 

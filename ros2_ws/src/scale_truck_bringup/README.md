@@ -22,11 +22,11 @@ This is an integration launch, not completed physical closed-loop control:
 - The control node consumes LiDAR scans for straight-line distance control,
   stopping on invalid/stale data. It does not consume raw encoder counts.
 - The bridge publishes raw encoder counts, not calibrated `/ocr2lrc_msg` speed.
-- The main Teensy firmware uses simulated feedback and has no actuator drivers;
-  encoder, motor, and servo tests are still separate firmware programs.
+- Main Teensy firmware 0.2.0 drives ESC/servo outputs and reads real counts.
+  Unknown encoder calibration selects limited OPEN_LOOP throttle, not m/s regulation.
 
 LiDAR distance now changes requested speed; steering stays centered. Physical
-sensor-to-actuator testing still requires the firmware connections above.
+sensor-to-actuator testing requires uploading and commissioning firmware 0.2.0.
 See [controller testing](../scale_truck_control/README.md) for parameters,
 sector alignment, and synthetic ROS tests. Laser filtering and obstacle
 processing remain disabled; the controller consumes raw scans directly.
@@ -64,15 +64,15 @@ python3 /ros2_ws/src/ros_to_teensy_test/ros_command_path_test.py
 ```
 
 The test clears faults, arms, publishes a 0.2 m/s target with zero steering,
-checks calculated outputs, checks the watchdog, and disarms. It does not test
-physical actuation: the current main firmware uses simulated feedback and has
-no motor/servo output drivers.
+checks calculated outputs, checks the watchdog, and disarms on historical
+simulation-only firmware. It now refuses to arm hardware-capable firmware 0.2.0.
+For physical commands, follow [firmware commissioning](../../../firmware/teensy/README.md).
 
 In this manual mode, to publish your own speed and steering targets instead of running the test,
 start this publisher in a separate sourced terminal:
 
 ```bash
-ros2 topic pub --rate 20 /lrc2ocr_msg scale_truck_msgs/msg/Lrc2Ocr "{tar_vel: 0.2, steer_angle: 5.0}"
+ros2 topic pub --rate 20 /lrc2ocr_msg scale_truck_msgs/msg/Lrc2Ocr "{tar_vel: 0.02, steer_angle: 0.0}"
 ```
 
 Then arm from another sourced terminal:
@@ -83,8 +83,9 @@ ros2 topic echo /firmware/serial_status
 ```
 
 Service success confirms the serial write; check `OK ARMED` and
-`OK COMMAND_ACCEPTED` replies for firmware acceptance. Speed is in m/s and
-steering is in degrees. Commands before arming are rejected. Stopping the
+`OK COMMAND_ACCEPTED` replies for firmware acceptance. The speed field is intended
+as m/s but uncalibrated firmware maps it to limited throttle; steering is in
+degrees. Commands before arming are rejected. Stopping the
 publisher triggers the 250 ms watchdog; use `/firmware/clear_faults` before
 rearming after a fault. To disarm explicitly:
 

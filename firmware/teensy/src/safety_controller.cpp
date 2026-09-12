@@ -40,8 +40,9 @@ bool SafetyController::arm(uint32_t now_ms) {
 void SafetyController::disarm() {
   controllers_.disable();
   command_received_ = false;
-  state_ = emergency_stop_asserted_ ? SafetyState::kEmergencyStop
-                                    : SafetyState::kDisarmed;
+  if (emergency_stop_asserted_) state_ = SafetyState::kEmergencyStop;
+  else if (state_ == SafetyState::kActive || state_ == SafetyState::kArmed)
+    state_ = SafetyState::kDisarmed;
   forceNeutral();
 }
 
@@ -71,10 +72,9 @@ bool SafetyController::acceptCommand(double speed_target_mps,
   }
   if (!std::isfinite(speed_target_mps) ||
       !std::isfinite(steering_target_degrees) ||
-      std::fabs(speed_target_mps) >
-          firmware_config::kMaximumPlausibleSpeedMps ||
+      speed_target_mps < 0.0 || speed_target_mps > firmware_config::kBenchSpeedLimitMps ||
       std::fabs(steering_target_degrees) >
-          firmware_config::kMaximumPlausibleSteeringDegrees) {
+          firmware_config::kBenchSteeringLimitDegrees) {
     enterFault(SafetyState::kCommandFault);
     return false;
   }
@@ -91,7 +91,6 @@ bool SafetyController::acceptCommand(double speed_target_mps,
 }
 
 void SafetyController::update(double measured_speed_mps,
-                              double measured_steering_degrees,
                               uint32_t now_ms) {
   if (emergency_stop_asserted_) {
     enterFault(SafetyState::kEmergencyStop);
@@ -101,7 +100,7 @@ void SafetyController::update(double measured_speed_mps,
     forceNeutral();
     return;
   }
-  if (!sensorsValid(measured_speed_mps, measured_steering_degrees)) {
+  if (firmware_config::kEncoderMetresPerCount > 0.0 && !sensorsValid(measured_speed_mps)) {
     enterFault(SafetyState::kSensorFault);
     return;
   }
@@ -115,13 +114,26 @@ void SafetyController::update(double measured_speed_mps,
     return;
   }
 
-  controllers_.update(measured_speed_mps, measured_steering_degrees);
-  safe_throttle_command_ =
-      clamp(controllers_.throttleCommand(), firmware_config::kSafeThrottleMin,
-            firmware_config::kSafeThrottleMax);
-  safe_steering_command_ =
-      clamp(controllers_.steeringCommand(), firmware_config::kSafeSteeringMin,
-            firmware_config::kSafeSteeringMax);
+  if (controllers_.speedTarget() == 0.0) {
+    // A stop must command neutral, never reverse or retain PID integral output.
+    controllers_.disable();
+    safe_throttle_command_ = 0.0;
+  } else if (firmware_config::kEncoderMetresPerCount > 0.0) {
+    controllers_.enable();
+    controllers_.update(measured_speed_mps, 0.0);
+    safe_throttle_command_ = clamp(controllers_.throttleCommand(),
+        firmware_config::kSafeThrottleMin, firmware_config::kSafeThrottleMax);
+  } else {
+    // Uncalibrated commissioning: the speed field is only a throttle request.
+    controllers_.disable();
+    safe_throttle_command_ = firmware_config::kSafeThrottleMax *
+        controllers_.speedTarget() / firmware_config::kBenchSpeedLimitMps;
+  }
+  // RC servo handles its own internal position loop. No external angle sensor
+  // is installed, so do not run a steering PID against fabricated feedback.
+  safe_steering_command_ = clamp(controllers_.steeringTarget() /
+      firmware_config::kBenchSteeringLimitDegrees * firmware_config::kSafeSteeringMax,
+      firmware_config::kSafeSteeringMin, firmware_config::kSafeSteeringMax);
 }
 
 SafetyState SafetyController::state() const { return state_; }
@@ -163,12 +175,9 @@ void SafetyController::forceNeutral() {
   safe_steering_command_ = 0.0;
 }
 
-bool SafetyController::sensorsValid(double speed_mps,
-                                    double steering_degrees) const {
-  return std::isfinite(speed_mps) && std::isfinite(steering_degrees) &&
-         std::fabs(speed_mps) <= firmware_config::kMaximumPlausibleSpeedMps &&
-         std::fabs(steering_degrees) <=
-             firmware_config::kMaximumPlausibleSteeringDegrees;
+bool SafetyController::sensorsValid(double speed_mps) const {
+  return std::isfinite(speed_mps) &&
+         std::fabs(speed_mps) <= firmware_config::kMaximumPlausibleSpeedMps;
 }
 
 double SafetyController::clamp(double value, double minimum, double maximum) {

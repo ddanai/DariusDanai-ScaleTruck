@@ -1,169 +1,177 @@
 #include <Arduino.h>
-
+#include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <limits>
 
 #include "firmware_config.h"
+#include "hardware_math.h"
 #include "pid_controllers.h"
 #include "safety_controller.h"
+#include "truck_hardware.h"
 
 namespace {
-
 char command_buffer[firmware_config::kCommandBufferSize] = {};
 size_t command_length = 0;
-uint32_t last_heartbeat_ms = 0;
-uint32_t last_led_toggle_ms = 0;
+bool discard_line = false;
 bool heartbeat_enabled = true;
+bool software_estop = false;
+uint32_t boot_ms = 0;
+uint32_t last_heartbeat_ms = 0;
+uint32_t last_led_ms = 0;
+uint32_t last_report_ms = 0;
+int32_t last_report_count = 0;
 PidControllers controllers;
 SafetyController safety(controllers);
-double simulated_speed_mps = 0.0;
-double simulated_steering_degrees = 0.0;
+TruckHardware hardware;
 
-void printInfo() {
-  Serial.print("INFO name=");
-  Serial.print(firmware_config::kFirmwareName);
-  Serial.print(" version=");
-  Serial.print(firmware_config::kFirmwareVersion);
-  Serial.print(" built=");
-  Serial.print(__DATE__);
-  Serial.print('T');
-  Serial.println(__TIME__);
+const char* modeName() {
+  return firmware_config::kEncoderMetresPerCount > 0.0 ? "SPEED_PID" : "OPEN_LOOP";
+}
+
+// Never let serial backpressure delay neutral/watchdog processing. A saturated
+// link may drop diagnostics; command acceptance is never inferred from silence.
+void reply(const char* text) {
+  const size_t length = std::strlen(text);
+  if (Serial && Serial.availableForWrite() >= static_cast<int>(length + 1)) {
+    Serial.write(reinterpret_cast<const uint8_t*>(text), length);
+    Serial.write('\n');
+  }
+}
+
+void applySafety() {
+  const uint32_t now = millis();
+  hardware.sample(now);
+  safety.setEmergencyStop(software_estop);
+  if (!Serial && (safety.mayDrive() || safety.state() == SafetyState::kArmed))
+    safety.disarm();
+  safety.update(hardware.speed(), now);
+  hardware.writeOutputs(safety.throttleCommand(), safety.steeringCommand());
+}
+
+void printStatus() {
+  char line[320];
+  std::snprintf(line, sizeof(line),
+    "STATUS uptime_ms=%lu safety_state=%s throttle_cmd=%.4f steering_cmd=%.4f heartbeat=%s "
+    "actuators=ENABLED mode=%s encoder_count=%ld speed_mps=%.5f esc_us=%d servo_us=%d",
+    static_cast<unsigned long>(millis()), safety.stateName(), safety.throttleCommand(),
+    safety.steeringCommand(), heartbeat_enabled ? "ON" : "OFF", modeName(),
+    static_cast<long>(hardware.count()), hardware.speed(), hardware.escPulse(), hardware.servoPulse());
+  reply(line);
 }
 
 void handleCommand(const char* command) {
   if (std::strcmp(command, "PING") == 0) {
-    Serial.println("PONG");
+    reply("PONG");
   } else if (std::strcmp(command, "INFO") == 0) {
-    printInfo();
+    char line[160];
+    std::snprintf(line, sizeof(line), "INFO name=%s version=%s actuators=ENABLED mode=%s",
+      firmware_config::kFirmwareName, firmware_config::kFirmwareVersion, modeName());
+    reply(line);
   } else if (std::strcmp(command, "STATUS") == 0) {
-    Serial.print("STATUS uptime_ms=");
-    Serial.print(millis());
-    Serial.print(" safety_state=");
-    Serial.print(safety.stateName());
-    Serial.print(" throttle_cmd=");
-    Serial.print(safety.throttleCommand(), 4);
-    Serial.print(" steering_cmd=");
-    Serial.print(safety.steeringCommand(), 4);
-    Serial.print(" heartbeat=");
-    Serial.println(heartbeat_enabled ? "ON" : "OFF");
+    printStatus();
   } else if (std::strcmp(command, "HEARTBEAT ON") == 0) {
     heartbeat_enabled = true;
-    last_heartbeat_ms = millis();
-    Serial.println("OK HEARTBEAT ON");
+    reply("OK HEARTBEAT ON");
   } else if (std::strcmp(command, "HEARTBEAT OFF") == 0) {
     heartbeat_enabled = false;
-    Serial.println("OK HEARTBEAT OFF");
+    reply("OK HEARTBEAT OFF");
   } else if (std::strcmp(command, "ARM") == 0) {
-    if (safety.arm(millis())) {
-      Serial.println("OK ARMED");
+    if (millis() - boot_ms < firmware_config::kEscStartupNeutralMs) {
+      reply("ERR ARM_REJECTED STARTUP_NEUTRAL");
     } else {
-      Serial.print("ERR ARM_REJECTED state=");
-      Serial.println(safety.stateName());
+      reply(safety.arm(millis()) ? "OK ARMED" : "ERR ARM_REJECTED");
     }
   } else if (std::strcmp(command, "CLEAR") == 0) {
-    // Software-only bring-up: simulate releasing the physical E-stop before
-    // clearing a latched fault. Replace this with the real input later.
+    // Explicit operator release of the software latch; no physical E-stop exists.
+    software_estop = false;
     safety.setEmergencyStop(false);
-    if (safety.clearFaults()) {
-      Serial.println("OK FAULTS_CLEARED");
-    } else {
-      Serial.print("ERR CLEAR_REJECTED state=");
-      Serial.println(safety.stateName());
-    }
+    safety.clearFaults();
+    applySafety();
+    reply("OK FAULTS_CLEARED");
   } else if (std::strcmp(command, "DISARM") == 0) {
     safety.disarm();
-    Serial.println("OK DISARMED");
+    applySafety();
+    reply("OK DISARMED");
   } else if (std::strcmp(command, "ESTOP") == 0) {
-    safety.setEmergencyStop(true);
-    Serial.println("OK ESTOP_LATCHED");
-  } else {
-    double first_value = 0.0;
-    double second_value = 0.0;
-    char trailing_character = '\0';
-
-    if (std::sscanf(command, "FEEDBACK %lf %lf %c", &first_value,
-                    &second_value, &trailing_character) == 2) {
-      simulated_speed_mps = first_value;
-      simulated_steering_degrees = second_value;
-      Serial.print("OK FEEDBACK speed=");
-      Serial.print(simulated_speed_mps, 4);
-      Serial.print(" steering=");
-      Serial.println(simulated_steering_degrees, 4);
-    } else if (std::sscanf(command, "CMD %lf %lf %c", &first_value,
-                           &second_value, &trailing_character) == 2) {
-      if (safety.acceptCommand(first_value, second_value, millis())) {
-        Serial.println("OK COMMAND_ACCEPTED");
-      } else {
-        Serial.print("ERR COMMAND_REJECTED state=");
-        Serial.println(safety.stateName());
-      }
-    } else if (command[0] != '\0') {
-      Serial.println("ERR UNKNOWN_COMMAND");
-    }
+    software_estop = true;
+    applySafety();
+    reply("OK ESTOP_LATCHED");
+  } else if (std::strncmp(command, "CMD", 3) == 0) {
+    double speed = 0.0, angle = 0.0;
+    char trailing = '\0';
+    const bool parsed = std::sscanf(command, "CMD %lf %lf %c", &speed, &angle, &trailing) == 2;
+    if (!parsed) speed = angle = std::numeric_limits<double>::quiet_NaN();
+    const bool accepted = safety.acceptCommand(speed, angle, millis());
+    applySafety();
+    reply(accepted ? "OK COMMAND_ACCEPTED" : "ERR COMMAND_REJECTED");
+  } else if (std::strncmp(command, "FEEDBACK", 8) == 0) {
+    reply("ERR SIMULATED_FEEDBACK_DISABLED");
+  } else if (command[0]) {
+    reply("ERR UNKNOWN_COMMAND");
   }
 }
 
 void pollSerial() {
-  while (Serial.available() > 0) {
+  // Bound work per loop so a continuous sender cannot starve the watchdog.
+  for (size_t i = 0; i < firmware_config::kCommandBufferSize && Serial.available(); ++i) {
     const char incoming = static_cast<char>(Serial.read());
-
-    if (incoming == '\r') {
-      continue;
-    }
-
+    if (incoming == '\r') continue;
     if (incoming == '\n') {
-      command_buffer[command_length] = '\0';
-      handleCommand(command_buffer);
+      if (!discard_line) {
+        command_buffer[command_length] = '\0';
+        handleCommand(command_buffer);
+      }
       command_length = 0;
-      continue;
-    }
-
-    if (command_length < sizeof(command_buffer) - 1) {
-      command_buffer[command_length++] = incoming;
-    } else {
-      command_length = 0;
-      Serial.println("ERR COMMAND_TOO_LONG");
+      discard_line = false;
+    } else if (!discard_line) {
+      if (incoming == '\0' || command_length >= sizeof(command_buffer) - 1) {
+        discard_line = true;
+        command_length = 0;
+        safety.disarm();
+        applySafety();
+        reply("ERR MALFORMED_OR_TOO_LONG");
+      } else {
+        command_buffer[command_length++] = incoming;
+      }
     }
   }
 }
-
 }  // namespace
 
 void setup() {
+  hardware.begin();  // Establish neutral outputs before serial initialization.
   controllers.begin();
   safety.begin();
+  boot_ms = millis();
   pinMode(firmware_config::kStatusLedPin, OUTPUT);
-  digitalWrite(firmware_config::kStatusLedPin, LOW);
-
   Serial.begin(firmware_config::kSerialBaud);
-  const uint32_t serial_wait_start = millis();
-  while (!Serial && millis() - serial_wait_start < 5000) {
-  // Wait up to five seconds for the Xavier to open USB serial.
-  }
-
-  Serial.print("BOOT ");
-  Serial.print(firmware_config::kFirmwareName);
-  Serial.print(' ');
-  Serial.println(firmware_config::kFirmwareVersion);
-  Serial.println("READY");
 }
 
 void loop() {
+  applySafety();
   pollSerial();
-
-  const uint32_t now_ms = millis();
-  safety.update(simulated_speed_mps, simulated_steering_degrees, now_ms);
-
-  if (now_ms - last_led_toggle_ms >= firmware_config::kLedTogglePeriodMs) {
-    last_led_toggle_ms = now_ms;
-    digitalWrite(firmware_config::kStatusLedPin,
-                 !digitalRead(firmware_config::kStatusLedPin));
+  applySafety();
+  const uint32_t now = millis();
+  if (now - last_led_ms >= firmware_config::kLedTogglePeriodMs) {
+    last_led_ms = now;
+    digitalWrite(firmware_config::kStatusLedPin, !digitalRead(firmware_config::kStatusLedPin));
   }
-
-  if (heartbeat_enabled &&
-      now_ms - last_heartbeat_ms >= firmware_config::kHeartbeatPeriodMs) {
-    last_heartbeat_ms = now_ms;
-    Serial.print("HEARTBEAT ");
-    Serial.println(now_ms);
+  if (now - last_report_ms >= firmware_config::kEncoderReportMs) {
+    last_report_ms = now;
+    const int32_t count = hardware.count();
+    const int32_t delta = countDelta(count, last_report_count);
+    last_report_count = count;
+    char line[128];
+    std::snprintf(line, sizeof(line), "ENCODER count=%ld delta=%ld direction=%s",
+      static_cast<long>(count), static_cast<long>(delta),
+      delta > 0 ? "FORWARD" : delta < 0 ? "REVERSE" : "STOP");
+    reply(line);
+  }
+  if (heartbeat_enabled && now - last_heartbeat_ms >= firmware_config::kHeartbeatPeriodMs) {
+    last_heartbeat_ms = now;
+    char line[64];
+    std::snprintf(line, sizeof(line), "HEARTBEAT %lu", static_cast<unsigned long>(now));
+    reply(line);
   }
 }

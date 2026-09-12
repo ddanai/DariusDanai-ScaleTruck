@@ -1,120 +1,141 @@
-# Scale Truck Teensy Firmware
+# Main Teensy firmware: hardware commissioning
 
-This directory is the firmware repository for the scale-truck low-level controller. It provides the Milestone 5 project foundation, serial/LED bring-up, and separate speed and steering PID controllers. Actuator drivers and the production command protocol are intentionally reserved for later deliverables.
+Version 0.2.0 accepts commands from the ROS serial bridge, drives the ESC and
+steering servo, and reports real quadrature encoder counts in the same program.
 
-## Hardware and toolchain
+**Default mode is OPEN_LOOP. Encoder calibration is unknown, so the firmware
+cannot measure or regulate speed in m/s yet.** It maps the bridge's speed field
+into a limited throttle request. The numeric request is not an achieved speed.
+There is no physical E-stop installed; `ESTOP` is a software serial latch.
 
-- Default board: Teensy 4.1 (`teensy41`)
-- Framework: Arduino for Teensy
-- Build system: PlatformIO Core or the PlatformIO VS Code extension
-- USB interface: USB serial at 115200 baud
+## Wiring and initial limits
 
-If the truck uses another Teensy model, change `board` in `platformio.ini` to the matching PlatformIO Teensy board ID.
+| Connection | Teensy pin / setting |
+|---|---|
+| ESC signal | 9 |
+| Steering servo signal | 6 |
+| Encoder A / B | 2 / 3, INPUT_PULLUP, both edges |
+| ESC neutral | 1500 microseconds |
+| ESC commissioning range | 1500 to 1600 microseconds, forward only |
+| Steering center | 1480 microseconds |
+| Steering commissioning range | 1360 to 1600 microseconds (requested -10 to +10 degrees) |
 
-## Repository layout
+These signal pins follow the existing standalone tests. Keep the tested power
+wiring: signal grounds shared, and the ESC's 6 V BEC red wire disconnected and
+insulated from the USB-powered Teensy. Use the existing external servo supply.
+For initial actuation tests, raise the driven wheels and keep steering unloaded.
+The reduced throttle range may be below the ESC/motor's start threshold; it is
+not a calibrated vehicle response and is not automatically increased.
+
+## Commands
+
+All commands are newline-terminated ASCII at 115200 baud.
+
+| Command | Result |
+|---|---|
+| `PING`, `INFO`, `STATUS` | Diagnostics, mode, counts and actual commanded pulses |
+| `ARM` | Arms after at least 3 seconds of startup neutral; does not move by itself |
+| `CMD 0.1 5` | In OPEN_LOOP: 1550 us ESC, 1540 us servo |
+| `CMD 0 0` | ESC neutral and steering center |
+| `DISARM` | Neutral/center; existing faults remain latched |
+| `ESTOP` | Immediately requests neutral/center and latches software E-stop |
+| `CLEAR` | Releases software E-stop/faults and returns to DISARMED |
+| `HEARTBEAT ON/OFF` | Enable/disable periodic heartbeat text |
+
+`CMD` accepts speed values from 0 to 0.2 and steering from -10 to +10 degrees.
+Reverse, larger values, NaN, infinity and malformed CMD packets are rejected;
+invalid CMD packets fault an armed controller. Send commands at 20 Hz or faster
+than the 250 ms watchdog. Zero speed always produces neutral, including in the
+future calibrated PID mode. Steering uses the RC servo's internal position loop;
+there is no external steering-angle sensor or steering PID feedback.
+
+Watchdog expiry, USB host disconnect and DISARM request neutral/center. An
+oversized or NUL-containing packet disarms and is discarded through its newline.
+Serial diagnostics are dropped under backpressure instead of blocking the
+control loop. A successful serial write alone does not prove command acceptance.
+Neutral is a signal request, not a power cut or a guarantee of mechanical braking.
+
+## Encoder feedback
+
+Every 250 ms the firmware sends the existing bridge-compatible format:
 
 ```text
-firmware/teensy/
-|-- include/
-|   `-- firmware_config.h   # Firmware constants and hardware selection
-|   `-- pid_controllers.h   # Independent speed and steering PID interface
-|-- src/
-|   `-- main.cpp            # Bring-up firmware
-|   `-- pid_controllers.cpp # PID_v1-backed controller implementation
-|-- test/                   # Future native/unit tests
-|-- .gitignore
-|-- platformio.ini          # Reproducible build and upload configuration
-`-- README.md
+ENCODER count=277 delta=-18 direction=REVERSE
 ```
 
-## Install PlatformIO
+Counts continue while disarmed and while driving. Positive/negative refers to
+the configured encoder direction, not a verified physical forward direction.
+`STATUS` includes `actuators=ENABLED mode=OPEN_LOOP`, pulse widths, encoder count,
+and `speed_mps=nan` until calibrated. No fake speed is published. The ROS bridge
+continues to publish `/motor_encoder/raw`, `/motor_encoder/count` and
+`/motor_encoder/delta`; the legacy `/ocr2lrc_msg` feedback interface is not added.
 
-Choose either the PlatformIO IDE extension in VS Code or install PlatformIO Core:
-
-```bash
-python -m pip install --user platformio
-pio --version
-```
+To calibrate later, measure travelled distance and signed count change, verify
+forward sign, and set `kEncoderSign` and `TRUCK_ENCODER_METRES_PER_COUNT` in
+`include/firmware_config.h`. This does not require knowing wheel diameter if
+travel distance can be measured directly. A positive calibration selects
+SPEED_PID mode, sampled every 20 ms, using the initial untuned speed gains.
+No-motion counts cannot distinguish a stopped shaft from a disconnected encoder;
+calibration alone does not validate sensor fault detection or vehicle dynamics.
 
 ## Build and upload
 
-For the short Jetson Xavier build, upload, and serial checklist, see
-[Xavier-Teensy Bring-Up](XAVIER_TEENSY_BRINGUP.md). Then run the
-[Xavier Fixed-Command Test](XAVIER_FIXED_COMMAND_TEST.md) before connecting ROS.
-
-For the Windows PC procedure used to upload and verify the Teensy directly, see
-[Teensy Upload Guide](TEENSY_UPLOAD_GUIDE.md).
-
-Run these commands from this directory:
+From `firmware/teensy`:
 
 ```bash
-pio run
-pio run --target upload
-pio device monitor
+pio run -e teensy41
+pio run -e teensy41 --target upload
 ```
 
-The monitor uses 115200 baud. If automatic upload does not find the board, connect the Teensy by USB and press its Program button once when PlatformIO requests it.
+The older Xavier toolchain configuration remains available as `teensy41_xavier`.
+This firmware replaces the separate encoder/motor/servo sketches on the board.
+It has been built for Teensy 4.1 but has not been uploaded or physically tested
+by this change. It does not print the old simulator BOOT/READY sequence; use PING,
+INFO or STATUS after opening the port.
 
-## Bring-up verification
+## Run through the ROS bridge
 
-After reset, the onboard LED blinks at 1 Hz and the serial monitor prints:
+Stop other launches/serial monitors owning the Teensy port. For manual commands:
 
-```text
-BOOT scale-truck-teensy 0.1.0
-READY
-HEARTBEAT <milliseconds>
+```bash
+ros2 launch scale_truck_bringup teensy_commands.launch.py use_control:=false
 ```
 
-Type one of these newline-terminated diagnostic commands:
+In another sourced terminal, start a low request at 20 Hz:
 
-| Command | Expected reply |
-|---|---|
-| `PING` | `PONG` |
-| `INFO` | firmware name, version, and build timestamp |
-| `STATUS` | uptime, PID enable state, and normalized PID outputs |
-| `HEARTBEAT ON` | enable periodic heartbeat messages |
-| `HEARTBEAT OFF` | stop periodic heartbeat messages |
-| `DISARM` | disable both PIDs and force both safe outputs to zero |
-| `ESTOP` | simulate and latch an emergency stop (reset required) |
-| anything else | `ERR UNKNOWN_COMMAND` |
+```bash
+ros2 topic pub --rate 20 /lrc2ocr_msg scale_truck_msgs/msg/Lrc2Ocr "{tar_vel: 0.02, steer_angle: 0.0}"
+```
 
-Successful `PING`/`PONG`, periodic heartbeats, and LED blinking verify the development environment, firmware upload, and bidirectional USB serial communication.
+Then explicitly arm from another sourced terminal:
 
-## Configuration
+```bash
+ros2 service call /firmware/arm std_srvs/srv/Trigger '{}'
+ros2 service call /firmware/status std_srvs/srv/Trigger '{}'
+ros2 topic echo /firmware/serial_status
+```
 
-Project-wide constants are in `include/firmware_config.h`. Pin assignments for throttle, steering, encoders, and emergency stop should be added only after the exact Teensy model and wiring are confirmed.
+Observe acceptance replies and pulse widths. Disarm with:
 
-## PID controllers
+```bash
+ros2 service call /firmware/disarm std_srvs/srv/Trigger '{}'
+```
 
-`PidControllers` contains two independent instances of Brett Beauregard's
-MIT-licensed Arduino PID library: one maps speed error to normalized throttle
-and one maps steering-angle error to a normalized steering command. Both
-outputs are limited to `[-1, 1]`, use a 20 ms sample period, and remain disabled
-by default. The initial gains are safe placeholders, not tuned vehicle values.
+Stopping the command publisher also triggers neutral after 250 ms. Clear faults
+with `/firmware/clear_faults` before rearming. For the LiDAR-controller launch,
+stop the manual publisher and restart without `use_control:=false`; its speed
+limit defaults to zero in `closed_loop_test.yaml`. Sensor-driven speed requests
+then map to throttle in OPEN_LOOP mode; this is not calibrated speed regulation.
 
-Call `enable()` only after the emergency stop, command watchdog, sensors, and
-actuator drivers are operational. Feed current speed and steering angle to
-`update()` on every pass through `loop()`, then map `throttleCommand()` and
-`steeringCommand()` to the verified hardware ranges. `disable()` immediately
-returns both computed commands to zero.
+## Tests
 
-## Safety supervisor
+The historical `pc_fixed_command_test.py` and ROS `ros_command_path_test.py`
+assume simulated feedback. They now refuse hardware-capable firmware before
+arming. Do not use their previous pass results as physical-actuator validation.
 
-`SafetyController` is the only approved source of actuator commands. It boots
-`DISARMED`, requires an explicit arm followed by a valid command before entering
-`ACTIVE`, limits initial throttle authority to `[-0.20, 0.20]`, and limits
-steering authority to `[-0.25, 0.25]`. Invalid/non-finite feedback, implausible
-commands, or a command gap longer than 250 ms disable both PIDs, force neutral
-outputs, and latch a fault. An emergency stop does the same immediately and
-cannot be cleared while its physical input remains asserted.
-
-The current bring-up program intentionally exposes no `ARM` command and does
-not call the control cycle, because sensor inputs, the physical E-stop pin, and
-actuator-neutral signals are not defined yet. Hardware integration must call
-`setEmergencyStop()` and `update()` every loop, send only the supervisor's
-clamped outputs to drivers, and provide an explicit operator-controlled path to
-`clearFaults()` and `arm()`.
-
-## Safety note
-
-This bring-up firmware does not drive actuator pins. Keep the motor controller and steering actuator disconnected or mechanically safe until saturation, emergency-stop, and watchdog behavior have been implemented and bench-tested.
+`test/host/firmware_test.cpp` runs the real main firmware with fake serial,
+clock, pins and Servo outputs, and the real PID library. It checks command
+mapping, watchdog, disarm, E-stop, USB loss, malformed input, backpressure,
+encoder interrupts and rollover. `calibrated_test.cpp` checks a synthetic known
+calibration and sensor-fault neutral. Neither test touches physical hardware.
+See `test/host/README.md` for host commands.

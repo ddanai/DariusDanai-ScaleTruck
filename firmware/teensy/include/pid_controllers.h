@@ -3,9 +3,9 @@
 #include <Arduino.h>
 #include <PID_v1.h>
 
-// Owns two completely independent feedback controllers. The class only
-// computes normalized commands; hardware drivers are responsible for mapping
-// those commands to PWM/servo signals and enforcing the emergency stop.
+// Owns the speed PID and a reserved steering PID. With no external angle sensor,
+// the steering PID stays disabled; SafetyController maps angle to servo command.
+// Hardware drivers map supervisor outputs to pulse widths.
 class PidControllers {
  public:
   PidControllers();
@@ -20,8 +20,7 @@ class PidControllers {
   void setSpeedTunings(double kp, double ki, double kd);
   void setSteeringTunings(double kp, double ki, double kd);
 
-  // Call every loop with fresh feedback. PID_v1 enforces the configured
-  // sample period internally. Outputs are normalized to [-1, 1].
+  // PID_v1 enforces the speed sample period. Steering input is reserved.
   void update(double measured_speed_metres_per_second,
               double measured_steering_degrees);
 

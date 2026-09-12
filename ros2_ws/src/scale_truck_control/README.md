@@ -52,9 +52,10 @@ ros2 launch scale_truck_bringup teensy_commands.launch.py
 ```
 
 Observe `/scan`, `/xav2lrc_msg`, and `/lrc2ocr_msg` while moving a target nearer
-and farther away. The launch does not arm the Teensy. Its main firmware still
-uses simulated feedback and lacks actuator drivers, so physical distance
-regulation requires integrated actuator/encoder firmware. Raw encoder counts
+and farther away. The launch does not arm the Teensy. Main firmware 0.2.0 now
+drives the ESC/servo and reads real encoder counts. Until encoder calibration,
+it maps requested speed to limited open-loop throttle rather than regulating m/s.
+See the firmware README before physical commissioning. Raw encoder counts
 are not calibrated m/s; this is not an encoder speed controller. Camera
 callbacks only record image arrival.
 

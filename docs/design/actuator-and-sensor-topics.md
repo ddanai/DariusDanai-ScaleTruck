@@ -35,7 +35,8 @@ The other fields retain the controller's existing message layout.
 | `pred_vel` | `float32` | Predicted speed in metres/second | No |
 | `alpha` | `bool` | LRC velocity-sensor discrepancy flag | No |
 
-Positive/negative speed denotes the requested forward/reverse convention.
+Positive/negative speed denotes the interface's forward/reverse convention;
+main firmware 0.2.0 rejects reverse during commissioning.
 Physical steering left/right sign, centre and servo mapping must be established
 by actuator calibration; the bridge performs no sign or unit conversion.
 The retained separation fields are not used to drive the Teensy.
@@ -48,11 +49,11 @@ steer_angle: 5.0
 ```
 
 It becomes ASCII `CMD 0.200000 5.000000` followed by a newline at 115200 baud.
-These are speed and angle setpoints, not PWM values or throttle percentages.
-The command-capable firmware must be armed before accepting them. Its current
-plausibility limits are finite values with absolute speed at most 15 m/s and
-absolute steering angle at most 45 degrees. These are rejection limits, not
-validated operating speeds or physical steering limits.
+Main firmware 0.2.0 accepts finite speed requests from 0 to 0.2 and steering
+from -10 to +10 degrees after explicit arming. With unknown encoder calibration,
+OPEN_LOOP mode maps the speed field linearly to 1500..1600 us ESC pulses; it
+does not achieve or measure the requested m/s. Steering maps around 1480 us at
+12 us/degree. These are commissioning limits, not validated vehicle performance.
 
 The firmware command watchdog is 250 ms. Commands must arrive with margin inside
 that interval; the default LRC timer is 20 ms (50 Hz), and the acceptance test
@@ -166,9 +167,10 @@ firmware. In command mode the bridge sends `HEARTBEAT OFF` at startup and tries
 `DISARM` at shutdown. Loss of the process requires the firmware watchdog rather
 than relying on the shutdown write.
 
-Encoder-test firmware and command-capable firmware are separate programs.
-The bridge implements their respective interfaces, but combined firmware and
-physical ROS-controlled actuation have not been validated by these sensor tests.
+The standalone encoder test remains separate. Main firmware 0.2.0 now combines
+real encoder counts and physical actuator outputs using the same bridge protocol.
+It has passed host tests and a Teensy build; physical ROS-controlled actuation
+has not been validated by those software tests or the earlier sensor tests.
 
 ## Evidence and definition status
 

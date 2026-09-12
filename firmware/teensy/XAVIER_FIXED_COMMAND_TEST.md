@@ -1,5 +1,8 @@
 # Xavier Fixed-Command Test
 
+Historical simulation-firmware test: the script refuses actuator-capable main
+firmware 0.2.0. For current hardware commissioning, follow [README.md](README.md).
+
 Run this after the current firmware has been uploaded using
 [Xavier–Teensy Basic Bring-Up](XAVIER_TEENSY_BRINGUP.md). It tests the Teensy
 controller from the Xavier without ROS or connected actuators.

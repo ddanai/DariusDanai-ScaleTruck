@@ -22,8 +22,8 @@ def generate_launch_description():
         ),
         LogInfo(msg=(
             "Teensy integration launch: sensors and USB commands enabled. "
-            "LiDAR distance control enabled; physical actuation still requires "
-            "integrated actuator/feedback firmware. No automatic arming."
+            "LiDAR distance control enabled. Main firmware 0.2.0 can drive actuators; "
+            "uncalibrated speed maps to limited open-loop throttle. No automatic arming."
         )),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(PathJoinSubstitution([

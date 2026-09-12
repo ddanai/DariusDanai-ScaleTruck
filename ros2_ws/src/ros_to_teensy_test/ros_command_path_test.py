@@ -71,6 +71,16 @@ class CommandPathTest(Node):
 
     def run(self):
         self.wait_for_services()
+        self.call("status")
+        status = self.wait_line(r"^STATUS ")
+        if not re.fullmatch(
+            r"STATUS uptime_ms=\d+ safety_state=[A-Z_]+ throttle_cmd=-?[\d.]+ "
+            r"steering_cmd=-?[\d.]+ heartbeat=(ON|OFF)", status
+        ):
+            raise RuntimeError(
+                "This historical test requires simulation-only firmware; "
+                "refusing to arm hardware-capable or unknown firmware."
+            )
         self.check("clear", lambda: self.call("clear_faults"), r"^OK FAULTS_CLEARED$")
         self.check("arm", lambda: self.call("arm"), r"^OK ARMED$")
         self.publish_for(0.2, 0.0)

@@ -123,6 +123,9 @@ def run(args: argparse.Namespace) -> int:
     test = TeensyTest(args.port, args.baud)
     try:
         test.drain_startup()
+        # This historical test assumes simulated feedback and must never arm
+        # firmware that can drive physical actuators.
+        test.status()  # Strict legacy STATUS format rejects actuators=ENABLED.
         test.command("HEARTBEAT OFF", "OK HEARTBEAT OFF")
         test.prepare_active()
 
