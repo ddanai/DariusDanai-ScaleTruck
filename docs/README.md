@@ -19,6 +19,7 @@ Start here instead of browsing individual files. Documentation is grouped by pur
 | [DDS validation](setup/dds-validation.md) | Confirming ROS 2 discovery and publish/subscribe communication. |
 | [Hardware bring-up checklist](testing/hardware-bringup-checklist.md) | Device connections, sensor startup, encoder checks, separate Teensy command tests and evidence recording. |
 | [ROS 2 latency test](testing/ros2-latency-test.md) | Recording and analyzing repeatable Milestone 4 latency runs. |
+| [Xavier controller test results](../results/controller/2026-09-12/README.md) | September 12 C++ and ROS integration results, coverage differences, and reproduction commands. |
 | [Xavier CPU and memory recording](testing/xavier-resource-recording.md) | Capturing resource samples and comparable power/DDS/network conditions. |
 | [ROS 1 vs. ROS 2 latency comparison](testing/ros1-vs-ros2-latency-comparison.md) | Milestone 4 results, plots, limitations, and timing conclusion. |
 

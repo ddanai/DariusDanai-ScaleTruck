@@ -61,8 +61,13 @@ callbacks only record image arrival.
 
 ## Verification without actuators
 
+From this repository's `ros2_ws` directory, inside the Humble environment:
+
 ```bash
-colcon test --packages-select scale_truck_control
+source /opt/ros/humble/setup.bash
+colcon build --packages-up-to scale_truck_control --cmake-args -DBUILD_TESTING=ON
+source install/setup.bash
+colcon test --packages-select scale_truck_control --event-handlers console_direct+
 colcon test-result --verbose
 python3 src/scale_truck_control/test/ros_distance_test.py
 ```
@@ -73,3 +78,23 @@ and timeout behavior. The Python test starts controller/LRC nodes in
 including scan loss and controller loss. It starts no serial bridge and does
 not operate actuators. The existing `ros_to_teensy_test` remains a separate
 command acceptance test; disable control publishers when running it.
+
+### Why run both tests?
+
+| Test | What it exercises | What it does not establish |
+|---|---|---|
+| C++ `distance_control_test` | Direct calls to distance-selection and speed functions: sector filtering, angle wrap, reversed scan ordering, invalid inputs, speed limits, and supplied scan age | ROS message delivery, node callbacks, timers, or LRC behavior |
+| Python `ros_distance_test.py` | Actual C++ controller and LRC processes communicating through ROS topics, using synthetic scans; checks forwarded speed/steering, timestamp handling, recovery, scan loss, and controller loss | Physical LiDAR, serial bridge, Teensy, motor/steering actuation, or calibrated speed control |
+
+Run both after controller/LRC changes and before hardware commissioning. The
+C++ test is useful for quick checks while editing the calculation functions;
+the integration test checks that those calculations work through the running
+ROS nodes. Python is the test harness, not a second controller implementation.
+Neither test replaces the other or physical hardware verification.
+
+CTest reports the C++ executable as **one test**, although it contains multiple
+assertions. The Python script reports **12 checks** separately and is currently
+run manually; `colcon test` does not run it or include it in its summary.
+
+See the [September 12 Xavier results](../../../results/controller/2026-09-12/README.md)
+for the recorded successful run.
